@@ -1,0 +1,593 @@
+{
+  "version": 8,
+  "center": [15.88623, 46.754915],
+  "zoom": 6,
+  "sources": {
+    "geolandbasemap": {
+      "type": "raster",
+      "tiles": [
+        "https://mapsneu.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png"
+      ],
+      "tileSize": 256,
+      "maxzoom": 19,
+      "attribution": "Grundkarte: <a href=\"https://basemap.at/\">basemap.at</a>",
+      "bounds": [8.782379, 46.35877, 17.5, 49.037872]
+    },
+    "bmaporthofoto30cm": {
+      "type": "raster",
+      "tiles": [
+        "https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg"
+      ],
+      "tileSize": 256,
+      "maxzoom": 19,
+      "attribution": "Grundkarte: <a href=\"https://basemap.at/\">basemap.at</a>",
+      "bounds": [8.782379, 46.35877, 17.5, 49.037872]
+    },
+    "neigungsklassen": {
+      "type": "raster",
+      "tileSize": 512,
+      "tiles": [
+        "https://inspire.lfrz.gv.at/000504/ows?SERVICE=WMS&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS=neigungsklassen&STYLES=&WIDTH=512&HEIGHT=512&CRS=EPSG%3A3857&BBOX={bbox-epsg-3857}"
+      ],
+      "minzoom": 9,
+      "maxzoom": 14,
+      "layout": {
+        "visibility": "none"
+      }
+    },
+    "agrargis": {
+      "type": "vector",
+      "tiles": ["https://agraratlas.inspire.gv.at/map/tiles/{z}/{x}/{y}.pbf"],
+      "attribution": "&copy; <a href=\"https://www.bml.gv.at/\">BML</a>",
+      "maxzoom": 15,
+      "bounds": [9.532874, 46.367811, 17.160773, 49.001157]
+    }
+  },
+  "layers": [
+    {
+      "id": "basemap.at",
+      "type": "raster",
+      "source": "geolandbasemap",
+      "metadata": {
+        "group": "base"
+      }
+    },
+    {
+      "id": "Orthofoto",
+      "type": "raster",
+      "source": "bmaporthofoto30cm",
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "group": "base"
+      }
+    },
+    {
+      "id": "neigungsklassen",
+      "type": "raster",
+      "source": "neigungsklassen",
+      "minzoom": 9,
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "group": "multi",
+        "classes": [
+          {
+            "label": "0 - <10%",
+            "value": 1,
+            "color": [255, 255, 154]
+          },
+          {
+            "label": "10 - <18%",
+            "value": 2,
+            "color": [12, 156, 205]
+          },
+          {
+            "label": "18 - <25%",
+            "value": 3,
+            "color": [255, 190, 255]
+          },
+          {
+            "label": "25 - <35%",
+            "value": 4,
+            "color": [0, 51, 255]
+          },
+          {
+            "label": "35 - <50%",
+            "value": 5,
+            "color": [255, 0, 0]
+          },
+          {
+            "label": ">=50%",
+            "value": 6,
+            "color": [164, 164, 164]
+          }
+        ]
+      }
+    },
+    {
+      "id": "benachteiligte_gebiete-berggebiet",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "benachteiligte_gebiete",
+      "filter": ["==", "bengebcode", 3],
+      "paint": {
+        "fill-color": "#98e600"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Benachteiligtes Gebiet – Berggebiet",
+        "urlSort": 17,
+        "group": "one",
+        "category": "Ausgleichszulage"
+      }
+    },
+    {
+      "id": "benachteiligte_gebiete-kleines_gebiet",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "benachteiligte_gebiete",
+      "filter": ["==", "bengebcode", 5],
+      "paint": {
+        "fill-color": "#e69800"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Benachteiligtes Gebiet – Kleines Gebiet",
+        "urlSort": 18,
+        "group": "one",
+        "category": "Ausgleichszulage"
+      }
+    },
+    {
+      "id": "benachteiligte_gebiete-sonstiges",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "benachteiligte_gebiete",
+      "filter": ["==", "bengebcode", 4],
+      "paint": {
+        "fill-color": "#267300"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Benachteiligtes Gebiet – Sonstiges",
+        "urlSort": 19,
+        "group": "one",
+        "category": "Ausgleichszulage"
+      }
+    },
+    {
+      "id": "bdfl_l08_seehoehe_1200m-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l08_seehoehe_1200m",
+      "paint": {
+        "fill-color": "rgb(153, 153, 153)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Seehöhe über 1200m",
+        "urlSort": 11,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "bdfl_l34_feucht_torfgebiete-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l34_feucht_torfgebiete",
+      "paint": {
+        "fill-color": "rgb(116, 216, 249)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "2: Feuchtgebiete und Torfflächen",
+        "urlSort": 14,
+        "group": "one",
+        "category": "GLÖZ"
+      }
+    },
+    {
+      "id": "bdfl_l33_pufferstreifen_belastete_gewaesser-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l33_pufferstreifen_belastete_gewaesser",
+      "paint": {
+        "fill-color": "rgb(147, 248, 104)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "4: Pufferstreifen belasteter Gewässer",
+        "urlSort": 1,
+        "group": "one",
+        "category": "GLÖZ"
+      }
+    },
+    {
+      "id": "schwere_boeden",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "schwere_boeden",
+      "paint": {
+        "fill-color": "#b4445a"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "6: Schwere Böden",
+        "urlSort": 21,
+        "group": "one",
+        "category": "GLÖZ"
+      }
+    },
+    {
+      "id": "natura2000_ffh",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "natura2000",
+      "filter": ["==", "gebietsart", "FFH"],
+      "paint": {
+        "fill-color": "#ffe600"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "9: Natura 2000 Fauna Flora Habitat",
+        "urlSort": 22,
+        "group": "one",
+        "category": "GLÖZ"
+      }
+    },
+    {
+      "id": "natura2000_vs",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "natura2000",
+      "filter": ["==", "gebietsart", "VS"],
+      "paint": {
+        "fill-color": "#b43200"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "9: Natura 2000 Vogelschutz",
+        "urlSort": 23,
+        "group": "one",
+        "category": "GLÖZ"
+      }
+    },
+    {
+      "id": "bdfl_l16_grundwasserschutz_acker-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l16_grundwasserschutz_acker",
+      "paint": {
+        "fill-color": "rgb(0, 97, 241)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Grundwasserschutz Acker",
+        "urlSort": 9,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "nitrataktionsprogramm",
+      "source": "agrargis",
+      "source-layer": "nitrataktionsprogramm",
+      "type": "fill",
+      "filter": ["==", "in_napv", 1],
+      "paint": {
+        "fill-color": "#89ce64"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "2: NAPV-Anlage 5 Gebiete",
+        "urlSort": 20,
+        "group": "one",
+        "category": "GAB"
+      }
+    },
+    {
+      "id": "bdfl_l40_gab8-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l40_gab8",
+      "paint": {
+        "fill-color": "rgb(191, 191, 191)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "8: PSM-Schutzgebiete (WRRL)",
+        "urlSort": 15,
+        "group": "one",
+        "category": "GAB"
+      }
+    },
+    {
+      "id": "bdfl_l13_besondere_lebensraumtypen-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l13_besondere_lebensraumtypen",
+      "paint": {
+        "fill-color": "rgb(255, 0, 255)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "9: Besondere Lebensraumtypen",
+        "urlSort": 10,
+        "group": "one",
+        "category": "GLÖZ"
+      }
+    },
+    {
+      "id": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen",
+      "filter": ["==", "el", "EL hoch 3"],
+      "paint": {
+        "fill-color": "rgb(33, 32, 255)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "WRRL Steiermark EL hoch 3",
+        "urlSort": 3,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_2",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen",
+      "filter": ["==", "el", "EL hoch 2"],
+      "paint": {
+        "fill-color": "rgb(60, 255, 40)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "WRRL Steiermark EL hoch 2",
+        "urlSort": 4,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_1",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen",
+      "filter": ["==", "el", "EL hoch 1"],
+      "paint": {
+        "fill-color": "rgb(253, 241, 45)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "WRRL Steiermark EL hoch 1",
+        "urlSort": 5,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen",
+      "filter": ["==", "el", "EL mittel"],
+      "paint": {
+        "fill-color": "rgb(198, 35, 197)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "WRRL Steiermark EL mittel",
+        "urlSort": 6,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel_10",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen",
+      "filter": ["==", "el", "EL mittel -10%"],
+      "paint": {
+        "fill-color": "rgb(252, 93, 33)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "WRRL Steiermark EL mittel -10%",
+        "urlSort": 7,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_niedrig",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l26_wasserrahmenrichtlinie_ertragslagen",
+      "filter": ["==", "el", "EL niedrig"],
+      "paint": {
+        "fill-color": "rgb(44, 214, 248)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "WRRL Steiermark EL niedrig",
+        "urlSort": 8,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "bdfl_l31_begruente_abflusswege-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "bdfl_l31_begruente_abflusswege",
+      "paint": {
+        "fill-color": "rgb(108, 143, 235)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Begrünte Abflusswege",
+        "urlSort": 2,
+        "group": "one",
+        "category": "ÖPUL"
+      }
+    },
+    {
+      "id": "stehende_gewaesser-one",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "stehende_gewaesser",
+      "paint": {
+        "fill-color": "rgb(29, 105, 174)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Gewässer",
+        "urlSort": 12,
+        "group": "one",
+        "category": "GAB"
+      }
+    },
+    {
+      "id": "gewaessernetz-one",
+      "type": "line",
+      "source": "agrargis",
+      "source-layer": "gewaessernetz",
+      "paint": {
+        "line-color": "rgb(29, 105, 174)",
+        "line-width": 4
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Gewässer",
+        "urlSort": 13,
+        "group": "one",
+        "category": "GAB"
+      }
+    },
+    {
+      "id": "invekos_schlaege_2023_polygon-fill",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "invekos_schlaege_2023_polygon",
+      "paint": {
+        "fill-color": [
+          "case",
+          ["boolean", ["feature-state", "selected"], false],
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0.1)"
+        ]
+      }
+    },
+    {
+      "id": "invekos_schlaege_polygon-line",
+      "type": "line",
+      "source": "agrargis",
+      "source-layer": "invekos_schlaege_2023_polygon",
+      "paint": {
+        "line-color": [
+          "case",
+          ["boolean", ["feature-state", "selected"], false],
+          "rgba(0, 0, 0, 0)",
+          "rgb(238, 90, 78)"
+        ],
+        "line-width": 2
+      }
+    },
+    {
+      "id": "invekos_schlaege_polygon-bio",
+      "type": "fill",
+      "source": "agrargis",
+      "source-layer": "invekos_schlaege_2023_bio_polygon",
+      "filter": ["any", ["==", "kz_bio_oepul_jn", "J"], ["!", ["has", "kz_bio_oepul_jn"]]],
+      "paint": {
+        "fill-color": "red",
+        "fill-outline-color": "rgb(139, 0, 0)"
+      },
+      "layout": {
+        "visibility": "none"
+      },
+      "metadata": {
+        "label": "Bio-Schläge MFA 2023",
+        "warning": "Die rot dargestellten Flächen werden biologisch bewirtschaftet. Es ist daher bei der Ausbringung von Betriebsmitteln auf Nachbarfeldstücken besondere Sorgfalt walten zu lassen",
+        "urlSort": 16,
+        "displaySort": 1,
+        "group": "one",
+        "category": "BIO"
+      }
+    },
+    {
+      "id": "invekos_schlaege_polygon-line-selected",
+      "type": "line",
+      "source": "agrargis",
+      "source-layer": "invekos_schlaege_2023_polygon",
+      "paint": {
+        "line-color": [
+          "case",
+          ["boolean", ["feature-state", "selected"], false],
+          "#65000B",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "line-width": 5
+      }
+    }
+  ],
+  "metadata": {
+    "sources": {
+      "invekos_schlaege_2023_polygon": {
+        "lastModified": "2023-07-01T00:00:00Z"
+      }
+    }
+  }
+}

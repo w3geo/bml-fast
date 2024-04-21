@@ -1,17 +1,9 @@
-import './assets/main.css';
+import '@mdi/font/css/materialdesignicons.css';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
 
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router';
+import router from './router/index.js';
+import vuetify from './plugins/vuetify.js';
 
-// Vuetify
-import 'vuetify/styles';
-import createVuetify from './plugins/vuetify';
-
-const vuetify = createVuetify();
-
-const app = createApp(App).use(vuetify);
-
-app.use(router);
-
-app.mount('#app');
+createApp(App).use(vuetify).use(router).mount('#app');

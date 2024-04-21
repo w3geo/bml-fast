@@ -1,5 +1,4 @@
-import '@mdi/font/css/materialdesignicons.css';
-import 'vuetify/styles';
+import 'vuetify/styles'; // eslint-disable-line import/no-unresolved
 import { createVuetify } from 'vuetify';
 
 export default createVuetify();
