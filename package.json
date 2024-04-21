@@ -32,5 +32,9 @@
     "vite": "^5.2.8",
     "vite-plugin-vuetify": "^2.0.3",
     "vue-tsc": "^2.0.13"
+  },
+  "engines": {
+    "node": "=20",
+    "npm": ">=10"
   }
 }
