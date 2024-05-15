@@ -1,9 +1,11 @@
 <template>
   <div ref="mapContainer" class="map" />
+  <the-schlag-info-panel />
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import TheSchlagInfoPanel from '../components/TheSchlagInfoPanel.vue';
 import { useMap } from '../composables/useMap.js';
 
 const { map } = useMap();
