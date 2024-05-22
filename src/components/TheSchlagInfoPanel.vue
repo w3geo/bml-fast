@@ -80,11 +80,13 @@ import { equals } from 'ol/coordinate';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
+import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 
 const { schlagInfo } = useSchlag();
 const { map, mapView } = useMap();
 const route = useRoute();
 const router = useRouter();
+const { topicHectars } = useTopicIntersections();
 
 const emit = defineEmits(['schlag']);
 
@@ -131,6 +133,9 @@ watch(schlagInfo, (value) => {
     emit('schlag', true);
   }
 });
+
+// Area of relevant topics inside the current schlag
+watch(topicHectars, (value) => console.log(value));
 
 map.on('singleclick', (event) => {
   if (map.getView().getZoom() < 12) {

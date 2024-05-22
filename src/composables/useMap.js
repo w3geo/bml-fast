@@ -4,14 +4,7 @@ import { Control, defaults } from 'ol/control.js';
 import ScaleLine from 'ol/control/ScaleLine.js';
 import Link from 'ol/interaction/Link.js';
 import { useGeographic } from 'ol/proj.js';
-import {
-  apply,
-  applyStyle,
-  getLayer,
-  getSource,
-  renderTransparent,
-  MapboxVectorLayer,
-} from 'ol-mapbox-style';
+import { apply, applyStyle, getLayer, getSource, renderTransparent } from 'ol-mapbox-style';
 import { getCenter } from 'ol/extent.js';
 import { shallowRef } from 'vue';
 import VectorTileLayer from 'ol/layer/VectorTile.js';
@@ -72,15 +65,6 @@ map.on('moveend', () => {
   };
 });
 
-map.addLayer(
-  new MapboxVectorLayer({
-    declutter: true,
-    visible: false,
-    minZoom: 14,
-    styleUrl: 'https://kataster.bev.gv.at/styles/kataster/style_basic.json',
-  }),
-);
-
 export const mapReady = apply(map, './map/style.json').then(() => {
   const { layers } = map.get('mapbox-style');
   layers.forEach((layer) => {
@@ -93,7 +77,7 @@ export const mapReady = apply(map, './map/style.json').then(() => {
 });
 
 /**
- * @type {Promise<import("ol/style/Style.js").StyleLike>}
+ * @type {Promise<import("ol/style/Style.js").StyleLike|import('ol/style/flat.js').FlatStyleLike>}
  */
 export const filterStyle = mapReady.then(async () => {
   const style = JSON.parse(JSON.stringify(map.get('mapbox-style')));

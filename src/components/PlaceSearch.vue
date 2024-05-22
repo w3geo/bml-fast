@@ -42,7 +42,6 @@ const clear = () => {
 };
 
 const filter = (haystack, needle) => {
-  console.log(haystack, needle);
   const index = haystack.toLowerCase().indexOf(needle.toLowerCase());
   return index === -1 ? true : index;
 };
