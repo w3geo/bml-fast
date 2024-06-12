@@ -26,3 +26,41 @@ for (let e = 0; e < work.length; e++) {
 }
 let out = JSON.stringify(kulturen);
 fs.writeFileSync('data/kulturen.json', out, { encoding: 'utf-8' });
+
+// 2. Handelsdünger
+// @ts-ignore
+work = await getJson('data/csv/handelsdünger.csv');
+for (let e = 0; e < work.length; e++) {
+  work[e]['stabilisierte N-Dünger'] =
+    work[e]['stabilisierte N-Dünger'].toString().toLowerCase() == 'x' ? true : false;
+}
+fs.writeFileSync('data/handelsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
+
+// 3. Wirtschaftsdünger
+// @ts-ignore
+work = await getJson('data/csv/wirtschaftsdünger.csv');
+fs.writeFileSync('data/wirtschaftsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
+
+// 4. Sekundärrohstoffe
+// @ts-ignore
+work = await getJson('data/csv/sekundärrohstoffe.csv');
+fs.writeFileSync('data/sekundärrohstoffe.json', JSON.stringify(work), { encoding: 'utf-8' });
+
+// 5. KG-Liste
+// @ts-ignore
+work = await getJson('data/csv/kgliste.csv');
+const kgliste = {};
+let kgnr = 0;
+for (let e = 0; e < work.length; e++) {
+  work[e]['GWA'] = work[e]['GWA'].toString().toLowerCase() == 'x' ? true : false;
+  work[e]['NAPV Anlage 5 Gebiet'] =
+    work[e]['NAPV Anlage 5 Gebiet'].toString().toLowerCase() == 'x' ? true : false;
+  work[e]['Feuchtgebiet'] = work[e]['Feuchtgebiet'].toString().toLowerCase() == 'x' ? true : false;
+  work[e]['Trockengebiet'] =
+    work[e]['Trockengebiet'].toString().toLowerCase() == 'x' ? true : false;
+  kgnr = work[e]['Katastralgemeindenummer'];
+  delete work[e]['Katastralgemeindenummer'];
+  kgliste[kgnr] = work[e];
+}
+
+fs.writeFileSync('data/kgliste.json', JSON.stringify(kgliste), { encoding: 'utf-8' });
