@@ -12,6 +12,7 @@
     "test": "vue-tsc --pretty && eslint . --ext .vue,.js,.jsx,.cjs,.mjs --ignore-path .gitignore && prettier --check ./"
   },
   "dependencies": {
+    "csvtojson": "^2.0.10",
     "ol": "^9.2.2",
     "ol-mapbox-style": "^12.3.2",
     "roboto-fontface": "*",
