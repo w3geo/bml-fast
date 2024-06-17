@@ -1,11 +1,15 @@
 <template>
   <div ref="mapContainer" class="map" />
-  <the-schlag-info-panel />
+  <the-entry-list />
+  <the-entry-form />
+  <the-fertilizer-balance />
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import TheSchlagInfoPanel from '../components/TheSchlagInfoPanel.vue';
+import TheEntryList from '../components/TheEntryList.vue';
+import TheFertilizerBalance from '../components/TheFertilizerBalance.vue';
+import TheEntryForm from '../components/TheEntryForm.vue';
 import { useMap } from '../composables/useMap.js';
 
 const { map } = useMap();
