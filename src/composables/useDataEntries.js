@@ -31,14 +31,40 @@ import { ref } from 'vue';
  * @property {Array<harvest>} ernten
  */
 
+export const emptyHarvest = { typ: '', duengung: [] };
+export const emptyFertilization = { name: '' };
+export const emptyEntry = {
+  jahr: 0,
+  schlagnummer: '',
+  feldstuecksname: '',
+  flaechennutzungsart: '',
+  flaeche: 0,
+  flaeche_nitratrisikogebiet: 0,
+  flaeche_grundwasserschutz_graz: 0,
+  duengeklasse_grundwasserschutz: '',
+  flaeche_grundwasserschutz_acker: false,
+  ackerzahl: 0,
+  phosphor_gehaltsklasse: '',
+  kalium_gehaltsklasse: '',
+  bodenart: '',
+  vorfrucht: '',
+  stickstoffueberschuss: '',
+  ernten: [],
+};
+
 /**
  * @typedef allData
- * @property {Array<dataEntry>|null} saved
- * @property {dataEntry|null} current
+ * @property {Array<dataEntry>} saved
+ * @property {dataEntry} current
+ * @property {boolean} datawindow
  */
 
-export const allData = ref({ saved: null, current: null });
+/** @type {import('vue').Ref<allData>} */
+export const allData = ref({ saved: [], current: null, datawindow: false });
 
+/**
+ * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry }}
+ */
 export function useDataEntries() {
-  return { allData };
+  return { allData, emptyFertilization, emptyHarvest, emptyEntry };
 }
