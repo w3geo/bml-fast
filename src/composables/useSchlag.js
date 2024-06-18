@@ -6,6 +6,7 @@ import { shallowRef, watch } from 'vue';
 import { GeoJSON } from 'ol/format';
 import { SCHLAEGE_SOURCE } from '../constants.js';
 import { map, mapReady } from './useMap.js';
+import { allData } from '../composables/useDataEntries.js';
 
 /** @typedef {Array<{x: number, y: number}>} Vectors */
 
@@ -123,10 +124,12 @@ async function setSchlagInfo(feature) {
 }
 
 map.on('click', (event) => {
-  const selectedRenderFeature = getSchlagAtPixel(event.pixel);
-  setSchlagInfo(
-    schlagInfo.value?.id !== selectedRenderFeature?.getId() ? selectedRenderFeature : null,
-  );
+  if (allData.value.datawindow) {
+    const selectedRenderFeature = getSchlagAtPixel(event.pixel);
+    setSchlagInfo(
+      schlagInfo.value?.id !== selectedRenderFeature?.getId() ? selectedRenderFeature : null,
+    );
+  }
 });
 map.on('pointermove', (event) => {
   if (event.dragging) {
