@@ -46,7 +46,17 @@ fs.writeFileSync('data/wirtschaftsdünger.json', JSON.stringify(work), { encodin
 work = await getJson('data/csv/sekundärrohstoffe.csv');
 fs.writeFileSync('data/sekundärrohstoffe.json', JSON.stringify(work), { encoding: 'utf-8' });
 
-// 5. KG-Liste
+// 5. Bodenarten - Bodenschwere
+// @ts-ignore
+work = await getJson('data/csv/bodenarten-bodenschwere.csv');
+fs.writeFileSync('data/bodenarten-bodenschwere.json', JSON.stringify(work), { encoding: 'utf-8' });
+
+// 6. Schlagnutzungsarten
+// @ts-ignore
+work = await getJson('data/csv/schlagnutzungsarten.csv');
+fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(work), { encoding: 'utf-8' });
+
+// 7. KG-Liste
 // @ts-ignore
 work = await getJson('data/csv/kgliste.csv');
 const kgliste = {};
