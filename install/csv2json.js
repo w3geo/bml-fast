@@ -54,7 +54,11 @@ fs.writeFileSync('data/bodenarten-bodenschwere.json', JSON.stringify(work), { en
 // 6. Schlagnutzungsarten
 // @ts-ignore
 work = await getJson('data/csv/schlagnutzungsarten.csv');
-fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(work), { encoding: 'utf-8' });
+const output = {};
+for (let e = 0; e < work.length; e++) {
+  output[work[e].Abkürzung] = work[e].Schlagnutzungsarten;
+}
+fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(output), { encoding: 'utf-8' });
 
 // 7. KG-Liste
 // @ts-ignore

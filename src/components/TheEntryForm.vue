@@ -11,19 +11,54 @@
         <div class="selectSchlag" v-if="!tempData.basic">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <div v-if="tempData.basic">
-          <pre>
-          {{ tempData }}
-        </pre
-          >
-        </div>
-      </v-col></v-row
-    >
+        <v-form ref="entryform" v-if="tempData.basic">
+          <div class="pa-4">
+            Bitte geben Sie Ihre Daten ein. Blau markierte Felder sind Pflichtfelder. Die
+            Güngebilanz wird angezeigt, sobald alle notwendigen Feldern mit Werten befüllt sind.
+          </div>
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-text-field
+                v-model="entry.flaechennutzungsart"
+                label="Flächennutzungsart"
+                variant="outlined"
+                density="compact"
+                disabled
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-text-field
+                v-model="entry.flaeche"
+                label="Fläche (ha)"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4">
+              <v-text-field
+                v-model="entry.schlagnummer"
+                label="Schlagnummer"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="px-4">
+              <v-text-field
+                v-model="entry.feldstuecksname"
+                label="Feldstücksname"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-form> </v-col
+    ></v-row>
     <v-row no-gutters class="bg-grey-lighten-3"
+      ><v-col cols="6" class="pa-2"> <v-btn block @click.stop="cancelData">Abbrechen</v-btn> </v-col
       ><v-col cols="6" class="pa-2">
-        <v-btn block @click.stop="allData.datawindow = false">Abbrechen</v-btn> </v-col
-      ><v-col cols="6" class="pa-2">
-        <v-btn block @click.stop="allData.datawindow = false">Speichern</v-btn>
+        <v-btn v-if="tempData.basic" block @click.stop="saveData">Speichern</v-btn>
       </v-col></v-row
     >
   </v-card>
@@ -31,7 +66,7 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-const { allData } = useDataEntries();
+const { allData, emptyEntry } = useDataEntries();
 import { watch, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSchlag } from '../composables/useSchlag.js';
@@ -51,6 +86,8 @@ const schlaegeLastModified = ref();
 
 const tempData = ref({ basic: null, programs: null });
 
+const entry = ref({ ...emptyEntry });
+
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
@@ -67,9 +104,22 @@ function setSchlagId(id) {
   }
 }
 
+function saveData() {
+  console.log(entry.value, tempData.value);
+}
+
+function cancelData() {
+  tempData.value = { basic: null, programs: null };
+  allData.value.datawindow = false;
+}
+
 watch(schlagInfo, (value) => {
   if (value?.id !== Number(route.params.schlagId)) {
     tempData.value.basic = schlagInfo.value;
+    if (tempData.value.basic) {
+      entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
+      entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
+    }
     if (tempData.value.basic && tempData.value.basic.parts) {
       delete tempData.value.basic.parts;
     }
@@ -99,6 +149,13 @@ watch(() => route.params.schlagId, setSchlagId);
 setSchlagId(route.params.schlagId);
 </script>
 
+<style>
+div.obligatory div.v-field__overlay {
+  border-left-style: solid;
+  border-left-color: teal !important;
+  border-left-width: 5px !important;
+}
+</style>
 <style scoped>
 .theForm {
   height: calc(100% - 82px);
