@@ -6,35 +6,17 @@
         Datenfenster
       </v-col>
     </v-row>
-    <v-row class="theForm" no-gutters
-      ><v-col>
+    <v-row class="theForm" no-gutters>
+      <v-col>
         <div class="selectSchlag" v-if="!tempData.basic">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
         <v-form ref="entryform" v-if="tempData.basic">
           <div class="pa-4">
-            Bitte geben Sie Ihre Daten ein. Blau markierte Felder sind Pflichtfelder. Die
-            Güngebilanz wird angezeigt, sobald alle notwendigen Feldern mit Werten befüllt sind.
+            Bitte geben Sie Ihre Daten ein. Blau markierte Felder sind Pflichtfelder. Kursiv
+            geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
+            sobald alle notwendigen Feldern mit Werten befüllt sind.
           </div>
-          <v-row no-gutters>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-text-field
-                v-model="entry.flaechennutzungsart"
-                label="Flächennutzungsart"
-                variant="outlined"
-                density="compact"
-                disabled
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-text-field
-                v-model="entry.flaeche"
-                label="Fläche (ha)"
-                variant="outlined"
-                density="compact"
-              ></v-text-field>
-            </v-col>
-          </v-row>
           <v-row no-gutters>
             <v-col cols="6" class="px-4">
               <v-text-field
@@ -53,8 +35,42 @@
               ></v-text-field>
             </v-col>
           </v-row>
-        </v-form> </v-col
-    ></v-row>
+
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-text-field
+                v-model="schlagnutzung"
+                label="Flächennutzungsart"
+                variant="outlined"
+                density="compact"
+                disabled
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-text-field
+                v-model="entry.flaeche"
+                label="Fläche (ha)"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-text-field
+                v-model="nitratRisikoGebiet"
+                label="Nitratrisikogebiet"
+                variant="outlined"
+                density="compact"
+                disabled
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="px-4 obligatory"> </v-col>
+          </v-row>
+        </v-form>
+      </v-col>
+    </v-row>
     <v-row no-gutters class="bg-grey-lighten-3"
       ><v-col cols="6" class="pa-2"> <v-btn block @click.stop="cancelData">Abbrechen</v-btn> </v-col
       ><v-col cols="6" class="pa-2">
@@ -67,12 +83,13 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 const { allData, emptyEntry } = useDataEntries();
-import { watch, ref } from 'vue';
+import { watch, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
+import { useLookup } from '../composables/useLookUps.js';
 
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
@@ -83,6 +100,8 @@ const { topicHectars } = useTopicIntersections();
 const emit = defineEmits(['schlag']);
 
 const schlaegeLastModified = ref();
+
+const { lookup } = useLookup();
 
 const tempData = ref({ basic: null, programs: null });
 
@@ -133,6 +152,9 @@ watch(schlagInfo, (value) => {
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
   tempData.value.programs = value;
+  if (tempData.value.programs) {
+    entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
+  }
 });
 
 map.on('singleclick', (event) => {
@@ -145,6 +167,16 @@ map.on('singleclick', (event) => {
   }
 });
 
+const schlagnutzung = computed(() => {
+  return lookup.schlagnutzungsarten[entry.value.flaechennutzungsart]
+    ? lookup.schlagnutzungsarten[entry.value.flaechennutzungsart]
+    : '-';
+});
+
+const nitratRisikoGebiet = computed(() => {
+  return entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? 'JA' : 'NEIN';
+});
+
 watch(() => route.params.schlagId, setSchlagId);
 setSchlagId(route.params.schlagId);
 </script>
@@ -154,6 +186,14 @@ div.obligatory div.v-field__overlay {
   border-left-style: solid;
   border-left-color: teal !important;
   border-left-width: 5px !important;
+}
+
+div.obligatory div.v-field {
+  opacity: 0.7 !important;
+}
+
+div.obligatory div.v-input--disabled {
+  font-style: italic;
 }
 </style>
 <style scoped>
