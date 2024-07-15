@@ -19,7 +19,6 @@ import { ref } from 'vue';
  * @property {string} flaechennutzungsart
  * @property {number} flaeche
  * @property {number} flaeche_nitratrisikogebiet
- * @property {number} flaeche_grundwasserschutz_graz
  * @property {string} duengeklasse_grundwasserschutz
  * @property {boolean} flaeche_grundwasserschutz_acker
  * @property {number} ackerzahl
@@ -40,8 +39,7 @@ export const emptyEntry = {
   flaechennutzungsart: '',
   flaeche: 0,
   flaeche_nitratrisikogebiet: 0,
-  flaeche_grundwasserschutz_graz: 0,
-  duengeklasse_grundwasserschutz: '',
+  duengeklasse_grundwasserschutz: '-',
   flaeche_grundwasserschutz_acker: false,
   ackerzahl: 0,
   phosphor_gehaltsklasse: '',

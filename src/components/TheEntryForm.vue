@@ -24,7 +24,7 @@
                 label="Schlagnummer"
                 variant="outlined"
                 density="compact"
-              ></v-text-field>
+              />
             </v-col>
             <v-col cols="6" class="px-4">
               <v-text-field
@@ -32,19 +32,19 @@
                 label="Feldstücksname"
                 variant="outlined"
                 density="compact"
-              ></v-text-field>
+              />
             </v-col>
           </v-row>
 
           <v-row no-gutters>
             <v-col cols="6" class="px-4 obligatory">
               <v-text-field
-                v-model="schlagnutzung"
+                v-model="entry.flaechennutzungsart"
                 label="Flächennutzungsart"
                 variant="outlined"
                 density="compact"
                 disabled
-              ></v-text-field>
+              />
             </v-col>
             <v-col cols="6" class="px-4 obligatory">
               <v-text-field
@@ -52,7 +52,7 @@
                 label="Fläche (ha)"
                 variant="outlined"
                 density="compact"
-              ></v-text-field>
+              />
             </v-col>
           </v-row>
 
@@ -64,9 +64,17 @@
                 variant="outlined"
                 density="compact"
                 disabled
-              ></v-text-field>
+              />
             </v-col>
-            <v-col cols="6" class="px-4 obligatory"> </v-col>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-select
+                v-model="entry.duengeklasse_grundwasserschutz"
+                :items="lookup.wrrl"
+                label="Düngeklasse Grundwasserschutz"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
           </v-row>
         </v-form>
       </v-col>
@@ -135,6 +143,7 @@ function cancelData() {
 watch(schlagInfo, (value) => {
   if (value?.id !== Number(route.params.schlagId)) {
     tempData.value.basic = schlagInfo.value;
+    console.log(tempData.value.basic);
     if (tempData.value.basic) {
       entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
@@ -151,9 +160,19 @@ watch(schlagInfo, (value) => {
 
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
+  console.log(value);
   tempData.value.programs = value;
   if (tempData.value.programs) {
     entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
+
+    entry.value.duengeklasse_grundwasserschutz = '-';
+    let currentDuengeklasse = 0;
+    for (let l = 1; l < lookup.value.wrrl.length; l++) {
+      if (tempData.value.programs[lookup.value.wrrl[l].code] > currentDuengeklasse) {
+        currentDuengeklasse = tempData.value.programs[lookup.value.wrrl[l].code];
+        entry.value.duengeklasse_grundwasserschutz = lookup.value.wrrl[l].value;
+      }
+    }
   }
 });
 
@@ -165,12 +184,6 @@ map.on('singleclick', (event) => {
       duration: 500,
     });
   }
-});
-
-const schlagnutzung = computed(() => {
-  return lookup.schlagnutzungsarten[entry.value.flaechennutzungsart]
-    ? lookup.schlagnutzungsarten[entry.value.flaechennutzungsart]
-    : '-';
 });
 
 const nitratRisikoGebiet = computed(() => {

@@ -25,20 +25,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import PlaceSearch from './components/PlaceSearch.vue';
 import logo from './assets/logo.svg';
-import { useLookup } from './composables/useLookUps.js';
-
-const { lookup } = useLookup();
 
 const drawer = ref(false);
-
-onMounted(async () => {
-  const response = await fetch('data/schlagnutzungsarten.json');
-  const data = await response.json();
-  lookup.schlagnutzungsarten = data;
-});
 </script>
 
 <style scoped>
