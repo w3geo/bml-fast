@@ -6,7 +6,7 @@
         Datenfenster
       </v-col>
     </v-row>
-    <v-row class="theForm" no-gutters>
+    <v-row class="theForm pa-1" no-gutters>
       <v-col>
         <div class="selectSchlag" v-if="!tempData.basic">
           Bitte einen Schlag als Ausgangspunkt wählen!
@@ -17,153 +17,164 @@
             geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
             sobald alle notwendigen Feldern mit Werten befüllt sind.
           </div>
-          <div class="bg-grey white text-subtitle-2 pa-2 mb-2">Basisdaten</div>
-          <v-row no-gutters>
-            <v-col cols="6" class="px-4">
-              <v-text-field
-                v-model="entry.schlagnummer"
-                label="Schlagnummer"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-            <v-col cols="6" class="px-4">
-              <v-text-field
-                v-model="entry.feldstuecksname"
-                label="Feldstücksname"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-          </v-row>
+          <v-expansion-panels variant="accordion">
+            <v-expansion-panel ref="basisdaten">
+              <v-expansion-panel-title static class="bg-grey"> Basisdaten </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-4">
+                    <v-text-field
+                      v-model="entry.schlagnummer"
+                      label="Schlagnummer"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4">
+                    <v-text-field
+                      v-model="entry.feldstuecksname"
+                      label="Feldstücksname"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                </v-row>
 
-          <v-row no-gutters>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-text-field
-                v-model="entry.flaechennutzungsart"
-                label="Flächennutzungsart"
-                variant="outlined"
-                density="compact"
-                disabled
-              />
-            </v-col>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-text-field
-                v-model="entry.flaeche"
-                label="Fläche (ha)"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-          </v-row>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-text-field
+                      v-model="entry.flaechennutzungsart"
+                      label="Flächennutzungsart"
+                      variant="outlined"
+                      density="compact"
+                      disabled
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-text-field
+                      v-model="entry.flaeche"
+                      label="Fläche (ha)"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                </v-row>
 
-          <v-divider color="grey" thickness="4" class="py-2" />
+                <v-divider color="grey" thickness="4" class="py-2" />
 
-          <v-row no-gutters>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-text-field
-                v-model="nitratRisikoGebiet"
-                label="Nitratrisikogebiet"
-                variant="outlined"
-                density="compact"
-                disabled
-              />
-            </v-col>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-select
-                v-model="entry.duengeklasse_grundwasserschutz"
-                :items="lookup.wrrl"
-                label="Düngeklasse Grundwasserschutz"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-          </v-row>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-text-field
+                      v-model="nitratRisikoGebiet"
+                      label="Nitratrisikogebiet"
+                      variant="outlined"
+                      density="compact"
+                      disabled
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-select
+                      v-model="entry.duengeklasse_grundwasserschutz"
+                      :items="lookup.wrrl"
+                      label="Düngeklasse Grundwasserschutz"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                </v-row>
 
-          <v-row no-gutters>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-text-field
-                v-model="bdfl_l16"
-                label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
-                variant="outlined"
-                density="compact"
-                disabled
-              />
-            </v-col>
-            <v-col cols="6" class="px-4">
-              <v-select
-                v-if="bdfl_l16 > 0"
-                v-model="entry.teilnahme_grundwasserschutz_acker"
-                :items="itemsJaNein"
-                label="Teilnahme am vorbeugenden Grundwasserschutz"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-          </v-row>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-text-field
+                      v-model="bdfl_l16"
+                      label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
+                      variant="outlined"
+                      density="compact"
+                      disabled
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4">
+                    <v-select
+                      v-if="bdfl_l16 > 0"
+                      v-model="entry.teilnahme_grundwasserschutz_acker"
+                      :items="itemsJaNein"
+                      label="Teilnahme am vorbeugenden Grundwasserschutz"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                </v-row>
 
-          <v-row no-gutters v-if="entry.teilnahme_grundwasserschutz_acker">
-            <v-col cols="6" class="px-4">
-              <v-text-field
-                v-model="entry.stickstoffueberschuss"
-                label="Stickstoffüberschuss"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-select
-                v-model="entry.gw_acker_gebietszuteilung"
-                :items="itemsGWAcker"
-                label="GW-Acker Gebietszuteilung"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-          </v-row>
+                <v-row no-gutters v-if="entry.teilnahme_grundwasserschutz_acker">
+                  <v-col cols="6" class="px-4">
+                    <v-text-field
+                      v-model="entry.stickstoffueberschuss"
+                      label="Stickstoffüberschuss"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-select
+                      v-model="entry.gw_acker_gebietszuteilung"
+                      :items="itemsGWAcker"
+                      label="GW-Acker Gebietszuteilung"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                </v-row>
 
-          <v-divider color="grey" thickness="4" class="py-2" />
+                <v-divider color="grey" thickness="4" class="py-2" />
 
-          <v-row no-gutters>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-select
-                v-model="entry.phosphor_gehaltsklasse"
-                :items="itemsABCDE"
-                label="Phosphor Gehaltsklasse"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-select
-                v-model="entry.kalium_gehaltsklasse"
-                :items="itemsABCDE"
-                label="Kalium Gehaltsklasse"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-          </v-row>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-select
+                      v-model="entry.phosphor_gehaltsklasse"
+                      :items="itemsABCDE"
+                      label="Phosphor Gehaltsklasse"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-select
+                      v-model="entry.kalium_gehaltsklasse"
+                      :items="itemsABCDE"
+                      label="Kalium Gehaltsklasse"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                </v-row>
 
-          <v-row no-gutters>
-            <v-col cols="6" class="px-4">
-              <v-text-field
-                v-model="entry.ackerzahl"
-                label="Ackerzahl"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-            <v-col cols="6" class="px-4 obligatory">
-              <v-select
-                v-model="entry.bodenart"
-                :items="lookup.bodenartenbodenschwere"
-                label="Bodenart"
-                variant="outlined"
-                density="compact"
-              />
-            </v-col>
-          </v-row>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-4">
+                    <v-text-field
+                      v-model="entry.ackerzahl"
+                      label="Ackerzahl"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-select
+                      v-model="entry.bodenart"
+                      :items="lookup.bodenartenbodenschwere"
+                      label="Bodenart"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+
+            <v-expansion-panel ref="ernten">
+              <v-expansion-panel-title static class="bg-grey"> Ernten </v-expansion-panel-title>
+              <v-expansion-panel-text> Daten über die Ernten... </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </v-form>
       </v-col>
     </v-row>
