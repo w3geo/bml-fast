@@ -11,8 +11,11 @@ import TheEntryList from '../components/TheEntryList.vue';
 import TheFertilizerBalance from '../components/TheFertilizerBalance.vue';
 import TheEntryForm from '../components/TheEntryForm.vue';
 import { useMap } from '../composables/useMap.js';
+import { usePlaceSearch } from '@w3geo/vue-place-search';
 
 const { map } = useMap();
+usePlaceSearch(map);
+
 const mapContainer = ref();
 
 onMounted(() => {

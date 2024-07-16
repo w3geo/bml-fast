@@ -26,7 +26,8 @@
 
 <script setup>
 import { ref } from 'vue';
-import PlaceSearch from './components/PlaceSearch.vue';
+import '@w3geo/vue-place-search/dist/style.css';
+import { PlaceSearch } from '@w3geo/vue-place-search';
 import logo from './assets/logo.svg';
 
 const drawer = ref(false);
