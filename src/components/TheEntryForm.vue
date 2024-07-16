@@ -12,11 +12,13 @@
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
         <v-form ref="entryform" v-if="tempData.basic">
-          <div class="pa-4">
+          <div class="pa-4 mb-2 bg-grey-lighten-4">
             Bitte geben Sie Ihre Daten ein. Blau markierte Felder sind Pflichtfelder. Kursiv
             geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
             sobald alle notwendigen Feldern mit Werten befüllt sind.
           </div>
+          <span class="text-subtitle-2 pl-2">Basisdaten</span>
+          <v-divider class="mb-2" />
           <v-row no-gutters>
             <v-col cols="6" class="px-4">
               <v-text-field
@@ -76,6 +78,70 @@
               />
             </v-col>
           </v-row>
+
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-text-field
+                v-model="bdfl_l16"
+                label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
+                variant="outlined"
+                density="compact"
+                disabled
+              />
+            </v-col>
+            <v-col cols="6" class="px-4">
+              <v-select
+                v-if="bdfl_l16 > 0"
+                v-model="entry.teilnahme_grundwasserschutz_acker"
+                :items="itemsJaNein"
+                label="Teilnahme am vorbeugenden Grundwasserschutz"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+          </v-row>
+
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4">
+              <v-text-field
+                v-model="entry.ackerzahl"
+                label="Ackerzahl"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-select
+                v-if="entry.teilnahme_grundwasserschutz_acker"
+                v-model="entry.gw_acker_gebietszuteilung"
+                :items="itemsGWAcker"
+                label="GW-Acker Gebietszuteilung"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+          </v-row>
+
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-select
+                v-model="entry.phosphor_gehaltsklasse"
+                :items="itemsABCDE"
+                label="Phosphor Gehaltsklasse"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-select
+                v-model="entry.kalium_gehaltsklasse"
+                :items="itemsABCDE"
+                label="Kalium Gehaltsklasse"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+          </v-row>
         </v-form>
       </v-col>
     </v-row>
@@ -114,6 +180,15 @@ const { lookup } = useLookup();
 const tempData = ref({ basic: null, programs: null });
 
 const entry = ref({ ...emptyEntry });
+
+const itemsJaNein = [
+  { value: true, title: 'Ja' },
+  { value: false, title: 'Nein' },
+];
+
+const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
+
+const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
 
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
@@ -188,6 +263,12 @@ map.on('singleclick', (event) => {
 
 const nitratRisikoGebiet = computed(() => {
   return entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? 'JA' : 'NEIN';
+});
+
+const bdfl_l16 = computed(() => {
+  return tempData.value.programs && tempData.value.programs.bdfl_l16_grundwasserschutz_acker
+    ? tempData.value.programs.bdfl_l16_grundwasserschutz_acker
+    : 0;
 });
 
 watch(() => route.params.schlagId, setSchlagId);

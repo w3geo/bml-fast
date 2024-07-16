@@ -20,7 +20,8 @@ import { ref } from 'vue';
  * @property {number} flaeche
  * @property {number} flaeche_nitratrisikogebiet
  * @property {string} duengeklasse_grundwasserschutz
- * @property {boolean} flaeche_grundwasserschutz_acker
+ * @property {boolean} teilnahme_grundwasserschutz_acker
+ * @property {string} gw_acker_gebietszuteilung
  * @property {number} ackerzahl
  * @property {string} phosphor_gehaltsklasse
  * @property {string} kalium_gehaltsklasse
@@ -40,10 +41,11 @@ export const emptyEntry = {
   flaeche: 0,
   flaeche_nitratrisikogebiet: 0,
   duengeklasse_grundwasserschutz: '-',
-  flaeche_grundwasserschutz_acker: false,
+  teilnahme_grundwasserschutz_acker: false,
+  gw_acker_gebietszuteilung: 'Trockengebiet',
   ackerzahl: 0,
-  phosphor_gehaltsklasse: '',
-  kalium_gehaltsklasse: '',
+  phosphor_gehaltsklasse: 'C',
+  kalium_gehaltsklasse: 'C',
   bodenart: '',
   vorfrucht: '',
   stickstoffueberschuss: '',
