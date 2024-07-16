@@ -6,7 +6,7 @@
         Datenfenster
       </v-col>
     </v-row>
-    <v-row class="theForm pa-1" no-gutters>
+    <v-row class="theForm" no-gutters>
       <v-col>
         <div class="selectSchlag" v-if="!tempData.basic">
           Bitte einen Schlag als Ausgangspunkt wählen!
@@ -18,8 +18,10 @@
             sobald alle notwendigen Feldern mit Werten befüllt sind.
           </div>
           <v-expansion-panels variant="accordion">
-            <v-expansion-panel ref="basisdaten">
-              <v-expansion-panel-title static class="bg-grey"> Basisdaten </v-expansion-panel-title>
+            <v-expansion-panel ref="basisdaten" rounded="0" elevation="0">
+              <v-expansion-panel-title static class="bg-grey-lighten-3">
+                Basisdaten
+              </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4">
@@ -167,11 +169,26 @@
                     />
                   </v-col>
                 </v-row>
+
+                <v-row no-gutters>
+                  <v-col cols="12" class="px-4">
+                    <v-select
+                      v-model="entry.vorfrucht"
+                      :items="lookup.kulturen"
+                      label="Vorfrucht"
+                      variant="outlined"
+                      density="compact"
+                      clearable
+                    />
+                  </v-col>
+                </v-row>
               </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <v-expansion-panel ref="ernten">
-              <v-expansion-panel-title static class="bg-grey"> Ernten </v-expansion-panel-title>
+            <v-expansion-panel ref="ernten" rounded="0" elevation="0">
+              <v-expansion-panel-title static class="bg-grey-lighten-3">
+                Ernten
+              </v-expansion-panel-title>
               <v-expansion-panel-text> Daten über die Ernten... </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
