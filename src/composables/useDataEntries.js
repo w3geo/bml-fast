@@ -7,8 +7,10 @@ import { ref } from 'vue';
 
 /**
  * @typedef harvest
- * @property {string} typ
- * @property {Array<harvest>} duengung
+ * @property {string} zwischenfrucht
+ * @property {string} kultur
+ * @property {number} menge
+ * @property {Array<fertilization>} duengung
  */
 
 /**
@@ -31,8 +33,13 @@ import { ref } from 'vue';
  * @property {Array<harvest>} ernten
  */
 
-export const emptyHarvest = { typ: '', duengung: [] };
 export const emptyFertilization = { name: '' };
+export const emptyHarvest = {
+  zwischenfrucht: '',
+  kultur: '',
+  menge: 0,
+  duengung: [emptyFertilization],
+};
 export const emptyEntry = {
   jahr: 0,
   schlagnummer: '',
@@ -49,7 +56,7 @@ export const emptyEntry = {
   bodenart: 'sU - sandiger Schluff',
   vorfrucht: '',
   stickstoffueberschuss: 0,
-  ernten: [],
+  ernten: [emptyHarvest],
 };
 
 /**
