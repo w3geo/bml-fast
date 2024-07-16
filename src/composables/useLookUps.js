@@ -23,6 +23,7 @@ async function getJson(what) {
 
 {
   getJson('schlagnutzungsarten');
+  getJson('bodenartenbodenschwere');
 }
 
 /**

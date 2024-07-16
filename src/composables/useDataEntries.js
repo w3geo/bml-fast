@@ -27,7 +27,7 @@ import { ref } from 'vue';
  * @property {string} kalium_gehaltsklasse
  * @property {string} bodenart
  * @property {string} vorfrucht
- * @property {string} stickstoffueberschuss
+ * @property {number} stickstoffueberschuss
  * @property {Array<harvest>} ernten
  */
 
@@ -46,9 +46,9 @@ export const emptyEntry = {
   ackerzahl: 0,
   phosphor_gehaltsklasse: 'C',
   kalium_gehaltsklasse: 'C',
-  bodenart: '',
+  bodenart: 'sU - sandiger Schluff',
   vorfrucht: '',
-  stickstoffueberschuss: '',
+  stickstoffueberschuss: 0,
   ernten: [],
 };
 

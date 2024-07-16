@@ -48,17 +48,27 @@ fs.writeFileSync('data/sekundärrohstoffe.json', JSON.stringify(work), { encodin
 
 // 5. Bodenarten - Bodenschwere
 // @ts-ignore
-work = await getJson('data/csv/bodenarten-bodenschwere.csv');
-fs.writeFileSync('data/bodenarten-bodenschwere.json', JSON.stringify(work), { encoding: 'utf-8' });
+work = await getJson('data/csv/bodenartenbodenschwere.csv');
+const outputbs = [];
+for (let e = 0; e < work.length; e++) {
+  outputbs.push({
+    value: work[e].Bodenart,
+    title: work[e].Bodenart,
+    schwere: work[e].Bodenschwere,
+  });
+}
+fs.writeFileSync('data/bodenartenbodenschwere.json', JSON.stringify(outputbs), {
+  encoding: 'utf-8',
+});
 
 // 6. Schlagnutzungsarten
 // @ts-ignore
 work = await getJson('data/csv/schlagnutzungsarten.csv');
-const output = {};
+const outputsn = {};
 for (let e = 0; e < work.length; e++) {
-  output[work[e].Abkürzung] = work[e].Schlagnutzungsarten;
+  outputsn[work[e].Abkürzung] = work[e].Schlagnutzungsarten;
 }
-fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(output), { encoding: 'utf-8' });
+fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(outputsn), { encoding: 'utf-8' });
 
 // 7. KG-Liste
 // @ts-ignore

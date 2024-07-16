@@ -17,8 +17,7 @@
             geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
             sobald alle notwendigen Feldern mit Werten befüllt sind.
           </div>
-          <span class="text-subtitle-2 pl-2">Basisdaten</span>
-          <v-divider class="mb-2" />
+          <div class="bg-grey white text-subtitle-2 pa-2 mb-2">Basisdaten</div>
           <v-row no-gutters>
             <v-col cols="6" class="px-4">
               <v-text-field
@@ -57,6 +56,8 @@
               />
             </v-col>
           </v-row>
+
+          <v-divider color="grey" thickness="4" class="py-2" />
 
           <v-row no-gutters>
             <v-col cols="6" class="px-4 obligatory">
@@ -101,18 +102,17 @@
             </v-col>
           </v-row>
 
-          <v-row no-gutters>
+          <v-row no-gutters v-if="entry.teilnahme_grundwasserschutz_acker">
             <v-col cols="6" class="px-4">
               <v-text-field
-                v-model="entry.ackerzahl"
-                label="Ackerzahl"
+                v-model="entry.stickstoffueberschuss"
+                label="Stickstoffüberschuss"
                 variant="outlined"
                 density="compact"
               />
             </v-col>
             <v-col cols="6" class="px-4 obligatory">
               <v-select
-                v-if="entry.teilnahme_grundwasserschutz_acker"
                 v-model="entry.gw_acker_gebietszuteilung"
                 :items="itemsGWAcker"
                 label="GW-Acker Gebietszuteilung"
@@ -121,6 +121,8 @@
               />
             </v-col>
           </v-row>
+
+          <v-divider color="grey" thickness="4" class="py-2" />
 
           <v-row no-gutters>
             <v-col cols="6" class="px-4 obligatory">
@@ -137,6 +139,26 @@
                 v-model="entry.kalium_gehaltsklasse"
                 :items="itemsABCDE"
                 label="Kalium Gehaltsklasse"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+          </v-row>
+
+          <v-row no-gutters>
+            <v-col cols="6" class="px-4">
+              <v-text-field
+                v-model="entry.ackerzahl"
+                label="Ackerzahl"
+                variant="outlined"
+                density="compact"
+              />
+            </v-col>
+            <v-col cols="6" class="px-4 obligatory">
+              <v-select
+                v-model="entry.bodenart"
+                :items="lookup.bodenartenbodenschwere"
+                label="Bodenart"
                 variant="outlined"
                 density="compact"
               />
