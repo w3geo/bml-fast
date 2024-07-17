@@ -17,8 +17,8 @@
             geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
             sobald alle notwendigen Feldern mit Werten befüllt sind.
           </div>
-          <v-expansion-panels variant="accordion">
-            <v-expansion-panel ref="basisdaten" rounded="0" elevation="0">
+          <v-expansion-panels variant="accordion" v-model="panelInit">
+            <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-lighten-3">
                 Basisdaten
               </v-expansion-panel-title>
@@ -185,7 +185,7 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <v-expansion-panel ref="ernten" rounded="0" elevation="0">
+            <v-expansion-panel value="ernten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-lighten-3">
                 Ernten
               </v-expansion-panel-title>
@@ -193,6 +193,11 @@
             </v-expansion-panel>
           </v-expansion-panels>
         </v-form>
+        <div class="pa-2 bg-blue-lighten-5" style="overflow: hidden">
+          SCHLAG-DATEN:<br />
+          <pre>{{ tempData.basic }}</pre>
+          <pre>{{ tempData.programs }}</pre>
+        </div>
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-lighten-3"
@@ -231,6 +236,8 @@ const tempData = ref({ basic: null, programs: null });
 
 const entry = ref({ ...emptyEntry });
 
+const panelInit = ref(['ernten']);
+
 const itemsJaNein = [
   { value: true, title: 'Ja' },
   { value: false, title: 'Nein' },
@@ -268,7 +275,6 @@ function cancelData() {
 watch(schlagInfo, (value) => {
   if (value?.id !== Number(route.params.schlagId)) {
     tempData.value.basic = schlagInfo.value;
-    console.log(tempData.value.basic);
     if (tempData.value.basic) {
       entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
@@ -285,7 +291,6 @@ watch(schlagInfo, (value) => {
 
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
-  console.log(value);
   tempData.value.programs = value;
   if (tempData.value.programs) {
     entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
