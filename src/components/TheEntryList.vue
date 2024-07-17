@@ -10,8 +10,13 @@
     <v-row class="theList" no-gutters
       ><v-col>
         <div class="noEntry" v-if="allData.saved.length === 0">Keine gespeicherten Einträge.</div>
-        <v-container v-for="i in allData.saved.length" :key="i" class="pa-0 ma-0">
-          <div class="bg-grey pa-1" v-if="showHeader(i - 1)">{{ allData.saved[i - 1].jahr }}</div>
+        <div v-for="i in allData.saved.length" :key="i" class="pa-0 ma-0">
+          <div
+            class="bg-grey pa-1"
+            v-if="i == 1 || (i > 1 && allData.saved[i - 1].jahr > allData.saved[i - 2].jahr)"
+          >
+            {{ allData.saved[i - 1].jahr }}
+          </div>
           <v-row no-gutters class="bg-grey-lighten-4 ma-1 pa-1">
             <v-col cols="9"
               >{{ allData.saved[i - 1].schlagnummer }} /
@@ -34,35 +39,26 @@
               />
             </v-col>
           </v-row>
-        </v-container>
+        </div>
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-lighten-3"
       ><v-col class="pa-2">
-        <v-btn block @click.stop="allData.datawindow = true">Neuer Eintrag</v-btn>
+        <v-btn block @click.stop="editEntry(null)">Neuer Eintrag</v-btn>
       </v-col></v-row
     >
   </v-card>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useDataEntries } from '../composables/useDataEntries.js';
 
 const { allData } = useDataEntries();
 
-const lastYear = ref(0);
-
-function showHeader(idx) {
-  if (allData.value.saved[idx].jahr != lastYear.value) {
-    lastYear.value = allData.value.saved[idx].jahr;
-    return true;
-  } else {
-    return false;
-  }
+function editEntry(nr) {
+  allData.value.current = nr;
+  allData.value.datawindow = true;
 }
-
-function editEntry(nr) {}
 
 function deleteEntry(nr) {
   allData.value.saved.splice(nr, 1);

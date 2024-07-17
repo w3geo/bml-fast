@@ -8,10 +8,10 @@
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
-        <div class="selectSchlag" v-if="!tempData.basic">
+        <div class="selectSchlag" v-if="!tempData.basic && !allData.current">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="tempData.basic">
+        <v-form ref="entryform" v-if="tempData.basic || allData.current">
           <div class="pa-4 mb-2 bg-grey-lighten-4">
             Bitte geben Sie Ihre Daten ein. Blau markierte Felder sind Pflichtfelder. Kursiv
             geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
@@ -277,7 +277,7 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 const { allData, emptyEntry, emptyHarvest } = useDataEntries();
-import { watch, ref, computed } from 'vue';
+import { watch, ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
@@ -313,6 +313,10 @@ const itemsYear = [2021, 2022, 2023, 2024];
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
+
+onMounted(() => {
+  console.log(allData.value.current);
+});
 
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);

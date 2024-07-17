@@ -64,7 +64,7 @@ export const emptyEntry = {
 /**
  * @typedef allData
  * @property {Array<dataEntry>} saved
- * @property {dataEntry} current
+ * @property {number} current
  * @property {boolean} datawindow
  */
 
