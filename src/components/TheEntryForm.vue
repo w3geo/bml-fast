@@ -339,9 +339,11 @@ function addHarvest() {
 }
 
 function saveData() {
-  console.log(entry.value, tempData.value);
+  allData.value.saved.push(entry.value);
+  localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   entry.value = { ...emptyEntry };
   entry.value.ernten = [{ ...emptyHarvest }];
+  allData.value.datawindow = false;
 }
 
 function cancelData() {

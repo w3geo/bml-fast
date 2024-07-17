@@ -71,6 +71,14 @@ export const emptyEntry = {
 /** @type {import('vue').Ref<allData>} */
 export const allData = ref({ saved: [], current: null, datawindow: false });
 
+// load from local storage, if existing
+{
+  const saved = localStorage.getItem('fasttool');
+  if (saved) {
+    allData.value.saved = JSON.parse(saved);
+  }
+}
+
 /**
  * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry }}
  */
