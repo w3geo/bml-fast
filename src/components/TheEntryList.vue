@@ -10,8 +10,33 @@
     <v-row class="theList" no-gutters
       ><v-col>
         <div class="noEntry" v-if="allData.saved.length === 0">Keine gespeicherten Einträge.</div>
-      </v-col></v-row
-    >
+        <v-container v-for="i in allData.saved.length" :key="i" class="pa-0 ma-0">
+          <div class="bg-grey pa-1" v-if="showHeader(i - 1)">{{ allData.saved[i - 1].jahr }}</div>
+          <v-row no-gutters class="bg-grey-lighten-4 ma-1 pa-1">
+            <v-col cols="9"
+              >{{ allData.saved[i - 1].schlagnummer }} /
+              {{ allData.saved[i - 1].feldstuecksname }}</v-col
+            >
+            <v-col cols="3" class="text-right">
+              <v-icon
+                class="mt-1 mr-3"
+                size="22"
+                color="orange"
+                icon="mdi-pencil"
+                @click="editEntry(i - 1)"
+              />
+              <v-icon
+                class="mt-1 mr-3"
+                size="22"
+                color="red"
+                icon="mdi-close"
+                @click="deleteEntry(i - 1)"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-col>
+    </v-row>
     <v-row no-gutters class="bg-grey-lighten-3"
       ><v-col class="pa-2">
         <v-btn block @click.stop="allData.datawindow = true">Neuer Eintrag</v-btn>
@@ -21,9 +46,28 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useDataEntries } from '../composables/useDataEntries.js';
 
 const { allData } = useDataEntries();
+
+const lastYear = ref(0);
+
+function showHeader(idx) {
+  if (allData.value.saved[idx].jahr != lastYear.value) {
+    lastYear.value = allData.value.saved[idx].jahr;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function editEntry(nr) {}
+
+function deleteEntry(nr) {
+  allData.value.saved.splice(nr, 1);
+  localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
+}
 </script>
 
 <style scoped>

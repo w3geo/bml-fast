@@ -301,7 +301,7 @@ const tempData = ref({ basic: null, programs: null });
 
 const entry = ref({ ...emptyEntry });
 
-const panelInit = ref(['ernten']);
+const panelInit = ref(['basisdaten']);
 
 const itemsJaNein = [
   { value: true, title: 'Ja' },
@@ -338,8 +338,13 @@ function addHarvest() {
   entry.value.ernten.push({ ...emptyHarvest });
 }
 
+function dataSort(a, b) {
+  return a.jahr < b.jahr ? -1 : 1;
+}
+
 function saveData() {
   allData.value.saved.push(entry.value);
+  allData.value.saved.sort(dataSort);
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   entry.value = { ...emptyEntry };
   entry.value.ernten = [{ ...emptyHarvest }];
