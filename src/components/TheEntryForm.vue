@@ -278,6 +278,8 @@ watch(schlagInfo, (value) => {
     if (tempData.value.basic) {
       entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
+
+      entry.value.extent = tempData.value.basic.extent;
     }
     if (tempData.value.basic && tempData.value.basic.parts) {
       delete tempData.value.basic.parts;

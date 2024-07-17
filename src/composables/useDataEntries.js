@@ -30,6 +30,7 @@ import { ref } from 'vue';
  * @property {string} bodenart
  * @property {string} vorfrucht
  * @property {number} stickstoffueberschuss
+ * @property {Array<number>} extent
  * @property {Array<harvest>} ernten
  */
 
@@ -56,6 +57,7 @@ export const emptyEntry = {
   bodenart: 'sU - sandiger Schluff',
   vorfrucht: '',
   stickstoffueberschuss: 0,
+  extent: [],
   ernten: [emptyHarvest],
 };
 
