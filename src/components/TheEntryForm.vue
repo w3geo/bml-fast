@@ -170,8 +170,19 @@
                   </v-col>
                 </v-row>
 
+                <v-divider color="grey" thickness="4" class="py-2" />
+
                 <v-row no-gutters>
-                  <v-col cols="12" class="px-4">
+                  <v-col cols="6" class="px-4 obligatory">
+                    <v-select
+                      v-model="entry.jahr"
+                      :items="itemsYear"
+                      label="Jahr"
+                      variant="outlined"
+                      density="compact"
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4">
                     <v-select
                       v-model="entry.vorfrucht"
                       :items="lookup.kulturen"
@@ -189,15 +200,69 @@
               <v-expansion-panel-title static class="bg-grey-lighten-3">
                 Ernten
               </v-expansion-panel-title>
-              <v-expansion-panel-text> Daten über die Ernten... </v-expansion-panel-text>
+              <v-expansion-panel-text>
+                <v-card class="ma-0 pa-0" v-for="i in entry.ernten.length" :key="i">
+                  <v-row no-gutters class="bg-grey-lighten-4 mb-3">
+                    <v-col cols="10" class="pl-2">
+                      <span class="text-button">Ernte {{ i }}</span>
+                    </v-col>
+                    <v-col cols="2" class="text-right">
+                      <v-icon
+                        v-if="i == entry.ernten.length && entry.ernten.length > 1"
+                        class="mt-1"
+                        size="28"
+                        color="red"
+                        icon="mdi-close"
+                        @click="deleteHarvest(i - 1)"
+                      />
+                    </v-col>
+                  </v-row>
+
+                  <v-row no-gutters>
+                    <v-col cols="9" class="px-4 obligatory">
+                      <v-select
+                        v-model="entry.ernten[i - 1].kultur"
+                        :items="lookup.kulturen"
+                        label="Kultur"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                    <v-col cols="3" class="px-4 obligatory">
+                      <v-text-field
+                        v-model="entry.ernten[i - 1].menge"
+                        label="Menge"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card>
+                <v-btn
+                  class="mt-5"
+                  prepend-icon="mdi-plus"
+                  color="green-lighten-4"
+                  size="small"
+                  @click="addHarvest"
+                  >Ernte hinzufügen</v-btn
+                >
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+
+            <v-expansion-panel value="data" rounded="0" elevation="0">
+              <v-expansion-panel-title static class="bg-grey-lighten-3 font-italic">
+                Schlag-Daten (Debugging / Testing)
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <div class="pa-2 bg-blue-lighten-5" style="overflow: hidden">
+                  SCHLAG-DATEN:<br />
+                  <pre>{{ tempData.basic }}</pre>
+                  <pre>{{ tempData.programs }}</pre>
+                </div>
+              </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
         </v-form>
-        <div class="pa-2 bg-blue-lighten-5" style="overflow: hidden">
-          SCHLAG-DATEN:<br />
-          <pre>{{ tempData.basic }}</pre>
-          <pre>{{ tempData.programs }}</pre>
-        </div>
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-lighten-3"
@@ -211,7 +276,7 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-const { allData, emptyEntry } = useDataEntries();
+const { allData, emptyEntry, emptyHarvest } = useDataEntries();
 import { watch, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSchlag } from '../composables/useSchlag.js';
@@ -243,6 +308,8 @@ const itemsJaNein = [
   { value: false, title: 'Nein' },
 ];
 
+const itemsYear = [2021, 2022, 2023, 2024];
+
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
@@ -263,12 +330,24 @@ function setSchlagId(id) {
   }
 }
 
+function deleteHarvest(nr) {
+  entry.value.ernten.splice(nr, 1);
+}
+
+function addHarvest() {
+  entry.value.ernten.push({ ...emptyHarvest });
+}
+
 function saveData() {
   console.log(entry.value, tempData.value);
+  entry.value = { ...emptyEntry };
+  entry.value.ernten = [{ ...emptyHarvest }];
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
+  entry.value = { ...emptyEntry };
+  entry.value.ernten = [{ ...emptyHarvest }];
   allData.value.datawindow = false;
 }
 

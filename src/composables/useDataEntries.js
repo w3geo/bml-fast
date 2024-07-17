@@ -39,7 +39,7 @@ export const emptyHarvest = {
   zwischenfrucht: '',
   kultur: '',
   menge: 0,
-  duengung: [emptyFertilization],
+  duengung: [{ ...emptyFertilization }],
 };
 export const emptyEntry = {
   jahr: 0,
@@ -58,7 +58,7 @@ export const emptyEntry = {
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
-  ernten: [emptyHarvest],
+  ernten: [{ ...emptyHarvest }],
 };
 
 /**
