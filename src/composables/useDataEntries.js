@@ -7,8 +7,10 @@ import { ref } from 'vue';
 
 /**
  * @typedef harvest
- * @property {string} typ
- * @property {Array<harvest>} duengung
+ * @property {string} zwischenfrucht
+ * @property {string} kultur
+ * @property {number} menge
+ * @property {Array<fertilization>} duengung
  */
 
 /**
@@ -19,20 +21,26 @@ import { ref } from 'vue';
  * @property {string} flaechennutzungsart
  * @property {number} flaeche
  * @property {number} flaeche_nitratrisikogebiet
- * @property {number} flaeche_grundwasserschutz_graz
  * @property {string} duengeklasse_grundwasserschutz
- * @property {boolean} flaeche_grundwasserschutz_acker
+ * @property {boolean} teilnahme_grundwasserschutz_acker
+ * @property {string} gw_acker_gebietszuteilung
  * @property {number} ackerzahl
  * @property {string} phosphor_gehaltsklasse
  * @property {string} kalium_gehaltsklasse
  * @property {string} bodenart
  * @property {string} vorfrucht
- * @property {string} stickstoffueberschuss
+ * @property {number} stickstoffueberschuss
+ * @property {Array<number>} extent
  * @property {Array<harvest>} ernten
  */
 
-export const emptyHarvest = { typ: '', duengung: [] };
 export const emptyFertilization = { name: '' };
+export const emptyHarvest = {
+  zwischenfrucht: '',
+  kultur: '',
+  menge: 0,
+  duengung: [{ ...emptyFertilization }],
+};
 export const emptyEntry = {
   jahr: 0,
   schlagnummer: '',
@@ -40,16 +48,17 @@ export const emptyEntry = {
   flaechennutzungsart: '',
   flaeche: 0,
   flaeche_nitratrisikogebiet: 0,
-  flaeche_grundwasserschutz_graz: 0,
-  duengeklasse_grundwasserschutz: '',
-  flaeche_grundwasserschutz_acker: false,
+  duengeklasse_grundwasserschutz: '-',
+  teilnahme_grundwasserschutz_acker: false,
+  gw_acker_gebietszuteilung: 'Trockengebiet',
   ackerzahl: 0,
-  phosphor_gehaltsklasse: '',
-  kalium_gehaltsklasse: '',
-  bodenart: '',
+  phosphor_gehaltsklasse: 'C',
+  kalium_gehaltsklasse: 'C',
+  bodenart: 'sU - sandiger Schluff',
   vorfrucht: '',
-  stickstoffueberschuss: '',
-  ernten: [],
+  stickstoffueberschuss: 0,
+  extent: [],
+  ernten: [{ ...emptyHarvest }],
 };
 
 /**

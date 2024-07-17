@@ -9,23 +9,16 @@ async function getJson(csvfile) {
 // 1. Kulturen
 // @ts-ignore
 let work = await getJson('data/csv/kulturen.csv');
-const keys = Object.keys(work[0]);
-const kulturen = {};
+const outputk = [];
 for (let e = 0; e < work.length; e++) {
-  for (let k = 0; k < keys.length; k++) {
-    if (kulturen[keys[k]]) {
-      if (work[e][keys[k]].length > 0) {
-        kulturen[keys[k]].push(work[e][keys[k]]);
-      }
-    } else {
-      if (work[e][keys[k]].length > 0) {
-        kulturen[keys[k]] = [work[e][keys[k]]];
-      }
-    }
-  }
+  outputk.push({
+    value: work[e].Kultur,
+    title: work[e].Kultur,
+  });
 }
-let out = JSON.stringify(kulturen);
-fs.writeFileSync('data/kulturen.json', out, { encoding: 'utf-8' });
+fs.writeFileSync('data/kulturen.json', JSON.stringify(outputk), {
+  encoding: 'utf-8',
+});
 
 // 2. Handelsdünger
 // @ts-ignore
@@ -48,13 +41,27 @@ fs.writeFileSync('data/sekundärrohstoffe.json', JSON.stringify(work), { encodin
 
 // 5. Bodenarten - Bodenschwere
 // @ts-ignore
-work = await getJson('data/csv/bodenarten-bodenschwere.csv');
-fs.writeFileSync('data/bodenarten-bodenschwere.json', JSON.stringify(work), { encoding: 'utf-8' });
+work = await getJson('data/csv/bodenartenbodenschwere.csv');
+const outputbs = [];
+for (let e = 0; e < work.length; e++) {
+  outputbs.push({
+    value: work[e].Bodenart,
+    title: work[e].Bodenart,
+    schwere: work[e].Bodenschwere,
+  });
+}
+fs.writeFileSync('data/bodenartenbodenschwere.json', JSON.stringify(outputbs), {
+  encoding: 'utf-8',
+});
 
 // 6. Schlagnutzungsarten
 // @ts-ignore
 work = await getJson('data/csv/schlagnutzungsarten.csv');
-fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(work), { encoding: 'utf-8' });
+const outputsn = {};
+for (let e = 0; e < work.length; e++) {
+  outputsn[work[e].Abkürzung] = work[e].Schlagnutzungsarten;
+}
+fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(outputsn), { encoding: 'utf-8' });
 
 // 7. KG-Liste
 // @ts-ignore
