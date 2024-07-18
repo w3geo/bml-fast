@@ -61,6 +61,8 @@ export const emptyEntry = {
   ernten: [{ ...emptyHarvest }],
 };
 
+export const entry = ref(emptyEntry);
+
 /**
  * @typedef allData
  * @property {Array<dataEntry>} saved
@@ -80,8 +82,8 @@ export const allData = ref({ saved: [], current: null, datawindow: false });
 }
 
 /**
- * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry }}
+ * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
-  return { allData, emptyFertilization, emptyHarvest, emptyEntry };
+  return { allData, emptyFertilization, emptyHarvest, emptyEntry, entry };
 }

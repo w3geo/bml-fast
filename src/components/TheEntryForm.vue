@@ -8,10 +8,10 @@
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
-        <div class="selectSchlag" v-if="!tempData.basic && !allData.current">
+        <div class="selectSchlag" v-if="!tempData.basic && allData.current === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="tempData.basic || allData.current">
+        <v-form ref="entryform" v-if="tempData.basic || allData.current !== null">
           <div class="pa-4 mb-2 bg-grey-lighten-4">
             Bitte geben Sie Ihre Daten ein. Blau markierte Felder sind Pflichtfelder. Kursiv
             geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
@@ -268,7 +268,9 @@
     <v-row no-gutters class="bg-grey-lighten-3"
       ><v-col cols="6" class="pa-2"> <v-btn block @click.stop="cancelData">Abbrechen</v-btn> </v-col
       ><v-col cols="6" class="pa-2">
-        <v-btn v-if="tempData.basic" block @click.stop="saveData">Speichern</v-btn>
+        <v-btn v-if="tempData.basic || allData.current !== null" block @click.stop="saveData"
+          >Speichern</v-btn
+        >
       </v-col></v-row
     >
   </v-card>
@@ -276,8 +278,7 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-const { allData, emptyEntry, emptyHarvest } = useDataEntries();
-import { watch, ref, computed, onMounted } from 'vue';
+import { watch, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
@@ -285,6 +286,7 @@ import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
 
+const { allData, emptyHarvest, entry } = useDataEntries();
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
 const route = useRoute();
@@ -299,8 +301,6 @@ const { lookup } = useLookup();
 
 const tempData = ref({ basic: null, programs: null });
 
-const entry = ref({ ...emptyEntry });
-
 const panelInit = ref(['basisdaten']);
 
 const itemsJaNein = [
@@ -313,10 +313,6 @@ const itemsYear = [2021, 2022, 2023, 2024];
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
-
-onMounted(() => {
-  console.log(allData.value.current);
-});
 
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
@@ -347,19 +343,22 @@ function dataSort(a, b) {
 }
 
 function saveData() {
-  allData.value.saved.push(entry.value);
-  allData.value.saved.sort(dataSort);
+  if (allData.value.current !== null) {
+    allData.value.saved[allData.value.current] = { ...entry.value };
+  } else {
+    allData.value.saved.push(entry.value);
+    allData.value.saved.sort(dataSort);
+  }
+
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
-  entry.value = { ...emptyEntry };
-  entry.value.ernten = [{ ...emptyHarvest }];
   allData.value.datawindow = false;
+  panelInit.value = ['basisdaten'];
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
-  entry.value = { ...emptyEntry };
-  entry.value.ernten = [{ ...emptyHarvest }];
   allData.value.datawindow = false;
+  panelInit.value = ['basisdaten'];
 }
 
 watch(schlagInfo, (value) => {

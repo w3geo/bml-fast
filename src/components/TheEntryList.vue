@@ -53,10 +53,16 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 
-const { allData } = useDataEntries();
+const { allData, emptyEntry, emptyHarvest, entry } = useDataEntries();
 
 function editEntry(nr) {
   allData.value.current = nr;
+  if (nr !== null) {
+    entry.value = allData.value.saved[nr];
+  } else {
+    entry.value = { ...emptyEntry };
+    entry.value.ernten = [{ ...emptyHarvest }];
+  }
   allData.value.datawindow = true;
 }
 
