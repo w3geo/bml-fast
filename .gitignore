@@ -1,6 +1,5 @@
 node_modules
 dist
-data/csv/*.csv
-data/*.json
+public/data
 
 

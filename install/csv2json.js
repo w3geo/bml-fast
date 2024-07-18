@@ -16,7 +16,7 @@ for (let e = 0; e < work.length; e++) {
     title: work[e].Kultur,
   });
 }
-fs.writeFileSync('data/kulturen.json', JSON.stringify(outputk), {
+fs.writeFileSync('public/data/kulturen.json', JSON.stringify(outputk), {
   encoding: 'utf-8',
 });
 
@@ -27,17 +27,17 @@ for (let e = 0; e < work.length; e++) {
   work[e]['stabilisierte N-Dünger'] =
     work[e]['stabilisierte N-Dünger'].toString().toLowerCase() == 'x' ? true : false;
 }
-fs.writeFileSync('data/handelsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
+fs.writeFileSync('public/data/handelsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 3. Wirtschaftsdünger
 // @ts-ignore
 work = await getJson('data/csv/wirtschaftsdünger.csv');
-fs.writeFileSync('data/wirtschaftsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
+fs.writeFileSync('public/data/wirtschaftsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 4. Sekundärrohstoffe
 // @ts-ignore
 work = await getJson('data/csv/sekundärrohstoffe.csv');
-fs.writeFileSync('data/sekundärrohstoffe.json', JSON.stringify(work), { encoding: 'utf-8' });
+fs.writeFileSync('public/data/sekundärrohstoffe.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 5. Bodenarten - Bodenschwere
 // @ts-ignore
@@ -50,7 +50,7 @@ for (let e = 0; e < work.length; e++) {
     schwere: work[e].Bodenschwere,
   });
 }
-fs.writeFileSync('data/bodenartenbodenschwere.json', JSON.stringify(outputbs), {
+fs.writeFileSync('public/data/bodenartenbodenschwere.json', JSON.stringify(outputbs), {
   encoding: 'utf-8',
 });
 
@@ -61,7 +61,9 @@ const outputsn = {};
 for (let e = 0; e < work.length; e++) {
   outputsn[work[e].Abkürzung] = work[e].Schlagnutzungsarten;
 }
-fs.writeFileSync('data/schlagnutzungsarten.json', JSON.stringify(outputsn), { encoding: 'utf-8' });
+fs.writeFileSync('public/data/schlagnutzungsarten.json', JSON.stringify(outputsn), {
+  encoding: 'utf-8',
+});
 
 // 7. KG-Liste
 // @ts-ignore
@@ -80,4 +82,4 @@ for (let e = 0; e < work.length; e++) {
   kgliste[kgnr] = work[e];
 }
 
-fs.writeFileSync('data/kgliste.json', JSON.stringify(kgliste), { encoding: 'utf-8' });
+fs.writeFileSync('public/data/kgliste.json', JSON.stringify(kgliste), { encoding: 'utf-8' });
