@@ -10,11 +10,41 @@
     <v-row class="theList" no-gutters
       ><v-col>
         <div class="noEntry" v-if="allData.saved.length === 0">Keine gespeicherten Einträge.</div>
-      </v-col></v-row
-    >
+        <div v-for="i in allData.saved.length" :key="i" class="pa-0 ma-0">
+          <div
+            class="bg-grey pa-1"
+            v-if="i == 1 || (i > 1 && allData.saved[i - 1].jahr > allData.saved[i - 2].jahr)"
+          >
+            {{ allData.saved[i - 1].jahr }}
+          </div>
+          <v-row no-gutters class="bg-grey-lighten-4 ma-1 pa-1">
+            <v-col cols="9"
+              >{{ allData.saved[i - 1].schlagnummer }} /
+              {{ allData.saved[i - 1].feldstuecksname }}</v-col
+            >
+            <v-col cols="3" class="text-right">
+              <v-icon
+                class="mt-1 mr-3"
+                size="22"
+                color="orange"
+                icon="mdi-pencil"
+                @click="editEntry(i - 1)"
+              />
+              <v-icon
+                class="mt-1 mr-3"
+                size="22"
+                color="red"
+                icon="mdi-close"
+                @click="deleteEntry(i - 1)"
+              />
+            </v-col>
+          </v-row>
+        </div>
+      </v-col>
+    </v-row>
     <v-row no-gutters class="bg-grey-lighten-3"
       ><v-col class="pa-2">
-        <v-btn block @click.stop="allData.datawindow = true">Neuer Eintrag</v-btn>
+        <v-btn block @click.stop="editEntry(null)">Neuer Eintrag</v-btn>
       </v-col></v-row
     >
   </v-card>
@@ -23,7 +53,23 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 
-const { allData } = useDataEntries();
+const { allData, emptyEntry, emptyHarvest, entry } = useDataEntries();
+
+function editEntry(nr) {
+  allData.value.current = nr;
+  if (nr !== null) {
+    entry.value = allData.value.saved[nr];
+  } else {
+    entry.value = { ...emptyEntry };
+    entry.value.ernten = [{ ...emptyHarvest }];
+  }
+  allData.value.datawindow = true;
+}
+
+function deleteEntry(nr) {
+  allData.value.saved.splice(nr, 1);
+  localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
+}
 </script>
 
 <style scoped>

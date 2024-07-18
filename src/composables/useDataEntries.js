@@ -61,19 +61,29 @@ export const emptyEntry = {
   ernten: [{ ...emptyHarvest }],
 };
 
+export const entry = ref(emptyEntry);
+
 /**
  * @typedef allData
  * @property {Array<dataEntry>} saved
- * @property {dataEntry} current
+ * @property {number} current
  * @property {boolean} datawindow
  */
 
 /** @type {import('vue').Ref<allData>} */
 export const allData = ref({ saved: [], current: null, datawindow: false });
 
+// load from local storage, if existing
+{
+  const saved = localStorage.getItem('fasttool');
+  if (saved) {
+    allData.value.saved = JSON.parse(saved);
+  }
+}
+
 /**
- * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry }}
+ * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
-  return { allData, emptyFertilization, emptyHarvest, emptyEntry };
+  return { allData, emptyFertilization, emptyHarvest, emptyEntry, entry };
 }
