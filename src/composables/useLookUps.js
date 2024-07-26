@@ -13,7 +13,7 @@ const wrrl = [
 /**
  * @type {import('vue').ShallowRef<Object>}
  */
-export const lookup = shallowRef({ schlagnutzungsarten: {}, wrrl: wrrl });
+export const lookup = shallowRef({ wrrl: wrrl });
 
 async function getJson(what) {
   const response = await fetch(`data/${what}.json`);
@@ -22,7 +22,7 @@ async function getJson(what) {
 }
 
 {
-  getJson('schlagnutzungsarten');
+  getJson('feldstücknutzungsarten');
   getJson('bodenartenbodenschwere');
   getJson('kulturen');
 }

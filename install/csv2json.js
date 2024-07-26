@@ -56,30 +56,12 @@ fs.writeFileSync('public/data/bodenartenbodenschwere.json', JSON.stringify(outpu
 
 // 6. Schlagnutzungsarten
 // @ts-ignore
-work = await getJson('data/csv/schlagnutzungsarten.csv');
+work = await getJson('data/csv/feldstücknutzungsarten.csv');
 const outputsn = {};
 for (let e = 0; e < work.length; e++) {
-  outputsn[work[e].Abkürzung] = work[e].Schlagnutzungsarten;
+  outputsn[work[e].Abkürzung] = work[e].Feldstücknutzungsarten;
 }
-fs.writeFileSync('public/data/schlagnutzungsarten.json', JSON.stringify(outputsn), {
+fs.writeFileSync('public/data/feldstücknutzungsarten.json', JSON.stringify(outputsn), {
   encoding: 'utf-8',
 });
 
-// 7. KG-Liste
-// @ts-ignore
-work = await getJson('data/csv/kgliste.csv');
-const kgliste = {};
-let kgnr = 0;
-for (let e = 0; e < work.length; e++) {
-  work[e]['GWA'] = work[e]['GWA'].toString().toLowerCase() == 'x' ? true : false;
-  work[e]['NAPV Anlage 5 Gebiet'] =
-    work[e]['NAPV Anlage 5 Gebiet'].toString().toLowerCase() == 'x' ? true : false;
-  work[e]['Feuchtgebiet'] = work[e]['Feuchtgebiet'].toString().toLowerCase() == 'x' ? true : false;
-  work[e]['Trockengebiet'] =
-    work[e]['Trockengebiet'].toString().toLowerCase() == 'x' ? true : false;
-  kgnr = work[e]['Katastralgemeindenummer'];
-  delete work[e]['Katastralgemeindenummer'];
-  kgliste[kgnr] = work[e];
-}
-
-fs.writeFileSync('public/data/kgliste.json', JSON.stringify(kgliste), { encoding: 'utf-8' });
