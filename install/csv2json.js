@@ -9,16 +9,8 @@ async function getJson(csvfile) {
 // 1. Kulturen
 // @ts-ignore
 let work = await getJson('data/csv/kulturen.csv');
-const outputk = [];
-for (let e = 0; e < work.length; e++) {
-  outputk.push({
-    value: work[e].Kultur,
-    title: work[e].Kultur,
-  });
-}
-fs.writeFileSync('public/data/kulturen.json', JSON.stringify(outputk), {
-  encoding: 'utf-8',
-});
+fs.writeFileSync('public/data/kulturen.json', JSON.stringify(work), { encoding: 'utf-8' });
+
 
 // 2. Handelsdünger
 // @ts-ignore
