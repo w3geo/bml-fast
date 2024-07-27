@@ -45,7 +45,7 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory">
                     <v-text-field
-                      v-model="entry.flaechennutzungsart"
+                      v-model="lookup.feldstücknutzungsarten[entry.flaechennutzungsart]"
                       label="Flächennutzungsart"
                       variant="outlined"
                       density="compact"
@@ -185,7 +185,7 @@
                   <v-col cols="6" class="px-4">
                     <v-select
                       v-model="entry.vorfrucht"
-                      :items="lookup.kulturen"
+                      :items="lookup.kulturenItems[entry.flaechennutzungsart]"
                       label="Vorfrucht"
                       variant="outlined"
                       density="compact"
@@ -222,7 +222,7 @@
                     <v-col cols="9" class="px-4 obligatory">
                       <v-select
                         v-model="entry.ernten[i - 1].kultur"
-                        :items="lookup.kulturen"
+                        :items="lookup.kulturenItems[entry.flaechennutzungsart]"
                         label="Kultur"
                         variant="outlined"
                         density="compact"
