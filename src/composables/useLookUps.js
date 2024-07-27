@@ -23,20 +23,20 @@ async function getJson(what) {
   lookup.value[what] = data;
 
   if (what === 'kulturen') {
-    for (let k = 0; k < data.length; k ++) {
+    for (let k = 0; k < data.length; k++) {
       const alleFNA = data[k].Feldstücknutzungsart.split(';');
-      for (let f = 0; f< alleFNA.length; f++) {
-      if (kulturenItems[alleFNA[f]]) {
-        kulturenItems[alleFNA[f]].push({value: data[k].ID , title: data[k].Kultur});
-      } else {
-        kulturenItems[alleFNA[f]] = [{value: data[k].ID , title: data[k].Kultur}];
+      for (let f = 0; f < alleFNA.length; f++) {
+        if (kulturenItems[alleFNA[f]]) {
+          kulturenItems[alleFNA[f]].push({ value: data[k].ID, title: data[k].Kultur });
+        } else {
+          kulturenItems[alleFNA[f]] = [{ value: data[k].ID, title: data[k].Kultur }];
+        }
       }
-    }
     }
   }
 }
 
-{ 
+{
   getJson('feldstücknutzungsarten');
   getJson('bodenartenbodenschwere');
   getJson('kulturen');
