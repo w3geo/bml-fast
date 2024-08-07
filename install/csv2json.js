@@ -17,6 +17,7 @@ work = await getJson('data/csv/handelsdünger.csv');
 for (let e = 0; e < work.length; e++) {
   work[e]['stabilisierte N-Dünger'] =
     work[e]['stabilisierte N-Dünger'].toString().toLowerCase() == 'x' ? true : false;
+  work[e]['BIO'] = work[e]['BIO'].toString().toLowerCase() == 'x' ? true : false;
 }
 fs.writeFileSync('public/data/handelsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
 
@@ -45,7 +46,7 @@ fs.writeFileSync('public/data/bodenartenbodenschwere.json', JSON.stringify(outpu
   encoding: 'utf-8',
 });
 
-// 6. Schlagnutzungsarten
+// 6. Feldstücknutzungsarten
 // @ts-ignore
 work = await getJson('data/csv/feldstücknutzungsarten.csv');
 const outputsn = {};
@@ -53,5 +54,31 @@ for (let e = 0; e < work.length; e++) {
   outputsn[work[e].Abkürzung] = work[e].Feldstücknutzungsarten;
 }
 fs.writeFileSync('public/data/feldstücknutzungsarten.json', JSON.stringify(outputsn), {
+  encoding: 'utf-8',
+});
+
+// 7. Entzugstabelle Weizen
+// @ts-ignore
+work = await getJson('data/csv/entzugstabelle-weizen.csv');
+const outputetw = { 12: {}, 13: {}, 14: {}, 15: {}, 16: {} };
+for (let e = 0; e < work.length; e++) {
+  for (let f = 12; f < 17; f++) {
+    outputetw[f][work[e]['field1']] = work[e][f];
+  }
+}
+fs.writeFileSync('public/data/entzugstabelle-weizen.json', JSON.stringify(outputetw), {
+  encoding: 'utf-8',
+});
+
+// 8. Entzugstabelle Braugerste
+// @ts-ignore
+work = await getJson('data/csv/entzugstabelle-braugerste.csv');
+const outputetb = { 12: {}, 13: {}, 14: {}, 15: {}, 16: {} };
+for (let e = 0; e < work.length; e++) {
+  for (let f = 12; f < 17; f++) {
+    outputetb[f][work[e]['field1']] = work[e][f];
+  }
+}
+fs.writeFileSync('public/data/entzugstabelle-braugerste.json', JSON.stringify(outputetb), {
   encoding: 'utf-8',
 });
