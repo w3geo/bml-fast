@@ -1,207 +1,347 @@
-﻿Handelsdünger;BIO;N [%];P2O5 [%];K2O [%];wirksam wie;Faktor N feldfallend;Faktor N jahreswirksam;Löslichkeit;stabilisierte N-Dünger;Schnellwirksamkeit
-Agro Hi N;;14;5;7;;1;1;leicht;;1
-Agrobiosol;;7;0,5;0,5;;1;1;leicht;;1
-AH - Lösung 27%;;27;0;0;;1;1;leicht;;1
-AH - Lösung 30%;;30;0;0;;1;1;leicht;;1
-AKRA organ. Flüssigdünger;x;1,5;0,6;4,1;Rindergülle;0,87;0,7;leicht;;0,5
-ALPIFERT;x;5,5;2,5;1,5;Mist;0,91;0,5;langsam;;0,15
-Alzon 46;;46;0;0;;1;1;leicht;x;1
-ALZON neo-N;;46;0;0;;1;1;leicht;x;1
-Aminosol-PS;x;5,7;0;0;Rindergülle;0,87;0,7;leicht;;0,5
-AminoVital;x;9;0;0;Rindergülle;0,87;0,7;leicht;;0,5
-Ammonsulfat 21% (SSA);;21;0;0;;1;1;leicht;;1
-Ammonsulfatsalpeter (ASS);;26;0;0;;1;1;leicht;;1
-ASPANGER GLIMMER MICA G;x;0;0;10;;1;1;;;1
-AZO - Speed;;23;0;0;;1;1;leicht;;1
-Bactiva;x;0,2;0,02;0,82;Mist;0,91;0,5;langsam;;0,15
-Bactosol;;8;3;3;;1;1;leicht;;1
-Bio Braunkorn Plus;x;7;2;1,5;Mist;0,91;0,5;langsam;;0,15
-BIOADUSOL;x;5,55;3,36;2,19;Mist;0,91;0,5;langsam;;0,15
-BIOADUSOL flüssig;x;3,4;2,76;3,28;Mist;0,91;0,5;langsam;;0,15
-BioAgenasol;x;5,5;2,5;1,5;Mist;0,91;0,5;langsam;;0,15
-Bio-Aminosol;x;9,1;0,4;0;Rindergülle;0,87;0,7;leicht;;0,5
-Biofert;x;4,5;1,5;0,5;Mist;0,91;0,5;langsam;;0,15
-Biolit;x;0;0;2;;1;1;;;1
-BIO-LIT Steinmehl ultrafein;x;0;0;2;;1;1;;;1
-BIOLUNDER+;x;1,05;0,57;0,24;Mist;0,91;0,5;langsam;;0,15
-Biosol;x;8;0,5;0,5;Mist;0,91;0,5;langsam;;0,15
-Biovin flüssig;x;3,25;4,5;7,5;Rindergülle;0,87;0,7;leicht;;0,5
-Biovin rein organischer Dünger;x;2,7;0,7;3;Mist;0,91;0,5;langsam;;0,15
-BOR-NAC 26:0:0;;26;0;0;;1;1;leicht;;1
-Citrosol;x;5;1,5;;Mist;0,91;0,5;langsam;;0,15
-Citrosteep (Maisquellwasser schwer);x;2,56;3,4;1,8;Mist;0,91;0,5;langsam;;0,15
-Complesal plus 15:5:16 +4MgO;;15;5;16;;1;1;leicht;;1
-COMPLEX 12/12/17+2MgO+12S+B+Zn;;12;12;17;;1;1;leicht;;1
-COMPLEX 14/10/20+10S;;14;10;20;;1;1;leicht;;1
-COMPLEX 15/15/15+8S+Zn;;15;15;15;;1;1;leicht;;1
-COMPLEX 15/5/18+2,5MgO+10S+B+Zn;;15;5;18;;1;1;leicht;;1
-COMPLEX 18/28+Zn;;18;28;0;;1;1;leicht;;1
-COMPLEX 20/10/8+12S;;20;10;8;;1;1;leicht;;1
-COMPLEX 20/20+7S+Zn;;20;20;0;;1;1;leicht;;1
-COMPLEX 20/8/8+3MgO+4S;;20;8;8;;1;1;leicht;;1
-COMPLEX 24/14+7S;;24;14;0;;1;1;leicht;;1
-COMPLEX SOP 12/12/17+2MgO+12S+B+Zn;;12;12;17;;1;1;leicht;;1
-COMPLEX SOP 15/5/18+2,5MgO+25S+B+Zn;;15;5;18;;1;1;leicht;;1
-DC - 44 0:10:30;;0;10;30;;1;1;;;1
-DC - 45 neu 0:12:20;;0;12;20;;1;1;;;1
-DC - classic 0:15:30 + 3S;;0;15;30;;1;1;;;1
-DC - Fit 0:10:30 + 0,1B + 11S;;0;10;30;;1;1;;;1
-DC - Frucht 12:5:15;;12;5;15;;1;1;leicht;;1
-DC - ROT 10:8:20 +13S +0,1B;;10;8;20;;1;1;leicht;;1
-DC - Rübe 0:10:30 + 0,2B + 6S;;0;10;30;;1;1;;;1
-DC 15:5:5 + 18S;;15;5;5;;1;1;leicht;;1
-DC 28 14:7:7;;14;7;7;;1;1;leicht;;1
-DC 35 10:10:15;;10;10;15;;1;1;leicht;;1
-DC 36 0:18:18;;0;18;18;;1;1;;;1
-DC 37 12:10:15 ;;12;10;15;;1;1;leicht;;1
-DC 39 9:15:15;;9;15;15;;1;1;leicht;;1
-DC 4 x 12;;12;12;12;;1;1;leicht;;1
-DC 42 6:14:24;;6;14;24;;1;1;leicht;;1
-DC Borstart 6:10:16 +0,1B;;6;10;16;;1;1;leicht;;1
-DC NPK;;16;5;7;;1;1;leicht;;1
-DC PK 0:12:20;;0;12;20;;1;1;;;1
-DC Stabil Sp. 9:9:15+2;;9;9;15;;1;1;leicht;;1
-DC Superphosphat;;0;18;0;;1;1;;;1
-DC Top 15:5:0;;15;5;0;;1;1;leicht;;1
-DC Vital 6:8:20+2 MgO + 15 SContent;;6;8;20;;1;1;leicht;;1
-DC-Naturphosphat;;0;26;0;;1;1;;;1
-Diabas Urgesteinsmehl;x;0;0,3;1,75;;1;1;;;1
-Dialit;x;0;0;2;;1;1;;;1
-Diammoniumphosphat DAP;;18;46;0;;1;1;leicht;;1
-Dolophos 15 / Dolophos 26;;0;20,5;0;;1;1;;;1
-Dolophos 15 gran.;;0;15;0;;1;1;;;1
-Dolosol;;3;1;1;;1;1;leicht;;1
-Domamon L 26;;20;0;0;;1;1;leicht;;1
-Ecovigor;x;3;0;7;Rindergülle;0,87;0,7;leicht;;0,5
-Eifelgold Urgesteinsmehl;x;0;0;5;;1;1;;;1
-EMIKO MikroDünger;x;4,4;0,5;4,3;Rindergülle;0,87;0,7;leicht;;0,5
-ENTEC 26;;26;0;0;;1;1;;x;1
-Foliarel Flüssigbor 14% Bor;;5,5;0;0;;1;1;leicht;;1
-Folifert super;;16;5;5;;1;1;leicht;;1
-Grundkorn 10:15:20+3;;10;15;20;;1;1;leicht;;1
-GÜLLE2000;x;0;0;1,77;;1;1;;;1
-Harnstoff 46:0:0;;46;0;0;;1;1;leicht;;1
-Harnstoff flü.;;46;0;0;;1;1;leicht;;1
-Hyperkali;;0;18;18;;1;1;;;1
-Hyperkalisulfat 18:18;;0;18;18;;1;1;;;1
-Hyperkorn 26;;0;26;0;;1;1;;;1
-Hyperkorn mehlfein;;0;29;0;;1;1;;;1
-Hyperphosphat;;0;29;0;;1;1;;;1
-Kali 40 0:0:40+6 MgO;;0;0;40;;1;1;;;1
-Kali 50 % schwefels.ges.+18 SContent;;0;0;50;;1;1;;;1
-Kali 60 0:0:60;;0;0;60;;1;1;;;1
-Kali PK 5:55;;0;5;55;;1;1;;;1
-Kalinitrat;;13;0;46;;1;1;leicht;;1
-Kalisop 50%;x;0;0;50;;1;1;;;1
-Kalksalpeter (CalciNit);;15,5;0;0;;1;1;leicht;;1
-Kalkstickstoff 20:0:0;;20;0;0;;1;1;leicht;;1
-KaPhos;x;0;5;0;;1;1;;;1
-KOMPOST2000;x;0;0;1,77;;1;1;;;1
-Konverterkalk;;0;2;0;;1;1;;;1
-LithoSoil;x;0;0;2,5;;1;1;;;1
-Magnesia Kainit;x;0;0;11;;1;1;;;1
-Maltaflor Bio Spezial;x;4;0,8;5;Mist;0,91;0,5;langsam;;0,15
-Maltaflor Bio Symbio;x;3;0,6;4;Mist;0,91;0,5;langsam;;0,15
-Monoammoniumph. 12:52:0;;12;52;0;;1;1;leicht;;1
-NAC 24% 24:0:0+6 S;;24;0;0;;1;1;leicht;;1
-NAC 25% 25:0:0+5 MgO;;25;0;0;;1;1;leicht;;1
-NAC 27% 27:0:0;;27;0;0;;1;1;leicht;;1
-NAC+S 26 N +13 SO3;;26;0;0;;1;1;leicht;;1
-Naturphosphat 26%;;0;26;0;;1;1;;;1
-Nitrophoska Mg plus 12:5:17+5;;12;5;17;;1;1;leicht;;1
-Nitrophoska perfekt 15:5:20+2;;15;5;20;;1;1;leicht;;1
-Nitrophoska spezial 12:5:17+2;;12;5;17;;1;1;leicht;;1
-Nitrophoska suprem 20:5:10+3;;20;5;10;;1;1;leicht;;1
-NPK 12/12/17+9S;;12;12;17;;1;1;leicht;;1
-NPK 13/6/16+9S;;13;6;16;;1;1;leicht;;1
-NPK 14/10/20;;14;10;20;;1;1;leicht;;1
-NPK 15/15/15;;15;15;15;;1;1;leicht;;1
-NPK 18/8/8;;18;8;8;;1;1;leicht;;1
-NPK 20/10/10;;20;10;10;;1;1;leicht;;1
-Nutribor;;6;0;0;;1;1;leicht;;1
-Nutrimix fluid;;3;0;0;;1;1;leicht;;1
-Organic Plant Feed (OPF) 4-2-8;x;4;2;8;Rindergülle;0,87;0,7;leicht;;0,5
-Organic Plant Feed (OPF) 5-2-5;x;5;2;5;Rindergülle;0,87;0,7;leicht;;0,5
-Organic Plant Feed (OPF) 7-2-3;x;7;2;3;Rindergülle;0,87;0,7;leicht;;0,5
-Organic Plant Feed (OPF) granular 11-0-5;x;11;0,5;5;Mist;0,91;0,5;langsam;;0,15
-Patentkali 0:0:30;x;0;0;30;;1;1;;;1
-Phosfik;;4,2;37,8;25,2;;1;1;leicht;;1
-Phytoamin;x;0,16;0;1,45;Rindergülle;0,87;0,7;leicht;;0,5
-Piamon S33;;33;0;0;;1;1;leicht;;1
-Piasan 28;;28;0;0;;1;1;leicht;;1
-Piasan G 20/8;;20;0;0;;1;1;leicht;;1
-Piasan S 25/6;;25;0;0;;1;1;leicht;;1
-Pischelsdorfer Düngerschlempe;x;5,5;2,5;1,5;Mist;0,91;0,5;langsam;;0,15
-Pischelsdorfer Düngerschlempe feucht;x;1,8;0,8;0,5;Mist;0,91;0,5;langsam;;0,15
-Plonvit Kali;;11;12;38;;1;1;leicht;;1
-Plonvit nitro;;31;12;10;;1;1;leicht;;1
-Plonvit Phospho;;11;53;5;;1;1;leicht;;1
-Pressgold 100% organische Hühnermistpellets aus Ö;x;3,6;2,6;2,3;Mist;0,91;0,5;langsam;;0,15
-Pressgold BIO 100% organische Hühnermistpellets aus Ö;x;3,6;2,6;2,3;Mist;0,91;0,5;langsam;;0,15
-ProLiq® AminoCalcio;x;0,6;0;0;Rindergülle;0,87;0,7;leicht;;0,5
-Radam extra 520;x;0;0;52;;1;1;;;1
-Resistance;x;0;0;4;;1;1;;;1
-Rübenbruchstücke / Rübengrün;x;0,2;0;0,2;Mist;0,91;0,5;langsam;;0,15
-Sedumin Regenwurmhumus;x;1,3;1,37;0,97;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Algen-Extrakt;x;1,5;2;18,5;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Bio-Ferrol;x;2,5;0;2,41;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Bio-Hühnermist-Pellets;x;3,9;2,6;2,6;Mist;0,91;0,5;;;0,15
-Sedumin® Carbofert;x;0;0;1,2;;1;1;;;1
-Sedumin® Haarmehlpellets 14% N;x;14;0;0;Mist;0,91;0,5;langsam;;0,15
-Sedumin® MicroVital 313;x;3,1;0,85;3,3;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Soilfeed Bio - flüssig;x;4,3;1;5,5;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Vegipur 402 M;x;3,7;0;1,6;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Vegipur 412;x;4,15;1,4;2,32;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Vegipur BIOMIX;x;5,5;0,5;0,5;Mist;0,91;0,5;langsam;;0,15
-Sedumin® Vinasse 305;x;3;0;5;Mist;0,91;0,5;langsam;;0,15
-solufit FG®/ solufit TG®/ solufit WE®;x;4,5;0;10;Rindergülle;0,87;0,7;leicht;;0,5
-Spower BioN +(A);x;5;1,7;1,3;Mist;0,91;0,5;langsam;;0,15
-StyriaFert N flüssig;x;9;0;0;Rindergülle;0,87;0,7;leicht;;0,5
-StyriaFert N+;x;13;0;0;Mist;0,91;0,5;langsam;;0,15
-StyriaFert N105;x;10,5;0;0;Mist;0,91;0,5;langsam;;0,15
-StyriaFert N14;x;14;0,5;;Mist;0,91;0,5;langsam;;0,15
-StyriaFert NK;x;10,5;0,8;8;Mist;0,91;0,5;langsam;;0,15
-StyriaFert NPK;x;8;6;7;Mist;0,91;0,5;langsam;;0,15
-StyriaFert Powerkorn;x;8;12;;Mist;0,91;0,5;langsam;;0,15
-StyriaFert Veggie Basis;x;5,5;3;1;Mist;0,91;0,5;langsam;;0,15
-StyriaFert Veggie Bio;x;4;0,5;0,2;Mist;0,91;0,5;langsam;;0,15
-StyriaFert Veggie eM;x;5,5;3;1;Mist;0,91;0,5;langsam;;0,15
-StyriaFert Veggie Plus;x;4,5;2;4,5;Mist;0,91;0,5;langsam;;0,15
-Sulfammo 23 N;;23;0;0;;1;1;leicht;;1
-Sulfammo 26 NContent PRO;;26;0;0;;1;1;leicht;;1
-Sulfammo 30 N;;30;0;0;;1;1;leicht;;1
-Superk. DC 36 0:18:18;;0;18;18;;1;1;;;1
-Superphosphat;;0;18;0;;1;1;;;1
-Thomaskali 10:20 + 3MgO;;0;10;20;;1;1;;;1
-Thomaskorn;;0;15;0;;1;1;;;1
-Thomasmehl 0:15:0;;0;15;0;;1;1;;;1
-Thomasphosphat;;0;12,5;0;;1;1;;;1
-Timac Agro Hyperkorn 26%;x;0;26;0;;1;1;;;1
-Timac Agro Hyperphosphat mehlfein 29%;x;0;29;0;;1;1;;;1
-Timac Agro Naturphosphat 26 %, granuliert;x;0;26;0;;1;1;;;1
-Triplephosphat 0:45:0;;0;45;0;;1;1;;;1
-UAN 30 NContent 30:0:0;;30;0;0;;1;1;leicht;;1
-Unser Bio HTK-Pellets 4-3-3;x;4;3;3;Mist;0,91;0,5;langsam;;0,15
-UREA 46 NContent 46:0:0;;46;0;0;;1;1;leicht;;1
-Urea S;;38;0;0;;1;1;leicht;;1
-Vario 18/11/11+2S;;18;11;11;;1;1;leicht;;1
-Vario 20/7/7+17S;;20;7;7;;1;1;leicht;;1
-Vario 21/5/5+20S;;21;5;5;;1;1;leicht;;1
-VARIO 23 N + 25 S;;23,5;0;0;;1;1;leicht;;1
-Vermesfluid;x;1,55;0,35;0;Rindergülle;0,87;0,7;leicht;;0,5
-VERMIGRAND Regenwurmhumus;x;1,9;0;0;Mist;0,91;0,5;langsam;;0,15
-VERMIGRAND Wagramkompost;x;1,6;0;0;Kompost;0,91;0,1;langsam;;0,01
-Vinasse;x;2;0;4;Mist;0,91;0,5;langsam;;0,15
-Vinasse C;x;2;0,3;5,8;Mist;0,91;0,5;langsam;;0,15
-Vinasse Team F;x;5;0,3;5,5;Rindergülle;0,87;0,7;leicht;;0,5
-Weicherdiges Rohphosphat (Naturphosphat);x;0;31;0;;1;1;;;1
-Wuxal Boron Plus;;5;13;0;;1;1;leicht;;1
-Wuxal Calcium;;10;0;0;;1;1;leicht;;1
-Wuxal Magnesium;;3,6;0;0;;1;1;leicht;;1
-Wuxal P Profi;;5;20;5;;1;1;leicht;;1
-Wuxal Schwefel;;15;0;0;;1;1;leicht;;1
-Wuxal super;;8;8;6;;1;1;leicht;;1
-Wuxal Top N;;12;4;6;;1;1;leicht;;1
-YaraBela ASS 26+14;;26;0;0;;1;1;leicht;;1
-YaraVera AMIDAS;;40;0;0;;1;1;leicht;;1
-Zink-Chelat flüssig;;5,2;0;0;;1;1;leicht;;1
+﻿ID;Handelsdünger;BIO;N [%];P2O5 [%];K2O [%];wirksam wie;Löslichkeit;stabilisierte N-Dünger;Baliscode;Einheit;Dichte [kg/l]
+2.1.1;Agro Hi Bor;x;0;0;0;;;;;l;1
+2.1.2;Agro Hi N;;14;5;7;;leicht;;;l;1
+2.1.3;Agrobiosol;;7;0,5;0,5;;leicht;;;kg;
+2.1.4;Agrosol;x;0;0;0;;;;1309;kg;
+2.1.5;Agrosol liquid;x;0;0;0;;;;;l;1,4
+2.1.6;AH - Lösung 27%;;27;0;0;;leicht;;1001;l;1,27
+2.1.7;AH - Lösung 30%;;30;0;0;;leicht;;1200;l;1,3
+2.1.8;AKRA Azoarcus N-Bakterien;x;0;0;0;;;;;kg;
+2.1.9;AKRA Azotobacter N-Bakterien;x;0;0;0;;;;;kg;
+2.1.10;AKRA Blatt;x;0;0;0;;;;;kg;
+2.1.11;AKRA Kombi;x;0;0,19;0,2;;;;;kg;
+2.1.12;AKRA Magnesia;x;0;0;0;;;;;kg;
+2.1.13;AKRA Magnesia +S;x;0;0;0;;;;;kg;
+2.1.14;AKRA MSB;x;0;0;0;;;;;kg;
+2.1.15;AKRA organ. Flüssigdünger;x;1,5;0,6;4,1;Rindergülle;leicht;;;kg;
+2.1.16;AKRA Plus 9;x;0;0;0;;;;;kg;
+2.1.17;AKRA Saat;x;0;0;0;;;;;kg;
+2.1.18;AKRA Start;x;0;2;0;;;;;kg;
+2.1.19;AKRA Stroh R. + P;x;0;0;0;;;;;kg;
+2.1.20;AKRA WD;x;0;0;0;;;;;kg;
+2.1.21;AlgoVital Plus;x;0;0;0;;;;;l;1
+2.1.22;ALPIFERT;x;5,5;2,5;1,5;Mist;langsam;;;kg;
+2.1.23;Alzon 46;;46;0;0;;;x;1295;kg;
+2.1.24;ALZON neo-N;;46;0;0;;;x;;kg;
+2.1.25;Amalgerol;x;0;0;0;;;;1235;l;0,97
+2.1.26;Aminosol-PS;x;5,75;;0;Rindergülle;leicht;;1154;l;1,13
+2.1.27;AminoVital;x;9;0;0;Rindergülle;leicht;;;l;1,21
+2.1.28;Ammonsulfat 21% (SSA);;21;0;0;;leicht;;1112;kg;
+2.1.29;Ammonsulfatsalpeter (ASS);;26;0;0;;leicht;;1199;kg;
+2.1.30;ASPANGER GLIMMER MICA G;x;0;0;10;;;;;kg;
+2.1.31;AZO - Speed;;23;0;0;;leicht;;3502;l;1,3
+2.1.32;B&P Kräuterextrakt;x;0;0;0;;;;;kg;
+2.1.33;Bactiva;x;0,2;0,02;0,82;Mist;langsam;;;kg;
+2.1.34;Bactosol;;8;3;3;;leicht;;;kg;
+2.1.35;Basaltmehl;x;0;0;0;;;;;kg;
+2.1.36;Bayfolan S;;0;0;0;;;;;l;1,4
+2.1.37;Bio Bokashi Terra;x;0;0;0;;;;;kg;
+2.1.38;Bio Braunkorn Plus;x;7;2;1,5;Mist;langsam;;;kg;
+2.1.39;BIOADUSOL;x;5,55;3,36;2,19;Mist;langsam;;;kg;
+2.1.40;BIOADUSOL flüssig;x;3,4;2,76;3,28;Mist;langsam;;;l;1
+2.1.41;BioAgenasol;x;5,5;2,5;1,5;Mist;langsam;;;kg;
+2.1.42;BioAktiv für Gülle;x;0;0;0;;;;;kg;
+2.1.43;BioAktiv für Kompost;x;0;0;0;;;;;kg;
+2.1.44;BioAktiv-Pflanze;x;0;0;0;;;;;kg;
+2.1.45;Bio-Aminosol;x;9,1;0,4;0;Rindergülle;leicht;;;kg;
+2.1.46;Biofert;x;4;1,5;0,5;Mist;langsam;;1253;kg;
+2.1.47;Biolit;x;0;0;2;;;;1254;kg;
+2.1.48;BIO-LIT Steinmehl ultrafein;x;0;0;2;;;;;kg;
+2.1.49;BIOLUNDER+;x;1,05;0,57;0,24;Mist;langsam;;;kg;
+2.1.50;Biosol;x;8;0,5;0,5;Mist;langsam;;;kg;
+2.1.51;Biovin flüssig;x;3,25;4,5;7,5;Rindergülle;leicht;;;l;1
+2.1.52;Biovin rein organischer Dünger;x;2,7;0,7;3;Mist;langsam;;;kg;
+2.1.53;Biplantol agrar;x;0;0;0;;;;;kg;
+2.1.54;Biplantol mykos V forte;x;0;0;0;;;;;kg;
+2.1.55;Biplantol X2 forte;x;0;0;0;;;;;kg;
+2.1.56;Bittersalz;;0;0;0;;;;1044;kg;
+2.1.57;Borax 10% Bor;x;0;0;0;;;;1045;kg;
+2.1.58;Bor-Max;x;0;0;0;;;;;kg;
+2.1.59;BOR-NAC 26:0:0;;26;0;0;;leicht;;1114;kg;
+2.1.60;Branntkalk;;0;0;0;;;;1006;kg;
+2.1.61;Carbo-Eco Fe;x;0;0;0;;;;;kg;
+2.1.62;Carbo-Eco Mn;x;0;0;0;;;;;kg;
+2.1.63;Citrosol;x;5;1,5;;Mist;langsam;;;kg;
+2.1.64;Citrosteep (Maisquellwasser schwer);x;2,56;3,4;1,8;Mist;langsam;;;kg;
+2.1.65;Complesal plus 15:5:16 +4MgO;;15;5;16;;leicht;;1047;kg;
+2.1.66;COMPLEX 12/12/17+2MgO+12S+B+Zn;;12;12;17;;leicht;;1066;kg;
+2.1.67;COMPLEX 14/10/20+10S;;14;10;20;;leicht;;1017;kg;
+2.1.68;COMPLEX 15/15/15+8S+Zn;;15;15;15;;leicht;;1053;kg;
+2.1.69;COMPLEX 15/5/18+2,5MgO+10S+B+Zn;;15;5;18;;leicht;;1046;kg;
+2.1.70;COMPLEX 18/28+Zn;;18;28;0;;leicht;;;kg;
+2.1.71;COMPLEX 20/10/8+12S;;20;10;8;;leicht;;1290;kg;
+2.1.72;COMPLEX 20/20+7S+Zn;;20;20;0;;leicht;;;kg;
+2.1.73;COMPLEX 20/8/8+3MgO+4S;;20;8;8;;leicht;;1018;kg;
+2.1.74;COMPLEX 24/14+7S;;24;14;0;;leicht;;;kg;
+2.1.75;COMPLEX SOP 12/12/17+2MgO+12S+B+Zn;;12;12;17;;leicht;;;kg;
+2.1.76;COMPLEX SOP 15/5/18+2,5MgO+25S+B+Zn;;15;5;18;;leicht;;;kg;
+2.1.77;Cuprofor flow;x;;;;;;;1153;l;1,5
+2.1.78;CutiSan;x;0;0;0;;;;;kg;
+2.1.79;DC - 44 0:10:30;;0;10;30;;;;1007;kg;
+2.1.80;DC - 45 neu 0:12:20;;0;12;20;;;;1097;kg;
+2.1.81;DC - classic 0:15:30 + 3S;;0;15;30;;;;;kg;
+2.1.82;DC - Fit 0:10:30 + 0,1B + 11S;;0;10;30;;;;1007;kg;
+2.1.83;DC - Frucht 12:5:15;;12;5;15;;leicht;;1049;kg;
+2.1.84;DC - ROT 10:8:20 +13S +0,1B;;10;8;20;;leicht;;;kg;
+2.1.85;DC - Rübe 0:10:30 + 0,2B + 6S;;0;10;30;;;;1051;kg;
+2.1.86;DC 15:5:5 + 18S;;15;5;5;;leicht;;1233;kg;
+2.1.87;DC 28 14:7:7;;14;7;7;;leicht;;1136;kg;
+2.1.88;DC 35 10:10:15;;10;10;15;;leicht;;1141;kg;
+2.1.89;DC 36 0:18:18;;0;18;18;;;;1240;kg;
+2.1.90;DC 37 12:10:15 ;;12;10;15;;leicht;;1143;kg;
+2.1.91;DC 39 9:15:15;;9;15;15;;leicht;;1145;kg;
+2.1.92;DC 4 x 12;;12;12;12;;leicht;;1317;kg;
+2.1.93;DC 42 6:14:24;;6;14;24;;leicht;;1011;kg;
+2.1.94;DC Borstart 6:10:16 +0,1B;;6;10;16;;leicht;;1025;kg;
+2.1.95;DC NPK;;16;5;7;;leicht;;;kg;
+2.1.96;DC PK 0:12:20;;0;12;20;;;;1097;kg;
+2.1.97;DC Stabil Sp. 9:9:15+2;;9;9;15;;leicht;;1019;kg;
+2.1.98;DC Superphosphat;;;18;;;;;;kg;
+2.1.99;DC Top 15:5:0;;15;5;0;;leicht;;;kg;
+2.1.100;DC Vital 6:8:20+2 MgO + 15 SContent;;6;8;20;;leicht;;1052;kg;
+2.1.101;DC-Naturphosphat;;0;26;0;;;;1054;kg;
+2.1.102;Diabas Urgesteinsmehl;x;0;0,3;1,75;;;;;kg;
+2.1.103;Dialit;x;0;;2;;;;;kg;
+2.1.104;Diammoniumphosphat DAP;;18;46;0;;leicht;;1132;kg;
+2.1.105;DolLit / Dolo 40;x;0;0;0;;;;;kg;
+2.1.106;Dolokorn;;0;0;0;;;;;kg;
+2.1.107;Dolophos 15 / Dolophos 26;;0;20,5;0;;;;;kg;
+2.1.108;Dolophos 15 gran.;;0;15;0;;;;1058;kg;
+2.1.109;Dolosol;;3;1;1;;leicht;;;kg;
+2.1.110;Domamon L 26;;20;;;;leicht;;;l;1,24
+2.1.111;Ecovigor;x;3;0;7;Rindergülle;leicht;;;kg;
+2.1.112;Eifelgold Urgesteinsmehl;x;0;0;5;;;;;kg;
+2.1.113;Eisen Chelat 6,5%;;0;0;0;;;;;kg;
+2.1.114;Eisenchelat 3%;;0;0;0;;;;;kg;
+2.1.115;Eisen-II-Sulfat;x;0;0;0;;;;;kg;
+2.1.116;EM Keramikpulver;x;0;0;0;;;;;kg;
+2.1.117;eMB Aktiv;x;0;0;0;;;;;kg;
+2.1.118;eMB Urlösung;x;0;0;0;;;;;l;1
+2.1.119;EMIKO MikroDünger;x;3;0,23;7,93;Rindergülle;leicht;;;kg;
+2.1.120;ENTEC 26;;26;0;0;;;x;1303;kg;
+2.1.121;Epiflor Ca - ultrafein;x;0;0;0;;;;;kg;
+2.1.122;Epiflor Mg - ultrafein;x;0;0;0;;;;;kg;
+2.1.123;Epso Combitop;x;0;0;0;;;;;kg;
+2.1.124;Epso Microtop;x;0;0;0;;;;1227;kg;
+2.1.125;Epso Top;x;0;0;0;;;;1044;kg;
+2.1.126;Equisetum Plus;x;0;0;0;;;;;kg;
+2.1.127;ESTA Kieserit gran.;x;0;0;0;;;;;kg;
+2.1.128;Fermentierter Pflanzenextrakt;x;0;0;0;;;;;kg;
+2.1.129;Ferrogranul 20;x;0;0;0;;;;;kg;
+2.1.130;Fertileader AZUR (Ca);x;0;0;0;;;;;l;1,3
+2.1.131;Fertileader Gold (BMo);x;0;0;0;;;;1397;l;1,23
+2.1.132;Fertileader OPAL;;0;0;0;;;;;l;1,28
+2.1.133;Feuchtkalk;;0;0;0;;;;;kg;
+2.1.134;Foliarel 21% Bor;;0;0;0;;;;1059;kg;
+2.1.135;Foliarel Flüssigbor 14% Bor;;5,5;0;0;;leicht;;1060;l;1,36
+2.1.136;Folifert super;;16;5;5;;leicht;;1203;kg;
+2.1.137;Graukalk;;0;0;0;;;;;kg;
+2.1.138;Graukorn;;0;0;0;;;;1323;kg;
+2.1.139;GreenFit CaCO3 92%;x;0;0;0;;;;;kg;
+2.1.140;Grundkorn 10:15:20+3;;10;15;20;;leicht;;1027;kg;
+2.1.141;GÜLLE2000;x;0;0;1,77;;;;;kg;
+2.1.142;Güllekalk;x;0;0;0;;;;;kg;
+2.1.143;Harnstoff 46:0:0;;46;0;0;;leicht;;1115;kg;
+2.1.144;Harnstoff flü.;;46;0;0;;leicht;;;kg;
+2.1.145;Hyperkali;;0;18;18;;;;1008;kg;
+2.1.146;Hyperkalisulfat 18:18;;0;18;18;;;;1009;kg;
+2.1.147;Hyperkorn 26;;0;26;0;;;;1072;kg;
+2.1.148;Hyperkorn mehlfein;;0;29;0;;;;1077;kg;
+2.1.149;Hyperphosphat;;0;29;0;;;;1082;kg;
+2.1.150;IPUSagro B100, 110;x;0;0;0;;;;;kg;
+2.1.151;IPUSagro L 900;x;0;0;0;;;;;kg;
+2.1.152;IPUSagro Quattro P 400;x;0;0;0;;;;;kg;
+2.1.153;K&A Decide;x;0;0;0;;;;;kg;
+2.1.154;K&A Frontiere;x;0;0;0;;;;;kg;
+2.1.155;Kali 40 0:0:40+6 MgO;;0;0;40;;;;1065;kg;
+2.1.156;Kali 50 % schwefels.ges.+18 SContent;;0;0;50;;;;1010;kg;
+2.1.157;Kali 60 0:0:60;;0;0;60;;;;1024;kg;
+2.1.158;Kali PK 5:55;;0;5;55;;;;;kg;
+2.1.159;Kalinitrat;;13;0;46;;leicht;;;kg;
+2.1.160;Kalisop 50%;x;0;0;50;;;;;kg;
+2.1.161;Kalksalpeter (CalciNit);;15,5;0;0;;leicht;;1118;kg;
+2.1.162;Kalkstickstoff 20:0:0;;20;0;0;;leicht;;1121;kg;
+2.1.163;Kalzium-Schwefeldünger;;0;0;0;;;;1067;kg;
+2.1.164;KaPhos;x;0;5;0;;;;;kg;
+2.1.165;KM 8000;x;0;0;0;;;;;kg;
+2.1.166;Kohlensaurer Kalk;x;0;0;0;;;;1070;kg;
+2.1.167;Kohlensaurer Magnesiumkalk;x;0;0;0;;;;1071;kg;
+2.1.168;Kohlensaurer Magnesiumkalk (S);x;0;0;0;;;;;kg;
+2.1.169;Kohlensaurer Magnesiumkalk, Dolomitkalk;x;0;0;0;;;;;kg;
+2.1.170;KOKA = Kohlensaurer Kalk;x;0;0;0;;;;;kg;
+2.1.171;KOKA Mg = Kohlensaurer Magnesiumkalk;x;0;0;0;;;;;kg;
+2.1.172;KomBioflor®-b;x;0;0;0;;;;;kg;
+2.1.173;KOMPOST2000;x;0;0;1,77;;;;;kg;
+2.1.174;Konverterkalk;;0;2;0;;;;1105;kg;
+2.1.175;Kupfer-Chelat flüssig;;0;0;0;;;;;l;1,3
+2.1.176;Kupfersulfat;x;0;0;0;;;;1158;kg;
+2.1.177;Lebosol Bor;x;;0;0;;;;;l;1,36
+2.1.178;Lebosol®-Magnesium 400 SC;x;0;0;0;;;;;l;1,61
+2.1.179;Lebosol®-Molybdän;x;0;0;0;;;;;kg;
+2.1.180;Lebosol®-Zink 700 SC;x;0;0;0;;;;;l;1,75
+2.1.181;LithoSoil;x;0;0;2,5;;;;;kg;
+2.1.182;Magnesia Kainit;x;0;0;11;;;;1037;kg;
+2.1.183;Magnesium Mischkalk 60;;0;0;0;;;;1075;kg;
+2.1.184;Magnesium Mischkalk 65;;0;0;0;;;;1076;kg;
+2.1.185;Magnesiumnitrat;;0;0;0;;;;;kg;
+2.1.186;Magnisol;x;0;0;0;;;;;kg;
+2.1.187;Maltaflor Bio Spezial;x;4;0,8;5;Mist;langsam;;;kg;
+2.1.188;Maltaflor Bio Symbio;x;3;0,6;4;Mist;langsam;;;kg;
+2.1.189;Mangan-Chelat flüssig;;0;0;0;;;;;l;1,3
+2.1.190;Mangansulfat;x;0;0;0;;;;;kg;
+2.1.191;Meerkalk;x;0;0;0;;;;;kg;
+2.1.192;Mischkalk;;0;0;0;;;;1079;kg;
+2.1.193;MK 5;x;0;0;0;;;;;kg;
+2.1.194;mOlnasa®;x;0;0;0;;;;;kg;
+2.1.195;Monoammoniumph. 12:52:0;;12;52;0;;leicht;;1134;kg;
+2.1.196;Multikraft Effektive Mikroorganismen Aktiv;x;0;0;0;;;;;kg;
+2.1.197;Multikraft Effektive Mikroorganismen Urlösung;x;0;0;0;;;;;l;1
+2.1.198;NAC 24% 24:0:0+6 S;;24;0;0;;leicht;;1012;kg;
+2.1.199;NAC 25% 25:0:0+5 MgO;;25;0;0;;leicht;;1081;kg;
+2.1.200;NAC 27% 27:0:0;;27;0;0;;leicht;;1123;kg;
+2.1.201;NAC+S 26 N +13 SO3;;26;0;0;;leicht;;1244;kg;
+2.1.202;NaturalGreen;x;0;0;0;;;;;kg;
+2.1.203;Naturgips / Naturgipskorn;x;0;0;0;;;;;kg;
+2.1.204;Naturphosphat 26%;;0;26;0;;;;;kg;
+2.1.205;Nitrophoska Mg plus 12:5:17+5;;12;5;17;;leicht;;;kg;
+2.1.206;Nitrophoska perfekt 15:5:20+2;;15;5;20;;leicht;;1039;kg;
+2.1.207;Nitrophoska spezial 12:5:17+2;;12;5;17;;leicht;;;kg;
+2.1.208;Nitrophoska suprem 20:5:10+3;;20;5;10;;leicht;;;kg;
+2.1.209;NPK 12/12/17+9S;;12;12;17;;leicht;;1066;kg;
+2.1.210;NPK 13/6/16+9S;;13;6;16;;leicht;;1334;kg;
+2.1.211;NPK 14/10/20;;14;10;20;;leicht;;1341;kg;
+2.1.212;NPK 15/15/15;;15;15;15;;leicht;;1053;kg;
+2.1.213;NPK 18/8/8;;18;8;8;;leicht;;;kg;
+2.1.214;NPK 20/10/10;;20;10;10;;leicht;;1341;kg;
+2.1.215;Nutribor;;6;0;0;;leicht;;3406;kg;
+2.1.216;Nutrimix fluid;;3;0;0;;leicht;;;l;1,27
+2.1.217;Organic Plant Feed (OPF) 4-2-8;x;4;2;8;Rindergülle;leicht;;;kg;
+2.1.218;Organic Plant Feed (OPF) 5-2-5;x;5;2;5;Rindergülle;leicht;;;kg;
+2.1.219;Organic Plant Feed (OPF) 7-2-3;x;7;2;3;Rindergülle;leicht;;;kg;
+2.1.220;Organic Plant Feed (OPF) granular 11-0-5;x;11;0,5;5;Mist;langsam;;;kg;
+2.1.221;Patentkali 0:0:30;x;0;0;30;;;;1040;kg;
+2.1.222;Phosfik;;4,2;37,8;25,2;;leicht;;;kg;
+2.1.223;Physiomax;;0;0;0;;;;1298;kg;
+2.1.224;Physiomax 975;;0;0;0;;;;1395;kg;
+2.1.225;Phytoamin;x;0,1296;0;3,5;Rindergülle;leicht;;;kg;1,08
+2.1.226;Piamon S33;;33;0;0;;leicht;;1211;kg;
+2.1.227;Piasan 28;;28;0;0;;leicht;;;l;1,28
+2.1.228;Piasan G 20/8;;20;0;0;;leicht;;;l;1,27
+2.1.229;Piasan S 25/6;;25;0;0;;leicht;;;l;1,31
+2.1.230;Pischelsdorfer Düngerschlempe;x;5,5;2,5;1,5;Mist;langsam;;;kg;
+2.1.231;Pischelsdorfer Düngerschlempe feucht;x;1,8;0,8;0,5;Mist;langsam;;;kg;
+2.1.232;Plonvit Kali;;11;12;38;;leicht;;;kg;
+2.1.233;Plonvit nitro;;31;12;10;;leicht;;;kg;
+2.1.234;Plonvit Phospho;;11;53;5;;leicht;;;kg;
+2.1.235;PottaSol;x;0;0;0;;;;;kg;
+2.1.236;Pressgold 100% organische Hühnermistpellets aus Ö;x;3,6;2,6;2,3;Mist;langsam;;;kg;
+2.1.237;Pressgold BIO 100% organische Hühnermistpellets aus Ö;x;3,6;2,6;2,3;Mist;langsam;;;kg;
+2.1.238;ProLiq® AminoCalcio;x;0,6;0;0;Rindergülle;leicht;;;l;1
+2.1.239;ProLiq® Calcium LQ;x;0;0;0;;;;;l;1
+2.1.240;Radam extra 520;x;0;0;52;;;;;kg;
+2.1.241;Resistance;x;0;0;4;;;;;kg;
+2.1.242;RhizoFlor ZEO ultrafein;x;0;0;0;;;;;kg;
+2.1.243;Rübenbruchstücke / Rübengrün;x;0,2;0;0,2;Mist;langsam;;;kg;
+2.1.244;SCHWEDOKAL® 90 Granulat;x;0;0;0;;;;;kg;
+2.1.245;SCHWEFAL flüssig;x;0;0;0;;;;;l;1,3
+2.1.246;SCHWEFAL-Schwefel-Linsen;x;0;0;0;;;;;kg;
+2.1.247;Sedumin Regenwurmhumus;x;1,3;1,37;0,97;Mist;langsam;;;kg;
+2.1.248;Sedumin® Algen-Extrakt;x;1,5;2;18,5;Mist;langsam;;;kg;
+2.1.249;Sedumin® Bio-Ferrol;x;2,5;0;2,41;Mist;langsam;;;kg;
+2.1.250;Sedumin® Bio-Hühnermist-Pellets;x;3,9;2,6;2,6;Mist;;;;kg;
+2.1.251;Sedumin® Carbofert;x;0;0;1,2;;;;;kg;
+2.1.252;Sedumin® Element-S Biofluid;x;0;0;0;;;;;kg;
+2.1.253;Sedumin® Haarmehlpellets 14% N;x;14;0;0;Mist;langsam;;;kg;
+2.1.254;Sedumin® MicroVital 313;x;3,1;0,85;3,3;Mist;langsam;;;kg;
+2.1.255;Sedumin® Soilfeed Bio - flüssig;x;4,3;1;5,5;Mist;langsam;;;l;1,3
+2.1.256;Sedumin® Vegipur 402 M;x;3,7;0;1,6;Mist;langsam;;;kg;
+2.1.257;Sedumin® Vegipur 412;x;4,15;1,4;2,32;Mist;langsam;;;kg;
+2.1.258;Sedumin® Vegipur BIOMIX;x;5,5;0,5;0,5;Mist;langsam;;;kg;
+2.1.259;Sedumin® Vinasse 305;x;3;0;5;Mist;langsam;;;kg;
+2.1.260;Sergomil L60;x;0;0;0;;;;;kg;
+2.1.261;SOJALL MICRO POWER;x;0;0;0;;;;;kg;
+2.1.262;Solubor;;0;0;0;;;;;kg;
+2.1.263;solufit FG®/ solufit TG®/ solufit WE®;x;4,5;0;10;Rindergülle;leicht;;;kg;
+2.1.264;Spower BioN +(A);x;5;1,7;1;Mist;langsam;;;kg;
+2.1.265;StyriaFert N flüssig;x;9;;;Rindergülle;leicht;;;l;1,2
+2.1.266;StyriaFert N+;x;13;0,5;;Mist;langsam;;;kg;
+2.1.267;StyriaFert N105;x;10,5;1;;Mist;langsam;;;kg;
+2.1.268;StyriaFert N14;x;14;0,5;;Mist;langsam;;;kg;
+2.1.269;StyriaFert NK;x;10;0,5;8;Mist;langsam;;;kg;
+2.1.270;StyriaFert NPK;x;8;6;7;Mist;langsam;;;kg;
+2.1.271;StyriaFert Powerkorn;x;8;12;;Mist;langsam;;;kg;
+2.1.272;StyriaFert Veggie Basis;x;5,5;3;1;Mist;langsam;;;kg;
+2.1.273;StyriaFert Veggie Bio;x;4;0,5;0,2;Mist;langsam;;;kg;
+2.1.274;StyriaFert Veggie eM;x;5,5;3;1;Mist;langsam;;;kg;
+2.1.275;StyriaFert Veggie Plus;x;6;1;5;Mist;langsam;;;kg;
+2.1.276;Sulfammo 23 N;;23;0;0;;leicht;;;kg;
+2.1.277;Sulfammo 26 NContent PRO;;26;0;0;;leicht;;;kg;
+2.1.278;Sulfammo 30 N;;30;0;0;;leicht;;;kg;
+2.1.279;Sulfogran®;x;0;0;0;;;;;kg;
+2.1.280;Sulfogranulat;x;0;0;0;;;;;kg;
+2.1.281;Sulfogüll® plus;x;0;0;0;;;;;kg;
+2.1.282;Sulfomax;x;0;0;0;;;;;kg;
+2.1.283;Superk. DC 36 0:18:18;;0;18;18;;;;;kg;
+2.1.284;Superphosphat;;0;18;0;;;;1085;kg;
+2.1.285;Terrafert Blatt;x;0;0;0;;;;;kg;
+2.1.286;Terrafert Boden;x;0;0;0;;;;;kg;
+2.1.287;Thomaskali 10:20 + 3MgO;;0;10;20;;;;1016;kg;
+2.1.288;Thomaskorn;;0;15;0;;;;;kg;
+2.1.289;Thomasmehl 0:15:0;;0;15;0;;;;1087;kg;
+2.1.290;Thomasphosphat;;0;12,5;0;;;;1088;kg;
+2.1.291;Timac Agro Hyperkorn 26%;x;0;26;0;;;;;kg;
+2.1.292;Timac Agro Hyperphosphat mehlfein 29%;x;0;29;0;;;;;kg;
+2.1.293;Timac Agro Naturphosphat 26 %, granuliert;x;0;26;0;;;;;kg;
+2.1.294;Triplephosphat 0:45:0;;0;45;0;;;;1089;kg;
+2.1.295;UAN 30 NContent 30:0:0;;30;0;0;;leicht;;;kg;
+2.1.296;Unser Bio HTK-Pellets 4-3-3;x;4;3;3;Mist;langsam;;;kg;
+2.1.297;UREA 46 NContent 46:0:0;;46;0;0;;leicht;;1115;kg;
+2.1.298;Urea S;;38;0;0;;leicht;;1151;kg;
+2.1.299;Vario 18/11/11+2S;;18;11;11;;leicht;;1360;kg;
+2.1.300;Vario 20/7/7+17S;;20;7;7;;leicht;;1480;kg;
+2.1.301;Vario 21/5/5+20S;;21;5;5;;leicht;;;kg;
+2.1.302;VARIO 23 N + 25 S;;23,5;0;0;;leicht;;1408;kg;
+2.1.303;Vermesfluid;x;1,55;0,35;0;Rindergülle;leicht;;;kg;
+2.1.304;VERMIGRAND Regenwurmhumus;x;1,9;0;0;Mist;langsam;;;kg;
+2.1.305;VERMIGRAND Wagramkompost;x;1,6;0;0;Kompost;langsam;;;kg;
+2.1.306;Vinasse;x;2;0;4;Mist;langsam;;;kg;
+2.1.307;Vinasse C;x;2;0,3;5,8;Mist;langsam;;;kg;
+2.1.308;Vinasse Team F;x;5;0,3;5,5;Rindergülle;leicht;;;kg;
+2.1.309;Weicherdiges Rohphosphat (Naturphosphat);x;0;31;0;;;;;kg;
+2.1.310;Wigor S;x;;;;;;;;kg;
+2.1.311;Wuxal Boron Plus;;5;13;0;;leicht;;;l;1,41
+2.1.312;Wuxal Calcium;;10;0;0;;leicht;;;l;1,64
+2.1.313;Wuxal Combi B Plus;;0;0;0;;;;;l;1,4
+2.1.314;Wuxal Magnesium;;3,6;0;0;;leicht;;;l;1,5
+2.1.315;Wuxal P Profi;;5;20;5;;leicht;;1165;l;1,28
+2.1.316;Wuxal Schwefel;;15;0;0;;leicht;;;l;1,323
+2.1.317;Wuxal super;;8;8;6;;leicht;;;l;1,24
+2.1.318;Wuxal Top N;;12;4;6;;leicht;;;l;1,18
+2.1.319;YaraBela ASS 26+14;;26;0;0;;leicht;;;kg;
+2.1.320;YaraVera AMIDAS;;40;0;0;;leicht;;;kg;
+2.1.321;Zink-Chelat flüssig;;5,2;0;0;;leicht;;;kg;
+2.1.322;Zinksulfat;x;0;0;0;;;;1161;kg;
+2.1.323;Kupfer 380 SC;x;;;;;;;;kg;
+2.1.324;Harnstoff flüssig 40%;;40;;;;leicht;;;l;1,112
+2.1.325;COMPLEX SOP 12/12/17 + 3,5MgO +13 SO? + B + Zn;;12;12;17;;leicht;;;kg;
+2.1.326;COMPLEX 14/10/20 + 11SO?;;14;10;20;;leicht;;;kg;
+2.1.327;COMPLEX SOP 15/5/18 +2,5MgO+24SO?+B+Zn;;15;5;18;;leicht;;;kg;
+2.1.328;COMPLEX 20/20 +8SO?+Zn;;20;20;;;leicht;;;kg;
+2.1.329;YaraBela SULFAN;;24;;;;leicht;;;kg;
+2.1.330;YaraBela SULFAN BOR;;24;;;;leicht;;;kg;
+2.1.331;YaraBela NITROMAG;;27;;;;leicht;;;kg;
+2.1.332;YaraBela (ASS+Bor) 26%;;26;;;;leicht;;;kg;
+2.1.333;Stimulus 40N (+5,5S);;40;;;;leicht;;;kg;
+2.1.334;Petiso 24N + 4,8S;;24;;;;leicht;;;kg;
+2.1.335;StyriaFert Veggie Plus P+S;;4;5;2;;leicht;;;kg;
+2.1.336;Diammoniumphosphat DAP 18:46 + (2,5S);;18;46;;;leicht;;;kg;
+2.1.337;Nitrophoska 12:12:17 + 20S;;12;12;17;;leicht;;;kg;
+2.1.338;Complex NP Dünger 20:20 + 3S;;20;20;;;leicht;;;kg;
+2.1.339;Complex NP Dünger 24:14 + 3S;;24;14;;;leicht;;;kg;
+2.1.340;Eurofertil TOP 49® NP + S;;3;22;;;leicht;;;kg;
+2.1.341;Eurofertil TOP 35® NP + S;;15;20;;;leicht;;;kg;
+2.1.342;YaraMila® Mais;;19;17;;;leicht;;;kg;
+2.1.343;Aminosol;x;9,4;;1,1;;;;;l;1,23
+2.1.344;Wuxal K40;;3,2;;25,5;;;;;l;1,57
+2.1.345;Genezis Stickstoff;;27;;;;;;;;
+2.1.346;Genezis Pétisó+S;;24;;;;;;;;
