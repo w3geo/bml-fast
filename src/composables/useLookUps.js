@@ -40,6 +40,11 @@ async function getJson(what) {
   getJson('feldstücknutzungsarten');
   getJson('bodenartenbodenschwere');
   getJson('kulturen');
+  getJson('wirtschaftsdünger');
+  getJson('sekundärrohstoffe');
+  getJson('handelsdünger');
+  getJson('entzugstabelle-weizen');
+  getJson('entzugstabelle-braugerste');
 }
 
 /**
