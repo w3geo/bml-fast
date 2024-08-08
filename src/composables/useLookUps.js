@@ -12,10 +12,22 @@ const wrrl = [
 
 const kulturenItems = {};
 
+const yearItems = [];
+{
+  const thisYear = new Date().getFullYear();
+  for (let y = thisYear - 2; y < thisYear + 2; y++) {
+    yearItems.push(y);
+  }
+}
+
 /**
  * @type {import('vue').ShallowRef<Object>}
  */
-export const lookup = shallowRef({ wrrl: wrrl, kulturenItems: kulturenItems });
+export const lookup = shallowRef({
+  yearItems: yearItems,
+  wrrl: wrrl,
+  kulturenItems: kulturenItems,
+});
 
 async function getJson(what) {
   const response = await fetch(`data/${what}.json`);

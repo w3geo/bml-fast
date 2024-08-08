@@ -176,7 +176,7 @@
                   <v-col cols="6" class="px-4 obligatory">
                     <v-select
                       v-model="entry.jahr"
-                      :items="itemsYear"
+                      :items="lookup.yearItems"
                       label="Jahr"
                       variant="outlined"
                       density="compact"
@@ -308,7 +308,7 @@ const itemsJaNein = [
   { value: false, title: 'Nein' },
 ];
 
-const itemsYear = [2021, 2022, 2023, 2024];
+const currentYear = new Date().getFullYear();
 
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
@@ -369,6 +369,8 @@ watch(schlagInfo, (value) => {
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
 
       entry.value.extent = tempData.value.basic.extent;
+
+      entry.value.jahr = new Date().getFullYear();
     }
     if (tempData.value.basic && tempData.value.basic.parts) {
       delete tempData.value.basic.parts;
