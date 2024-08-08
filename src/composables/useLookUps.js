@@ -20,6 +20,27 @@ const yearItems = [];
   }
 }
 
+const fertilizationTypes = ['Eigene', 'Handelsdünger', 'Wirtschaftsdünger', 'Sekundärrohstoffe'];
+
+const aussaatTypes = {
+  0: [
+    { title: 'Keine', value: 'keine' },
+    { title: 'Ungenutzte Zwischenfrucht', value: 'zwischenU' },
+    { title: 'Genutzte Zwischenfrucht', value: 'zwischenG' },
+  ],
+  1: [
+    { title: 'Keine', value: 'keine' },
+    { title: 'Ungenutzte Zwischenfrucht', value: 'zwischenU' },
+    { title: 'Genutzte Zwischenfrucht', value: 'zwischenG' },
+    { title: 'Hauptfrucht', value: 'haupt' },
+  ],
+};
+
+const aussaatTypeFilter = {
+  zwischenU: ['1.1.600', '1.1.610', '1.1.620'],
+  zwischenG: ['1.1.630', '1.1.640', '1.1.650'],
+};
+
 /**
  * @type {import('vue').ShallowRef<Object>}
  */
@@ -27,6 +48,9 @@ export const lookup = shallowRef({
   yearItems: yearItems,
   wrrl: wrrl,
   kulturenItems: kulturenItems,
+  fertilizationTypes: fertilizationTypes,
+  aussaatTypes: aussaatTypes,
+  aussaatTypeFilter: aussaatTypeFilter,
 });
 
 async function getJson(what) {

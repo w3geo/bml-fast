@@ -17,7 +17,7 @@
             geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
             sobald alle notwendigen Feldern mit Werten befüllt sind.
           </div>
-          <v-expansion-panels variant="accordion" v-model="panelInit">
+          <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-lighten-3">
                 Basisdaten
@@ -198,7 +198,7 @@
 
             <v-expansion-panel value="ernten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-lighten-3">
-                Ernten
+                Hauptkulturen und Zwischenfrüchte
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <v-card class="ma-0 pa-0" v-for="i in entry.ernten.length" :key="i">
@@ -213,7 +213,7 @@
                         size="28"
                         color="red"
                         icon="mdi-close"
-                        @click="deleteHarvest(i - 1)"
+                        @click="deleteCulture(i - 1)"
                       />
                     </v-col>
                   </v-row>
@@ -243,7 +243,7 @@
                   prepend-icon="mdi-plus"
                   color="green-lighten-4"
                   size="small"
-                  @click="addHarvest"
+                  @click="addCulture"
                   >Ernte hinzufügen</v-btn
                 >
               </v-expansion-panel-text>
@@ -286,7 +286,7 @@ import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
 
-const { allData, emptyHarvest, entry } = useDataEntries();
+const { allData, emptyCulture, entry } = useDataEntries();
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
 const route = useRoute();
@@ -301,14 +301,12 @@ const { lookup } = useLookup();
 
 const tempData = ref({ basic: null, programs: null });
 
-const panelInit = ref(['basisdaten']);
+const panelInit = ref(['basisdaten', 'ernten']);
 
 const itemsJaNein = [
   { value: true, title: 'Ja' },
   { value: false, title: 'Nein' },
 ];
-
-const currentYear = new Date().getFullYear();
 
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
@@ -330,12 +328,12 @@ function setSchlagId(id) {
   }
 }
 
-function deleteHarvest(nr) {
+function deleteCulture(nr) {
   entry.value.ernten.splice(nr, 1);
 }
 
-function addHarvest() {
-  entry.value.ernten.push({ ...emptyHarvest });
+function addCulture() {
+  entry.value.ernten.push({ ...emptyCulture });
 }
 
 function dataSort(a, b) {

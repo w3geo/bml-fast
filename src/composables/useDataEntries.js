@@ -2,14 +2,22 @@ import { ref } from 'vue';
 
 /**
  * @typedef fertilization
- * @property {string} name
+ * @property {string} typ
+ * @property {string} id
+ * @property {number} n
+ * @property {number} p
+ * @property {number} k
  */
 
 /**
- * @typedef harvest
- * @property {string} zwischenfrucht
+ * @typedef culture
+ * @property {string} typ
  * @property {string} kultur
- * @property {number} menge
+ * @property {number} ertragslage
+ * @property {number} ernte
+ * @property {number} ertragslageernte
+ * @property {number} feuchte
+ * @property {number} protein
  * @property {Array<fertilization>} duengung
  */
 
@@ -31,14 +39,18 @@ import { ref } from 'vue';
  * @property {string} vorfrucht
  * @property {number} stickstoffueberschuss
  * @property {Array<number>} extent
- * @property {Array<harvest>} ernten
+ * @property {Array<culture>} cultures
  */
 
-export const emptyFertilization = { name: '' };
-export const emptyHarvest = {
-  zwischenfrucht: '',
+export const emptyFertilization = { typ: 'Eigene', id: '', n: 0, p: 0, k: 0 };
+export const emptyCulture = {
+  typ: 'keine',
   kultur: '',
-  menge: 0,
+  ertragslage: 0,
+  ernte: 0,
+  ertragslageernte: 0,
+  feuchte: 0,
+  protein: 0,
   duengung: [{ ...emptyFertilization }],
 };
 export const emptyEntry = {
@@ -58,7 +70,7 @@ export const emptyEntry = {
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
-  ernten: [{ ...emptyHarvest }],
+  cultures: [{ ...emptyCulture }],
 };
 
 export const entry = ref(emptyEntry);
@@ -82,8 +94,8 @@ export const allData = ref({ saved: [], current: null, datawindow: false });
 }
 
 /**
- * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
+ * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
-  return { allData, emptyFertilization, emptyHarvest, emptyEntry, entry };
+  return { allData, emptyFertilization, emptyCulture, emptyEntry, entry };
 }
