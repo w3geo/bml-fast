@@ -25,8 +25,7 @@ const fertilizationTypes = ['Eigene', 'Handelsdünger', 'Wirtschaftsdünger', 'S
 const aussaatTypes = {
   0: [
     { title: 'Keine', value: 'keine' },
-    { title: 'Ungenutzte Zwischenfrucht', value: 'zwischenU' },
-    { title: 'Genutzte Zwischenfrucht', value: 'zwischenG' },
+    { title: 'Genutzt / Ungenutzt', value: 'zwischen' },
   ],
   1: [
     { title: 'Keine', value: 'keine' },
@@ -59,16 +58,24 @@ async function getJson(what) {
   lookup.value[what] = data;
 
   if (what === 'kulturen') {
+    kulturenItems.zwischen = [];
     for (let k = 0; k < data.length; k++) {
-      const alleFNA = data[k].Feldstücknutzungsart.split(';');
-      for (let f = 0; f < alleFNA.length; f++) {
-        if (kulturenItems[alleFNA[f]]) {
-          kulturenItems[alleFNA[f]].push({ value: data[k].ID, title: data[k].Kultur });
-        } else {
-          kulturenItems[alleFNA[f]] = [{ value: data[k].ID, title: data[k].Kultur }];
+      if (aussaatTypeFilter.zwischenU.includes(data[k].ID)) {
+        kulturenItems.zwischen.push({ value: data[k].ID, title: data[k].Kultur });
+      } else if (aussaatTypeFilter.zwischenG.includes(data[k].ID)) {
+        kulturenItems.zwischen.push({ value: data[k].ID, title: data[k].Kultur });
+      } else {
+        const alleFNA = data[k].Feldstücknutzungsart.split(';');
+        for (let f = 0; f < alleFNA.length; f++) {
+          if (kulturenItems[alleFNA[f]]) {
+            kulturenItems[alleFNA[f]].push({ value: data[k].ID, title: data[k].Kultur });
+          } else {
+            kulturenItems[alleFNA[f]] = [{ value: data[k].ID, title: data[k].Kultur }];
+          }
         }
       }
     }
+    console.log(kulturenItems);
   }
 }
 

@@ -70,7 +70,7 @@ export const emptyEntry = {
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
-  cultures: [{ ...emptyCulture }],
+  cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
 
 export const entry = ref(emptyEntry);

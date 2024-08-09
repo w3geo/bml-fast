@@ -196,24 +196,55 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <v-expansion-panel value="ernten" rounded="0" elevation="0">
+            <v-expansion-panel value="kulturen" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-lighten-3">
                 Hauptkulturen und Zwischenfrüchte
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <v-card class="ma-0 pa-0" v-for="i in entry.ernten.length" :key="i">
+                <v-card class="ma-0 pa-0" v-for="i in entry.cultures.length - 1" :key="i">
                   <v-row no-gutters class="bg-grey-lighten-4 mb-3">
                     <v-col cols="10" class="pl-2">
-                      <span class="text-button">Ernte {{ i }}</span>
+                      <span class="text-button">Zwischenfrucht</span>
+                    </v-col>
+                    <v-col cols="2" class="text-right"> </v-col>
+                  </v-row>
+
+                  <v-row no-gutters>
+                    <v-col cols="12" class="px-4">
+                      <v-select
+                        v-model="entry.cultures[0].typ"
+                        :items="lookup.aussaatTypes[0]"
+                        label="Art der Zwischenfrucht"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters v-if="entry.cultures[0].typ != 'keine'">
+                    <v-col cols="12" class="px-4">
+                      <v-select
+                        v-model="entry.cultures[0].kultur"
+                        :items="lookup.kulturenItems.zwischen"
+                        label="Kultur"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-card>
+                <v-card class="ma-0 pa-0" v-for="i in entry.cultures.length - 1" :key="i">
+                  <v-row no-gutters class="bg-grey-lighten-4 mb-3">
+                    <v-col cols="10" class="pl-2">
+                      <span class="text-button">Hauptfrucht {{ i }}</span>
                     </v-col>
                     <v-col cols="2" class="text-right">
                       <v-icon
-                        v-if="i == entry.ernten.length && entry.ernten.length > 1"
+                        v-if="i == entry.cultures.length && entry.cultures.length > 1"
                         class="mt-1"
                         size="28"
                         color="red"
                         icon="mdi-close"
-                        @click="deleteCulture(i - 1)"
+                        @click="deleteCulture(i)"
                       />
                     </v-col>
                   </v-row>
@@ -221,21 +252,14 @@
                   <v-row no-gutters>
                     <v-col cols="9" class="px-4 obligatory">
                       <v-select
-                        v-model="entry.ernten[i - 1].kultur"
+                        v-model="entry.cultures[i].kultur"
                         :items="lookup.kulturenItems[entry.flaechennutzungsart]"
                         label="Kultur"
                         variant="outlined"
                         density="compact"
                       />
                     </v-col>
-                    <v-col cols="3" class="px-4 obligatory">
-                      <v-text-field
-                        v-model="entry.ernten[i - 1].menge"
-                        label="Menge"
-                        variant="outlined"
-                        density="compact"
-                      />
-                    </v-col>
+                    <v-col cols="3" class="px-4 obligatory"> </v-col>
                   </v-row>
                 </v-card>
                 <v-btn
@@ -246,6 +270,7 @@
                   @click="addCulture"
                   >Ernte hinzufügen</v-btn
                 >
+                <br /><br /><br /><br />
               </v-expansion-panel-text>
             </v-expansion-panel>
 
@@ -301,7 +326,7 @@ const { lookup } = useLookup();
 
 const tempData = ref({ basic: null, programs: null });
 
-const panelInit = ref(['basisdaten', 'ernten']);
+const panelInit = ref(['basisdaten', 'kulturen']);
 
 const itemsJaNein = [
   { value: true, title: 'Ja' },
@@ -329,11 +354,11 @@ function setSchlagId(id) {
 }
 
 function deleteCulture(nr) {
-  entry.value.ernten.splice(nr, 1);
+  entry.value.cultures.splice(nr, 1);
 }
 
 function addCulture() {
-  entry.value.ernten.push({ ...emptyCulture });
+  entry.value.cultures.push({ ...emptyCulture });
 }
 
 function dataSort(a, b) {
