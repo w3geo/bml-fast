@@ -10,6 +10,41 @@ const wrrl = [
   { value: 'F', title: 'F', code: 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3' },
 ];
 
+const ertragsLagen = ['niedrig', 'mittel', 'hoch 1', 'hoch 2', 'hoch 3'];
+
+/*
+EL niedrig Bereich
+EL niedrig t / m3 ab
+Entzugsfaktor EL niedrig
+Düngeobergrenze EL mittel
+Düngeobergenze EL mittel A5
+EL mittel Bereich 
+EL mittel t / m3 je ab
+Entzugsfaktor EL mittel
+Düngeobergrenze EL hoch 1
+Düngeobergrenze EL hoch 1 A5
+EL hoch 1 Bereich
+EL hoch 1 t / m3 ab
+Entzugsfaktor EL hoch 1
+Düngeobergrenze EL hoch 2
+Düngeobergenze EL hoch 2 A5
+EL hoch 2 Bereich
+EL hoch 2 t / m3 ab
+Entzugsfaktor EL hoch 2
+Düngeobergrenze EL hoch 3
+Düngeobergenze EL hoch 3 A5
+EL hoch 3 t / m3 Bereich
+EL hoch 3 t / m3 ab
+EL hoch 3 t / m3 bis
+
+
+EL niedrig
+EL mittel
+EL hoch 1
+EL hoch 2
+EL hoch 3
+*/
+
 const kulturenItems = {};
 
 const yearItems = [];
@@ -46,6 +81,7 @@ const aussaatTypeFilter = {
 export const lookup = shallowRef({
   yearItems: yearItems,
   wrrl: wrrl,
+  ertragsLagen: ertragsLagen,
   kulturenItems: kulturenItems,
   fertilizationTypes: fertilizationTypes,
   aussaatTypes: aussaatTypes,
@@ -75,7 +111,6 @@ async function getJson(what) {
         }
       }
     }
-    console.log(kulturenItems);
   }
 }
 

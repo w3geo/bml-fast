@@ -13,9 +13,9 @@ import { ref } from 'vue';
  * @typedef culture
  * @property {string} typ
  * @property {string} kultur
- * @property {number} ertragslage
+ * @property {string} ertragslage
  * @property {number} ernte
- * @property {number} ertragslageernte
+ * @property {string} ertragslageernte
  * @property {number} feuchte
  * @property {number} protein
  * @property {Array<fertilization>} duengung
@@ -46,9 +46,9 @@ export const emptyFertilization = { typ: 'Eigene', id: '', n: 0, p: 0, k: 0 };
 export const emptyCulture = {
   typ: 'keine',
   kultur: '',
-  ertragslage: 0,
+  ertragslage: '',
   ernte: 0,
-  ertragslageernte: 0,
+  ertragslageernte: '',
   feuchte: 0,
   protein: 0,
   duengung: [{ ...emptyFertilization }],

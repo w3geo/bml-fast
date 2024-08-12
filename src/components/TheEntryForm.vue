@@ -19,7 +19,7 @@
           </div>
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
-              <v-expansion-panel-title static class="bg-grey-lighten-3">
+              <v-expansion-panel-title static class="bg-teal-darken-3">
                 Basisdaten
               </v-expansion-panel-title>
               <v-expansion-panel-text>
@@ -197,12 +197,12 @@
             </v-expansion-panel>
 
             <v-expansion-panel value="kulturen" rounded="0" elevation="0">
-              <v-expansion-panel-title static class="bg-grey-lighten-3">
+              <v-expansion-panel-title static class="bg-teal-darken-3">
                 Hauptkulturen und Zwischenfrüchte
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <v-card class="ma-0 pa-0" v-for="i in entry.cultures.length - 1" :key="i">
-                  <v-row no-gutters class="bg-grey-lighten-4 mb-3">
+                <v-card class="my-1 pa-0">
+                  <v-row no-gutters class="bg-blue-grey mb-3">
                     <v-col cols="10" class="pl-2">
                       <span class="text-button">Zwischenfrucht</span>
                     </v-col>
@@ -232,8 +232,9 @@
                     </v-col>
                   </v-row>
                 </v-card>
-                <v-card class="ma-0 pa-0" v-for="i in entry.cultures.length - 1" :key="i">
-                  <v-row no-gutters class="bg-grey-lighten-4 mb-3">
+
+                <v-card class="my-1 pa-0" v-for="i in entry.cultures.length - 1" :key="i">
+                  <v-row no-gutters class="bg-blue-grey">
                     <v-col cols="10" class="pl-2">
                       <span class="text-button">Hauptfrucht {{ i }}</span>
                     </v-col>
@@ -250,7 +251,10 @@
                   </v-row>
 
                   <v-row no-gutters>
-                    <v-col cols="9" class="px-4 obligatory">
+                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1"
+                      >Aussaat / Erwartete Ertragslage</v-col
+                    >
+                    <v-col cols="12" class="px-4 obligatory">
                       <v-select
                         v-model="entry.cultures[i].kultur"
                         :items="lookup.kulturenItems[entry.flaechennutzungsart]"
@@ -259,7 +263,17 @@
                         density="compact"
                       />
                     </v-col>
-                    <v-col cols="3" class="px-4 obligatory"> </v-col>
+                    <v-col cols="12" class="px-4 obligatory">
+                      <v-select
+                        v-model="entry.cultures[i].ertragslage"
+                        :items="ertragsLagen(entry.cultures[i].kultur)"
+                        label="Erwartete Ertragslage"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Düngung(en)</v-col>
+                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Ernte / Ertrag</v-col>
                   </v-row>
                 </v-card>
                 <v-btn
@@ -342,6 +356,21 @@ mapReady.then(() => {
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
 
+function ertragsLagen(kultur) {
+  const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
+  console.log(dataRow);
+  const itemReturn = [{ title: 'Keine', value: '' }];
+  if (dataRow) {
+    for (const el of lookup.value.ertragsLagen) {
+      if (dataRow[`EL ${el} Bereich`] != '') {
+        itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
+      }
+      console.log(el, dataRow['EL ' + el + ' t / m3 ab']);
+    }
+  }
+  return itemReturn;
+}
+
 function setSchlagId(id) {
   if (Number(id) !== schlagInfo.value?.id) {
     schlagInfo.value = id
@@ -375,13 +404,13 @@ function saveData() {
 
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   allData.value.datawindow = false;
-  panelInit.value = ['basisdaten'];
+  panelInit.value = ['basisdaten', 'kulturen'];
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
   allData.value.datawindow = false;
-  panelInit.value = ['basisdaten'];
+  panelInit.value = ['basisdaten', 'kulturen'];
 }
 
 watch(schlagInfo, (value) => {

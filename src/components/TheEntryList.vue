@@ -61,7 +61,7 @@ function editEntry(nr) {
     entry.value = allData.value.saved[nr];
   } else {
     entry.value = { ...emptyEntry };
-    entry.value.ernten = [{ ...emptyCulture }];
+    entry.value.cultures = [{ ...emptyCulture }, { ...emptyCulture }];
   }
   allData.value.datawindow = true;
 }
