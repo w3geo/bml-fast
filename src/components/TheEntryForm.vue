@@ -363,7 +363,14 @@ function ertragsLagen(kultur) {
   if (dataRow) {
     for (const el of lookup.value.ertragsLagen) {
       if (dataRow[`EL ${el} Bereich`] != '') {
-        itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
+        if (entry.value.flaechennutzungsart == 'A' && entry.value.ackerzahl < 30) {
+          // Sonderfall Ackerzahl < 30, Ackerkultur
+          if (lookup.value.limitAckerzahl.includes(el)) {
+            itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
+          }
+        } else {
+          itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
+        }
       }
       console.log(el, dataRow['EL ' + el + ' t / m3 ab']);
     }

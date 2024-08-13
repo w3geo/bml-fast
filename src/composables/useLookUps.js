@@ -11,6 +11,7 @@ const wrrl = [
 ];
 
 const ertragsLagen = ['niedrig', 'mittel', 'hoch 1', 'hoch 2', 'hoch 3'];
+const limitAckerzahl = ['niedrig', 'mittel'];
 
 /*
 EL niedrig Bereich
@@ -82,6 +83,7 @@ export const lookup = shallowRef({
   yearItems: yearItems,
   wrrl: wrrl,
   ertragsLagen: ertragsLagen,
+  limitAckerzahl: limitAckerzahl,
   kulturenItems: kulturenItems,
   fertilizationTypes: fertilizationTypes,
   aussaatTypes: aussaatTypes,
