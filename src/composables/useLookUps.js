@@ -56,7 +56,13 @@ const yearItems = [];
   }
 }
 
-const fertilizationTypes = ['Eigene', 'Handelsdünger', 'Wirtschaftsdünger', 'Sekundärrohstoffe'];
+const fertilizationTypes = [
+  { title: 'Kein', value: '' },
+  { title: 'Eigene', value: 'eigene' },
+  { title: 'Handelsdünger', value: 'handelsdünger' },
+  { title: 'Sekundärrohstoffe', value: 'sekundärrohstoffe' },
+  { title: 'Wirtschaftsdünger', value: 'wirtschaftsdünger' },
+];
 
 const aussaatTypes = {
   0: [

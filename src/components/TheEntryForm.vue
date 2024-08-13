@@ -233,7 +233,11 @@
                   </v-row>
                 </v-card>
 
-                <v-card class="my-1 pa-0" v-for="i in entry.cultures.length - 1" :key="i">
+                <v-card
+                  class="my-1 pa-0"
+                  v-for="i in entry.cultures.length - 1"
+                  :key="`kultur${i}`"
+                >
                   <v-row no-gutters class="bg-blue-grey">
                     <v-col cols="10" class="pl-2">
                       <span class="text-button">Hauptfrucht {{ i }}</span>
@@ -273,6 +277,73 @@
                       />
                     </v-col>
                     <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Düngung(en)</v-col>
+                    <v-row
+                      no-gutters
+                      v-for="f in entry.cultures[i].duengung.length"
+                      :key="`kultur${i}duengung${f}`"
+                      class="border-md mx-1 mb-2"
+                    >
+                      <v-col cols="5" class="pa-2">
+                        <v-select
+                          v-model="entry.cultures[i].duengung[f - 1].typ"
+                          :items="lookup.fertilizationTypes"
+                          label="Typ"
+                          variant="outlined"
+                          density="compact"
+                          hide-details
+                        />
+                      </v-col>
+                      <v-col cols="6" class="pa-2">
+                        <v-select
+                          v-model="entry.cultures[i].duengung[f - 1].id"
+                          :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
+                          label="Typ"
+                          variant="outlined"
+                          density="compact"
+                          hide-details
+                        />
+                      </v-col>
+                      <v-col cols="1" class="pa-2 text-right"> X </v-col>
+
+                      <v-col cols="3" class="pa-2">
+                        <v-text-field
+                          v-model="entry.cultures[i].duengung[f - 1].menge"
+                          label="Menge (in T)"
+                          variant="outlined"
+                          density="compact"
+                          hide-details
+                        />
+                      </v-col>
+                      <v-col cols="2" class="pa-2 text-right"></v-col>
+
+                      <v-col cols="2" class="pa-2">
+                        <v-text-field
+                          v-model="entry.cultures[i].duengung[f - 1].n"
+                          label="N(%)"
+                          variant="outlined"
+                          density="compact"
+                          hide-details
+                        />
+                      </v-col>
+                      <v-col cols="2" class="pa-2">
+                        <v-text-field
+                          v-model="entry.cultures[i].duengung[f - 1].p"
+                          label="P2O5(%)"
+                          variant="outlined"
+                          density="compact"
+                        />
+                      </v-col>
+                      <v-col cols="2" class="pa-2">
+                        <v-text-field
+                          v-model="entry.cultures[i].duengung[f - 1].k"
+                          label="K2O(%)"
+                          variant="outlined"
+                          density="compact"
+                        />
+                      </v-col>
+
+                      <v-col cols="1" class="pa-2 text-right"></v-col>
+                    </v-row>
                     <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Ernte / Ertrag</v-col>
                   </v-row>
                 </v-card>
@@ -351,14 +422,16 @@ const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
 
+console.log(lookup.value);
+
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
 
 function ertragsLagen(kultur) {
+  console.log(entry.value);
   const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
-  console.log(dataRow);
   const itemReturn = [{ title: 'Keine', value: '' }];
   if (dataRow) {
     for (const el of lookup.value.ertragsLagen) {
@@ -372,7 +445,6 @@ function ertragsLagen(kultur) {
           itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
         }
       }
-      console.log(el, dataRow['EL ' + el + ' t / m3 ab']);
     }
   }
   return itemReturn;

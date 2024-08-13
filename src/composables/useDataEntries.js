@@ -4,6 +4,7 @@ import { ref } from 'vue';
  * @typedef fertilization
  * @property {string} typ
  * @property {string} id
+ * @property {number} menge
  * @property {number} n
  * @property {number} p
  * @property {number} k
@@ -42,7 +43,7 @@ import { ref } from 'vue';
  * @property {Array<culture>} cultures
  */
 
-export const emptyFertilization = { typ: 'Eigene', id: '', n: 0, p: 0, k: 0 };
+export const emptyFertilization = { typ: 'Eigene', id: '', menge: 0, n: 0, p: 0, k: 0 };
 export const emptyCulture = {
   typ: 'keine',
   kultur: '',
