@@ -45,7 +45,7 @@ import { ref } from 'vue';
 
 export const emptyFertilization = { typ: 'Eigene', id: '', menge: 0, n: 0, p: 0, k: 0 };
 export const emptyCulture = {
-  typ: 'keine',
+  typ: '',
   kultur: '',
   ertragslage: '',
   ernte: 0,

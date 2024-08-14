@@ -157,6 +157,7 @@
                       label="Ackerzahl"
                       variant="outlined"
                       density="compact"
+                      @update:model-value="allCulturesReset"
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory">
@@ -265,10 +266,12 @@
                         label="Kultur"
                         variant="outlined"
                         density="compact"
+                        @update:model-value="cultureChanged(i)"
                       />
                     </v-col>
                     <v-col cols="12" class="px-4 obligatory">
                       <v-select
+                        v-if="entry.cultures[i].kultur != ''"
                         v-model="entry.cultures[i].ertragslage"
                         :items="ertragsLagen(entry.cultures[i].kultur)"
                         label="Erwartete Ertragslage"
@@ -276,6 +279,8 @@
                         density="compact"
                       />
                     </v-col>
+                  </v-row>
+                  <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
                     <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Düngung(en)</v-col>
                     <v-row
                       no-gutters
@@ -295,17 +300,24 @@
                       </v-col>
                       <v-col cols="6" class="pa-2">
                         <v-select
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                          "
                           v-model="entry.cultures[i].duengung[f - 1].id"
                           :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
-                          label="Typ"
+                          label="Bezeichnung"
                           variant="outlined"
                           density="compact"
                           hide-details
                         />
                       </v-col>
                       <v-col cols="1" class="pa-2 text-right"> X </v-col>
-
-                      <v-col cols="3" class="pa-2">
+                      <v-col
+                        cols="3"
+                        class="pa-2"
+                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                      >
                         <v-text-field
                           v-model="entry.cultures[i].duengung[f - 1].menge"
                           label="Menge (in T)"
@@ -314,9 +326,17 @@
                           hide-details
                         />
                       </v-col>
-                      <v-col cols="2" class="pa-2 text-right"></v-col>
+                      <v-col
+                        cols="2"
+                        class="pa-2 text-right"
+                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                      ></v-col>
 
-                      <v-col cols="2" class="pa-2">
+                      <v-col
+                        cols="2"
+                        class="pa-2"
+                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                      >
                         <v-text-field
                           v-model="entry.cultures[i].duengung[f - 1].n"
                           label="N(%)"
@@ -325,7 +345,11 @@
                           hide-details
                         />
                       </v-col>
-                      <v-col cols="2" class="pa-2">
+                      <v-col
+                        cols="2"
+                        class="pa-2"
+                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                      >
                         <v-text-field
                           v-model="entry.cultures[i].duengung[f - 1].p"
                           label="P2O5(%)"
@@ -333,7 +357,11 @@
                           density="compact"
                         />
                       </v-col>
-                      <v-col cols="2" class="pa-2">
+                      <v-col
+                        cols="2"
+                        class="pa-2"
+                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                      >
                         <v-text-field
                           v-model="entry.cultures[i].duengung[f - 1].k"
                           label="K2O(%)"
@@ -342,8 +370,14 @@
                         />
                       </v-col>
 
-                      <v-col cols="1" class="pa-2 text-right"></v-col>
+                      <v-col
+                        cols="1"
+                        class="pa-2 text-right"
+                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                      ></v-col>
                     </v-row>
+                  </v-row>
+                  <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
                     <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Ernte / Ertrag</v-col>
                   </v-row>
                 </v-card>
@@ -422,15 +456,22 @@ const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
 
-console.log(lookup.value);
-
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
 
+function cultureChanged(index) {
+  entry.value.cultures[index].ertragslage = '';
+}
+
+function allCulturesReset() {
+  for (let c = 0; c < entry.value.cultures.length; c++) {
+    entry.value.cultures[c].ertragslage = '';
+  }
+}
+
 function ertragsLagen(kultur) {
-  console.log(entry.value);
   const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
   const itemReturn = [{ title: 'Keine', value: '' }];
   if (dataRow) {

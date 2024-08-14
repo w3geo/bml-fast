@@ -15,6 +15,8 @@ fs.writeFileSync('public/data/kulturen.json', JSON.stringify(work), { encoding: 
 // @ts-ignore
 work = await getJson('data/csv/handelsdünger.csv');
 for (let e = 0; e < work.length; e++) {
+  work[e]['title'] = work[e]['Handelsdünger'];
+  work[e]['value'] = work[e]['ID'];
   work[e]['stabilisierte N-Dünger'] =
     work[e]['stabilisierte N-Dünger'].toString().toLowerCase() == 'x' ? true : false;
   work[e]['BIO'] = work[e]['BIO'].toString().toLowerCase() == 'x' ? true : false;
@@ -24,11 +26,19 @@ fs.writeFileSync('public/data/handelsdünger.json', JSON.stringify(work), { enco
 // 3. Wirtschaftsdünger
 // @ts-ignore
 work = await getJson('data/csv/wirtschaftsdünger.csv');
+for (let e = 0; e < work.length; e++) {
+  work[e]['title'] = work[e]['Wirtschaftsdünger'];
+  work[e]['value'] = work[e]['ID'];
+}
 fs.writeFileSync('public/data/wirtschaftsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 4. Sekundärrohstoffe
 // @ts-ignore
 work = await getJson('data/csv/sekundärrohstoffe.csv');
+for (let e = 0; e < work.length; e++) {
+  work[e]['title'] = work[e]['Organischer Dünger / Sekundärrohstoff'];
+  work[e]['value'] = work[e]['ID'];
+}
 fs.writeFileSync('public/data/sekundärrohstoffe.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 5. Bodenarten - Bodenschwere
