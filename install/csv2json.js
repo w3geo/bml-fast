@@ -1,8 +1,13 @@
+// @ts-nocheck
 import csv from 'csvtojson';
 import fs from 'fs';
 
 async function getJson(csvfile) {
-  const jsonArray = await csv({ trim: true, delimiter: ';' }).fromFile(csvfile);
+  const jsonArray = await csv({ trim: true, delimiter: ';' })
+    .fromFile(csvfile)
+    .preFileLine((fileLineString, lineIdx) => {
+      return lineIdx > 0 ? fileLineString.replace(/,/g, '.') : fileLineString;
+    });
   return jsonArray;
 }
 
@@ -21,6 +26,7 @@ for (let e = 0; e < work.length; e++) {
     work[e]['stabilisierte N-Dünger'].toString().toLowerCase() == 'x' ? true : false;
   work[e]['BIO'] = work[e]['BIO'].toString().toLowerCase() == 'x' ? true : false;
 }
+work.push({ title: 'Bitte wählen', value: '' });
 fs.writeFileSync('public/data/handelsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 3. Wirtschaftsdünger
@@ -30,6 +36,7 @@ for (let e = 0; e < work.length; e++) {
   work[e]['title'] = work[e]['Wirtschaftsdünger'];
   work[e]['value'] = work[e]['ID'];
 }
+work.push({ title: 'Bitte wählen', value: '' });
 fs.writeFileSync('public/data/wirtschaftsdünger.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 4. Sekundärrohstoffe
@@ -39,6 +46,7 @@ for (let e = 0; e < work.length; e++) {
   work[e]['title'] = work[e]['Organischer Dünger / Sekundärrohstoff'];
   work[e]['value'] = work[e]['ID'];
 }
+work.push({ title: 'Bitte wählen', value: '' });
 fs.writeFileSync('public/data/sekundärrohstoffe.json', JSON.stringify(work), { encoding: 'utf-8' });
 
 // 5. Bodenarten - Bodenschwere

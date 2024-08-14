@@ -43,7 +43,7 @@ import { ref } from 'vue';
  * @property {Array<culture>} cultures
  */
 
-export const emptyFertilization = { typ: 'Eigene', id: '', menge: 0, n: 0, p: 0, k: 0 };
+export const emptyFertilization = { typ: '', id: '', menge: 0, n: 0, p: 0, k: 0 };
 export const emptyCulture = {
   typ: '',
   kultur: '',

@@ -221,7 +221,7 @@
                       />
                     </v-col>
                   </v-row>
-                  <v-row no-gutters v-if="entry.cultures[0].typ != 'keine'">
+                  <v-row no-gutters v-if="entry.cultures[0].typ != ''">
                     <v-col cols="12" class="px-4">
                       <v-select
                         v-model="entry.cultures[0].kultur"
@@ -296,6 +296,7 @@
                           variant="outlined"
                           density="compact"
                           hide-details
+                          @update:model-value="fertilizationChanged('typ', i, f - 1)"
                         />
                       </v-col>
                       <v-col cols="6" class="pa-2">
@@ -306,10 +307,11 @@
                           "
                           v-model="entry.cultures[i].duengung[f - 1].id"
                           :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
-                          label="Bezeichnung"
+                          :label="entry.cultures[i].duengung[f - 1].typ"
                           variant="outlined"
                           density="compact"
                           hide-details
+                          @update:model-value="fertilizationChanged('id', i, f - 1)"
                         />
                       </v-col>
                       <v-col cols="1" class="pa-2 text-right"> X </v-col>
@@ -461,6 +463,32 @@ mapReady.then(() => {
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
 
+function fertilizationChanged(what, cindex, findex) {
+  entry.value.cultures[cindex].duengung[findex].menge = 0;
+  entry.value.cultures[cindex].duengung[findex].n = 0;
+  entry.value.cultures[cindex].duengung[findex].p = 0;
+  entry.value.cultures[cindex].duengung[findex].k = 0;
+  if (what == 'typ') {
+    entry.value.cultures[cindex].duengung[findex].id = '';
+  }
+  if (what == 'id' && entry.value.cultures[cindex].duengung[findex].typ == 'handelsdünger') {
+    const hDuenger = lookup.value[entry.value.cultures[cindex].duengung[findex].typ].find(
+      (d) => d.ID == entry.value.cultures[cindex].duengung[findex].id,
+    );
+    if (hDuenger) {
+      entry.value.cultures[cindex].duengung[findex].n = parseFloat(hDuenger['N [%]'])
+        ? parseFloat(hDuenger['N [%]'])
+        : 0;
+      entry.value.cultures[cindex].duengung[findex].p = parseFloat(hDuenger['P2O5 [%]'])
+        ? parseFloat(hDuenger['P2O5 [%]'])
+        : 0;
+      entry.value.cultures[cindex].duengung[findex].k = parseFloat(hDuenger['K2O [%]'])
+        ? parseFloat(hDuenger['K2O [%]'])
+        : 0;
+    }
+  }
+}
+
 function cultureChanged(index) {
   entry.value.cultures[index].ertragslage = '';
 }
@@ -608,6 +636,10 @@ div.obligatory div.v-field {
 
 div.obligatory div.v-input--disabled {
   font-style: italic;
+}
+
+.v-field-label--floating {
+  text-transform: capitalize;
 }
 </style>
 <style scoped>

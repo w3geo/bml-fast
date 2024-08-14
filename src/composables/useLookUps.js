@@ -66,11 +66,11 @@ const fertilizationTypes = [
 
 const aussaatTypes = {
   0: [
-    { title: 'Keine', value: 'keine' },
+    { title: 'Keine', value: '' },
     { title: 'Genutzt / Ungenutzt', value: 'zwischen' },
   ],
   1: [
-    { title: 'Keine', value: 'keine' },
+    { title: 'Keine', value: '' },
     { title: 'Ungenutzte Zwischenfrucht', value: 'zwischenU' },
     { title: 'Genutzte Zwischenfrucht', value: 'zwischenG' },
     { title: 'Hauptfrucht', value: 'haupt' },
