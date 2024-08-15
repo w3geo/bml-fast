@@ -282,102 +282,121 @@
                   </v-row>
                   <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
                     <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Düngung(en)</v-col>
-                    <v-row
-                      no-gutters
+                    <v-card
                       v-for="f in entry.cultures[i].duengung.length"
                       :key="`kultur${i}duengung${f}`"
-                      class="border-md mx-1 mb-2"
+                      class="border-md mx-1 mb-2 w-100"
                     >
-                      <v-col cols="5" class="pa-2">
-                        <v-select
-                          v-model="entry.cultures[i].duengung[f - 1].typ"
-                          :items="lookup.fertilizationTypes"
-                          label="Typ"
-                          variant="outlined"
-                          density="compact"
-                          hide-details
-                          @update:model-value="fertilizationChanged('typ', i, f - 1)"
-                        />
-                      </v-col>
-                      <v-col cols="6" class="pa-2">
-                        <v-select
-                          v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
-                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
-                          "
-                          v-model="entry.cultures[i].duengung[f - 1].id"
-                          :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
-                          :label="entry.cultures[i].duengung[f - 1].typ"
-                          variant="outlined"
-                          density="compact"
-                          hide-details
-                          @update:model-value="fertilizationChanged('id', i, f - 1)"
-                        />
-                      </v-col>
-                      <v-col cols="1" class="pa-2 text-right"> X </v-col>
-                      <v-col
-                        cols="3"
-                        class="pa-2"
-                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
-                      >
-                        <v-text-field
-                          v-model="entry.cultures[i].duengung[f - 1].menge"
-                          label="Menge (in T)"
-                          variant="outlined"
-                          density="compact"
-                          hide-details
-                        />
-                      </v-col>
-                      <v-col
-                        cols="2"
-                        class="pa-2 text-right"
-                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
-                      ></v-col>
+                      <v-row no-gutters>
+                        <v-col cols="5" class="pa-2">
+                          <v-select
+                            v-model="entry.cultures[i].duengung[f - 1].typ"
+                            :items="lookup.fertilizationTypes"
+                            label="Typ"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            @update:model-value="fertilizationChanged('typ', i, f - 1)"
+                          />
+                        </v-col>
+                        <v-col cols="6" class="pa-2">
+                          <v-select
+                            v-if="
+                              entry.cultures[i].duengung[f - 1].typ != '' &&
+                              entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                            "
+                            v-model="entry.cultures[i].duengung[f - 1].id"
+                            :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
+                            :label="entry.cultures[i].duengung[f - 1].typ"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            @update:model-value="fertilizationChanged('id', i, f - 1)"
+                          />
+                        </v-col>
+                        <v-col cols="1" class="pa-2 text-right"
+                          ><v-icon
+                            color="red"
+                            size="small"
+                            class="mt-2 mr-4"
+                            @click.stop="deleteFertilization(i, f - 1)"
+                            >mdi-close-circle</v-icon
+                          ></v-col
+                        >
+                        <v-col
+                          cols="3"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].menge"
+                            label="Menge (in T)"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                          />
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          class="pa-2 text-right"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        ></v-col>
 
-                      <v-col
-                        cols="2"
-                        class="pa-2"
-                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
-                      >
-                        <v-text-field
-                          v-model="entry.cultures[i].duengung[f - 1].n"
-                          label="N(%)"
-                          variant="outlined"
-                          density="compact"
-                          hide-details
-                        />
-                      </v-col>
-                      <v-col
-                        cols="2"
-                        class="pa-2"
-                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
-                      >
-                        <v-text-field
-                          v-model="entry.cultures[i].duengung[f - 1].p"
-                          label="P2O5(%)"
-                          variant="outlined"
-                          density="compact"
-                        />
-                      </v-col>
-                      <v-col
-                        cols="2"
-                        class="pa-2"
-                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
-                      >
-                        <v-text-field
-                          v-model="entry.cultures[i].duengung[f - 1].k"
-                          label="K2O(%)"
-                          variant="outlined"
-                          density="compact"
-                        />
-                      </v-col>
+                        <v-col
+                          cols="2"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].n"
+                            label="N(%)"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                          />
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].p"
+                            label="P2O5(%)"
+                            variant="outlined"
+                            density="compact"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].k"
+                            label="K2O(%)"
+                            variant="outlined"
+                            density="compact"
+                          />
+                        </v-col>
 
-                      <v-col
-                        cols="1"
-                        class="pa-2 text-right"
-                        v-if="entry.cultures[i].duengung[f - 1].typ != ''"
-                      ></v-col>
-                    </v-row>
+                        <v-col
+                          cols="1"
+                          class="pa-2 text-right"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        ></v-col>
+                      </v-row>
+                    </v-card>
+                    <v-btn
+                      tile
+                      block
+                      color="light-green-lighten-1"
+                      density="compact"
+                      prepend-icon="mdi-plus"
+                      class="ma-1"
+                      @click.stop="addFertilization(i)"
+                      >Düngung hinzufügen</v-btn
+                    >
                   </v-row>
                   <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
                     <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Ernte / Ertrag</v-col>
@@ -432,7 +451,7 @@ import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
 
-const { allData, emptyCulture, entry } = useDataEntries();
+const { allData, emptyCulture, emptyFertilization, entry } = useDataEntries();
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
 const route = useRoute();
@@ -462,6 +481,14 @@ mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
+
+function addFertilization(cindex) {
+  entry.value.cultures[cindex].duengung.push({ ...emptyFertilization });
+}
+
+function deleteFertilization(cindex, findex) {
+  entry.value.cultures[cindex].duengung.splice(findex, 1);
+}
 
 function fertilizationChanged(what, cindex, findex) {
   entry.value.cultures[cindex].duengung[findex].menge = 0;

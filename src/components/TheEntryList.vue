@@ -53,7 +53,7 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 
-const { allData, emptyEntry, emptyCulture, emptyFertilization, entry } = useDataEntries();
+const { allData, emptyEntry, emptyCulture, entry } = useDataEntries();
 
 function editEntry(nr) {
   allData.value.current = nr;
@@ -62,8 +62,8 @@ function editEntry(nr) {
   } else {
     entry.value = { ...emptyEntry };
     entry.value.cultures = [{ ...emptyCulture }, { ...emptyCulture }];
-    entry.value.cultures[0].duengung = [{ ...emptyFertilization }];
-    entry.value.cultures[1].duengung = [{ ...emptyFertilization }];
+    entry.value.cultures[0].duengung = [];
+    entry.value.cultures[1].duengung = [];
   }
   allData.value.datawindow = true;
 }

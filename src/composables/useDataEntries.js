@@ -52,7 +52,7 @@ export const emptyCulture = {
   ertragslageernte: '',
   feuchte: 0,
   protein: 0,
-  duengung: [{ ...emptyFertilization }],
+  duengung: [],
 };
 export const emptyEntry = {
   jahr: 0,
