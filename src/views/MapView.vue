@@ -3,12 +3,14 @@
   <the-entry-list />
   <the-entry-form />
   <the-fertilizer-balance />
+  <the-load-save-panel />
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import TheEntryList from '../components/TheEntryList.vue';
 import TheFertilizerBalance from '../components/TheFertilizerBalance.vue';
+import TheLoadSavePanel from '../components/TheLoadSavePanel.vue';
 import TheEntryForm from '../components/TheEntryForm.vue';
 import { useMap } from '../composables/useMap.js';
 import { usePlaceSearch } from '@w3geo/vue-place-search';

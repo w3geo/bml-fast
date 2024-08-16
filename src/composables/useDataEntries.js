@@ -74,7 +74,7 @@ export const emptyEntry = {
   cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
 
-export const entry = ref(emptyEntry);
+export const entry = ref({ ...emptyEntry });
 
 /**
  * @typedef allData

@@ -16,6 +16,7 @@
   "dependencies": {
     "@w3geo/vue-place-search": "^1.0.2",
     "csvtojson": "^2.0.10",
+    "downloadjs": "^1.4.7",
     "ol": "^9.2.2",
     "ol-mapbox-style": "^12.3.2",
     "roboto-fontface": "*",
