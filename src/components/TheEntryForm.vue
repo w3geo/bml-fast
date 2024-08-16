@@ -12,14 +12,9 @@
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
         <v-form ref="entryform" v-if="tempData.basic || allData.current !== null">
-          <div class="pa-4 mb-2 bg-grey-lighten-4">
-            Bitte geben Sie Ihre Daten ein. Blau markierte Felder sind Pflichtfelder. Kursiv
-            geschriebene Werte sind gesperrt (aus Daten berechnet). Die Düngebilanz wird angezeigt,
-            sobald alle notwendigen Feldern mit Werten befüllt sind.
-          </div>
-          <v-expansion-panels variant="accordion" v-model="panelInit">
+          <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
-              <v-expansion-panel-title static class="bg-grey-lighten-3">
+              <v-expansion-panel-title static class="bg-teal-darken-3">
                 Basisdaten
               </v-expansion-panel-title>
               <v-expansion-panel-text>
@@ -157,6 +152,7 @@
                       label="Ackerzahl"
                       variant="outlined"
                       density="compact"
+                      @update:model-value="allCulturesReset"
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory">
@@ -176,8 +172,8 @@
                   <v-col cols="6" class="px-4 obligatory">
                     <v-select
                       v-model="entry.jahr"
-                      :items="itemsYear"
-                      label="Jahr"
+                      :items="lookup.yearItems"
+                      label="Wirtschaftsjahr"
                       variant="outlined"
                       density="compact"
                     />
@@ -196,42 +192,242 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <v-expansion-panel value="ernten" rounded="0" elevation="0">
-              <v-expansion-panel-title static class="bg-grey-lighten-3">
-                Ernten
+            <v-expansion-panel value="kulturen" rounded="0" elevation="0">
+              <v-expansion-panel-title static class="bg-teal-darken-3">
+                Hauptkulturen und Zwischenfrüchte
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <v-card class="ma-0 pa-0" v-for="i in entry.ernten.length" :key="i">
-                  <v-row no-gutters class="bg-grey-lighten-4 mb-3">
+                <v-card class="my-1 pa-0">
+                  <v-row no-gutters class="bg-blue-grey mb-3">
                     <v-col cols="10" class="pl-2">
-                      <span class="text-button">Ernte {{ i }}</span>
+                      <span class="text-button">Zwischenfrucht</span>
                     </v-col>
-                    <v-col cols="2" class="text-right">
-                      <v-icon
-                        v-if="i == entry.ernten.length && entry.ernten.length > 1"
-                        class="mt-1"
-                        size="28"
-                        color="red"
-                        icon="mdi-close"
-                        @click="deleteHarvest(i - 1)"
-                      />
-                    </v-col>
+                    <v-col cols="2" class="text-right"> </v-col>
                   </v-row>
 
                   <v-row no-gutters>
-                    <v-col cols="9" class="px-4 obligatory">
+                    <v-col cols="12" class="px-4">
                       <v-select
-                        v-model="entry.ernten[i - 1].kultur"
-                        :items="lookup.kulturenItems[entry.flaechennutzungsart]"
+                        v-model="entry.cultures[0].typ"
+                        :items="lookup.aussaatTypes[0]"
+                        label="Art der Zwischenfrucht"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters v-if="entry.cultures[0].typ != ''">
+                    <v-col cols="12" class="px-4">
+                      <v-select
+                        v-model="entry.cultures[0].kultur"
+                        :items="lookup.kulturenItems.zwischen"
                         label="Kultur"
                         variant="outlined"
                         density="compact"
                       />
                     </v-col>
-                    <v-col cols="3" class="px-4 obligatory">
+                  </v-row>
+                </v-card>
+
+                <v-card
+                  class="my-1 pa-0"
+                  v-for="i in entry.cultures.length - 1"
+                  :key="`kultur${i}`"
+                >
+                  <v-row no-gutters class="bg-blue-grey">
+                    <v-col cols="10" class="pl-2">
+                      <span class="text-button">{{ i }}. Hauptfrucht</span>
+                    </v-col>
+                    <v-col cols="2" class="text-right">
+                      <v-icon
+                        class="mt-1"
+                        size="24"
+                        color="red"
+                        icon="mdi-close-circle"
+                        @click="deleteCulture(i)"
+                      />
+                    </v-col>
+                  </v-row>
+
+                  <v-row no-gutters>
+                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1"
+                      >Aussaat / Erwartete Ertragslage</v-col
+                    >
+                    <v-col cols="12" class="px-4 obligatory">
+                      <v-select
+                        v-model="entry.cultures[i].kultur"
+                        :items="lookup.kulturenItems[entry.flaechennutzungsart]"
+                        label="Kultur"
+                        variant="outlined"
+                        density="compact"
+                        @update:model-value="cultureChanged(i)"
+                      />
+                    </v-col>
+                    <v-col cols="12" class="px-4 obligatory">
+                      <v-select
+                        v-if="entry.cultures[i].kultur != ''"
+                        v-model="entry.cultures[i].ertragslage"
+                        :items="ertragsLagen(entry.cultures[i].kultur)"
+                        label="Erwartete Ertragslage"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
+                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Düngung(en)</v-col>
+                    <v-card
+                      v-for="f in entry.cultures[i].duengung.length"
+                      :key="`kultur${i}duengung${f}`"
+                      class="border-md mx-1 mb-2 w-100"
+                    >
+                      <v-row no-gutters>
+                        <v-col cols="5" class="pa-2">
+                          <v-select
+                            v-model="entry.cultures[i].duengung[f - 1].typ"
+                            :items="lookup.fertilizationTypes"
+                            label="Typ"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            @update:model-value="fertilizationChanged('typ', i, f - 1)"
+                          />
+                        </v-col>
+                        <v-col cols="6" class="pa-2">
+                          <v-select
+                            v-if="
+                              entry.cultures[i].duengung[f - 1].typ != '' &&
+                              entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                            "
+                            v-model="entry.cultures[i].duengung[f - 1].id"
+                            :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
+                            :label="entry.cultures[i].duengung[f - 1].typ"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            @update:model-value="fertilizationChanged('id', i, f - 1)"
+                          />
+                        </v-col>
+                        <v-col cols="1" class="pa-2 pt-4 text-right"
+                          ><v-icon color="red" @click.stop="deleteFertilization(i, f - 1)"
+                            >mdi-close-circle</v-icon
+                          ></v-col
+                        >
+                        <v-col
+                          cols="3"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].menge"
+                            label="Menge (in T)"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                          />
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          class="pa-2 text-right"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        ></v-col>
+
+                        <v-col
+                          cols="2"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].n"
+                            label="N(%)"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                          />
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].p"
+                            label="P2O5(%)"
+                            variant="outlined"
+                            density="compact"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          class="pa-2"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        >
+                          <v-text-field
+                            v-model="entry.cultures[i].duengung[f - 1].k"
+                            label="K2O(%)"
+                            variant="outlined"
+                            density="compact"
+                          />
+                        </v-col>
+
+                        <v-col
+                          cols="1"
+                          class="pa-2 text-right"
+                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                        ></v-col>
+                      </v-row>
+                    </v-card>
+                    <v-col cols="12" class="pa-2">
+                      <v-btn
+                        block
+                        color="light-green-lighten-1"
+                        density="compact"
+                        prepend-icon="mdi-plus"
+                        @click.stop="addFertilization(i)"
+                        >Düngung hinzufügen</v-btn
+                      ></v-col
+                    >
+                  </v-row>
+                  <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
+                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Ernte / Ertrag</v-col>
+                    <v-col cols="6" class="pa-2">
+                      <v-select
+                        v-if="ertragsTyp(entry.cultures[i].kultur, 'einheit') == 'EL Auswahl'"
+                        v-model="entry.cultures[i].ertragslageernte"
+                        :items="ertragsLagen(entry.cultures[i].kultur)"
+                        label="Ertrag (Klasse)"
+                        variant="outlined"
+                        density="compact"
+                      />
                       <v-text-field
-                        v-model="entry.ernten[i - 1].menge"
-                        label="Menge"
+                        v-if="['t', 'm3'].includes(ertragsTyp(entry.cultures[i].kultur, 'einheit'))"
+                        v-model="entry.cultures[i].ernte"
+                        :label="`Ernte (in ${ertragsTyp(entry.cultures[i].kultur, 'einheit')})`"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+
+                    <v-col cols="3" class="pa-2">
+                      <v-text-field
+                        v-if="
+                          ertragsTyp(entry.cultures[i].kultur, '') == 4 ||
+                          ertragsTyp(entry.cultures[i].kultur, '') == 5
+                        "
+                        v-model="entry.cultures[i].feuchte"
+                        label="Kornfeuchte"
+                        variant="outlined"
+                        density="compact"
+                      />
+                    </v-col>
+                    <v-col cols="3" class="pa-2">
+                      <v-text-field
+                        v-if="
+                          ertragsTyp(entry.cultures[i].kultur, '') == 4 ||
+                          ertragsTyp(entry.cultures[i].kultur, '') == 5
+                        "
+                        v-model="entry.cultures[i].protein"
+                        label="Proteingehalt"
                         variant="outlined"
                         density="compact"
                       />
@@ -239,17 +435,19 @@
                   </v-row>
                 </v-card>
                 <v-btn
+                  block
                   class="mt-5"
                   prepend-icon="mdi-plus"
                   color="green-lighten-4"
                   size="small"
-                  @click="addHarvest"
-                  >Ernte hinzufügen</v-btn
+                  @click="addCulture"
+                  >Hauptkultur hinzufügen</v-btn
                 >
+                <br /><br /><br /><br />
               </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <v-expansion-panel value="data" rounded="0" elevation="0">
+            <v-expansion-panel value="data" rounded="0" elevation="0" v-if="debug">
               <v-expansion-panel-title static class="bg-grey-lighten-3 font-italic">
                 Schlag-Daten (Debugging / Testing)
               </v-expansion-panel-title>
@@ -286,7 +484,9 @@ import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
 
-const { allData, emptyHarvest, entry } = useDataEntries();
+const debug = false; // TRUE FÜR DEBUG PANEL
+
+const { allData, emptyCulture, emptyFertilization, entry } = useDataEntries();
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
 const route = useRoute();
@@ -301,14 +501,12 @@ const { lookup } = useLookup();
 
 const tempData = ref({ basic: null, programs: null });
 
-const panelInit = ref(['basisdaten']);
+const panelInit = ref(['basisdaten', 'kulturen']);
 
 const itemsJaNein = [
   { value: true, title: 'Ja' },
   { value: false, title: 'Nein' },
 ];
-
-const itemsYear = [2021, 2022, 2023, 2024];
 
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 
@@ -318,6 +516,85 @@ mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
+
+function addFertilization(cindex) {
+  entry.value.cultures[cindex].duengung.push({ ...emptyFertilization });
+}
+
+function deleteFertilization(cindex, findex) {
+  entry.value.cultures[cindex].duengung.splice(findex, 1);
+}
+
+function fertilizationChanged(what, cindex, findex) {
+  entry.value.cultures[cindex].duengung[findex].menge = 0;
+  entry.value.cultures[cindex].duengung[findex].n = 0;
+  entry.value.cultures[cindex].duengung[findex].p = 0;
+  entry.value.cultures[cindex].duengung[findex].k = 0;
+  if (what == 'typ') {
+    entry.value.cultures[cindex].duengung[findex].id = '';
+  }
+  if (what == 'id' && entry.value.cultures[cindex].duengung[findex].typ == 'handelsdünger') {
+    const hDuenger = lookup.value[entry.value.cultures[cindex].duengung[findex].typ].find(
+      (d) => d.ID == entry.value.cultures[cindex].duengung[findex].id,
+    );
+    if (hDuenger) {
+      entry.value.cultures[cindex].duengung[findex].n = parseFloat(hDuenger['N [%]'])
+        ? parseFloat(hDuenger['N [%]'])
+        : 0;
+      entry.value.cultures[cindex].duengung[findex].p = parseFloat(hDuenger['P2O5 [%]'])
+        ? parseFloat(hDuenger['P2O5 [%]'])
+        : 0;
+      entry.value.cultures[cindex].duengung[findex].k = parseFloat(hDuenger['K2O [%]'])
+        ? parseFloat(hDuenger['K2O [%]'])
+        : 0;
+    }
+  }
+}
+
+function cultureChanged(index) {
+  entry.value.cultures[index].ertragslage = '';
+}
+
+function allCulturesReset() {
+  for (let c = 0; c < entry.value.cultures.length; c++) {
+    entry.value.cultures[c].ertragslage = '';
+  }
+}
+
+function ertragsTyp(kultur, what) {
+  const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
+  if (what == 'einheit') {
+    return dataRow.Ertragserfassungsart ? dataRow.Ertragserfassungsart : 't';
+  } else {
+    return dataRow[
+      'Saldierungsart 1=t/ha; 2=m3/ha;3=kg N/ha;4=Weichweizen; 5=Braugerste;6=Mais;7=EL Auswahl;8=keine Eingabe'
+    ]
+      ? dataRow[
+          'Saldierungsart 1=t/ha; 2=m3/ha;3=kg N/ha;4=Weichweizen; 5=Braugerste;6=Mais;7=EL Auswahl;8=keine Eingabe'
+        ]
+      : 0;
+  }
+}
+
+function ertragsLagen(kultur) {
+  const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
+  const itemReturn = [{ title: 'Keine', value: '' }];
+  if (dataRow) {
+    for (const el of lookup.value.ertragsLagen) {
+      if (dataRow[`EL ${el} Bereich`] != '') {
+        if (entry.value.flaechennutzungsart == 'A' && entry.value.ackerzahl < 30) {
+          // Sonderfall Ackerzahl < 30, Ackerkultur
+          if (lookup.value.limitAckerzahl.includes(el)) {
+            itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
+          }
+        } else {
+          itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
+        }
+      }
+    }
+  }
+  return itemReturn;
+}
 
 function setSchlagId(id) {
   if (Number(id) !== schlagInfo.value?.id) {
@@ -330,12 +607,12 @@ function setSchlagId(id) {
   }
 }
 
-function deleteHarvest(nr) {
-  entry.value.ernten.splice(nr, 1);
+function deleteCulture(nr) {
+  entry.value.cultures.splice(nr, 1);
 }
 
-function addHarvest() {
-  entry.value.ernten.push({ ...emptyHarvest });
+function addCulture() {
+  entry.value.cultures.push({ ...emptyCulture });
 }
 
 function dataSort(a, b) {
@@ -352,13 +629,13 @@ function saveData() {
 
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   allData.value.datawindow = false;
-  panelInit.value = ['basisdaten'];
+  panelInit.value = ['basisdaten', 'kulturen'];
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
   allData.value.datawindow = false;
-  panelInit.value = ['basisdaten'];
+  panelInit.value = ['basisdaten', 'kulturen'];
 }
 
 watch(schlagInfo, (value) => {
@@ -369,6 +646,8 @@ watch(schlagInfo, (value) => {
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
 
       entry.value.extent = tempData.value.basic.extent;
+
+      entry.value.jahr = new Date().getFullYear();
     }
     if (tempData.value.basic && tempData.value.basic.parts) {
       delete tempData.value.basic.parts;
@@ -434,6 +713,10 @@ div.obligatory div.v-field {
 
 div.obligatory div.v-input--disabled {
   font-style: italic;
+}
+
+.v-field-label--floating {
+  text-transform: capitalize;
 }
 </style>
 <style scoped>

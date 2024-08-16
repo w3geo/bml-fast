@@ -2,14 +2,23 @@ import { ref } from 'vue';
 
 /**
  * @typedef fertilization
- * @property {string} name
+ * @property {string} typ
+ * @property {string} id
+ * @property {number} menge
+ * @property {number} n
+ * @property {number} p
+ * @property {number} k
  */
 
 /**
- * @typedef harvest
- * @property {string} zwischenfrucht
+ * @typedef culture
+ * @property {string} typ
  * @property {string} kultur
- * @property {number} menge
+ * @property {string} ertragslage
+ * @property {number} ernte
+ * @property {string} ertragslageernte
+ * @property {number} feuchte
+ * @property {number} protein
  * @property {Array<fertilization>} duengung
  */
 
@@ -31,15 +40,19 @@ import { ref } from 'vue';
  * @property {string} vorfrucht
  * @property {number} stickstoffueberschuss
  * @property {Array<number>} extent
- * @property {Array<harvest>} ernten
+ * @property {Array<culture>} cultures
  */
 
-export const emptyFertilization = { name: '' };
-export const emptyHarvest = {
-  zwischenfrucht: '',
+export const emptyFertilization = { typ: '', id: '', menge: 0, n: 0, p: 0, k: 0 };
+export const emptyCulture = {
+  typ: '',
   kultur: '',
-  menge: 0,
-  duengung: [{ ...emptyFertilization }],
+  ertragslage: '',
+  ernte: 0,
+  ertragslageernte: '',
+  feuchte: 0,
+  protein: 0,
+  duengung: [],
 };
 export const emptyEntry = {
   jahr: 0,
@@ -58,7 +71,7 @@ export const emptyEntry = {
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
-  ernten: [{ ...emptyHarvest }],
+  cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
 
 export const entry = ref(emptyEntry);
@@ -82,8 +95,8 @@ export const allData = ref({ saved: [], current: null, datawindow: false });
 }
 
 /**
- * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyHarvest: harvest, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
+ * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
-  return { allData, emptyFertilization, emptyHarvest, emptyEntry, entry };
+  return { allData, emptyFertilization, emptyCulture, emptyEntry, entry };
 }
