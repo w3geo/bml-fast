@@ -1,7 +1,7 @@
 <template>
-  <v-card class="entryList">
+  <v-card class="entryList" elevation="10">
     <div class="greyOut" v-if="allData.datawindow" />
-    <v-row no-gutters class="boxHeader">
+    <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-view-list </v-icon>
         Gespeicherte Einträge
@@ -17,24 +17,24 @@
           >
             {{ allData.saved[i - 1].jahr }}
           </div>
-          <v-row no-gutters class="bg-grey-lighten-4 ma-1 pa-1">
+          <v-row no-gutters class="bg-grey-lighten-3 my-1 pa-1 text-subtitle-2">
             <v-col cols="9"
               >{{ allData.saved[i - 1].schlagnummer }} /
               {{ allData.saved[i - 1].feldstuecksname }}</v-col
             >
             <v-col cols="3" class="text-right">
               <v-icon
-                class="mt-1 mr-3"
+                class="mr-2"
                 size="22"
                 color="orange"
-                icon="mdi-pencil"
+                icon="mdi-pencil-circle"
                 @click="editEntry(i - 1)"
               />
               <v-icon
-                class="mt-1 mr-3"
+                class="mr-1"
                 size="22"
                 color="red"
-                icon="mdi-close"
+                icon="mdi-close-circle"
                 @click="deleteEntry(i - 1)"
               />
             </v-col>
@@ -42,9 +42,16 @@
         </div>
       </v-col>
     </v-row>
-    <v-row no-gutters class="bg-grey-lighten-3"
+    <v-row no-gutters class="bg-grey-darken-2"
       ><v-col class="pa-2">
-        <v-btn block @click.stop="editEntry(null)">Neuer Eintrag</v-btn>
+        <v-btn
+          density="compact"
+          prepend-icon="mdi-plus"
+          color="green"
+          block
+          @click.stop="editEntry(null)"
+          >Neuer Eintrag</v-btn
+        >
       </v-col></v-row
     >
   </v-card>
@@ -104,11 +111,5 @@ function deleteEntry(nr) {
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;
-}
-
-.boxHeader .v-col {
-  height: 30px;
-  line-height: 30px;
-  background-color: #777;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <v-card class="fertilizerData" v-if="allData.datawindow">
-    <v-row no-gutters class="boxHeader">
+  <v-card class="fertilizerData" v-if="allData.datawindow" elevation="10">
+    <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
         Düngemittel-Bilanz
@@ -35,11 +35,5 @@ const { allData } = useDataEntries();
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;
-}
-
-.boxHeader .v-col {
-  height: 30px;
-  line-height: 30px;
-  background-color: #777;
 }
 </style>

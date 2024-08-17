@@ -746,12 +746,6 @@ div.obligatory div.v-input--disabled {
   overflow: auto;
 }
 
-.boxHeader .v-col {
-  height: 30px;
-  line-height: 30px;
-  background-color: #777;
-}
-
 .schlagTools button {
   display: block;
 }

@@ -1,29 +1,33 @@
 <template>
-  <v-card class="fertilizerData" v-if="!allData.datawindow">
-    <v-row no-gutters class="boxHeader">
+  <v-card class="panelSize" v-if="!allData.datawindow" elevation="10">
+    <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-file-arrow-up-down </v-icon>
         Daten Export / Import
       </v-col>
     </v-row>
-    <v-row no-gutters>
-      <v-col cols="4" class="pa-2">Export:</v-col>
+    <v-row no-gutters class="mt-2">
+      <v-col cols="4" class="pa-2 pt-4">
+        <v-icon size="20" class="mr-2">mdi-file-download</v-icon>Export:</v-col
+      >
       <v-col cols="8" class="pa-2">
-        <v-btn prepend-icon="mdi-file-download" hide-input block @click.stop="downloadJson"
-          >Download</v-btn
-        >
+        <v-btn color="grey-lighten-4" block @click.stop="downloadJson">Download</v-btn>
       </v-col>
       <v-divider class="my-3" />
-      <v-col cols="4" class="pa-2">Import:</v-col>
+      <v-col cols="4" class="pa-2 pt-4">
+        <v-icon size="20" class="mr-2">mdi-file-upload</v-icon>Import:</v-col
+      >
       <v-col cols="8" class="pa-2">
         <v-file-input
+          bg-color="grey-lighten-4"
+          hide-details
+          center-affix
           accept=".txt"
           label="Datei wählen"
           variant="outlined"
           density="compact"
           v-model="inputFile"
           prepend-icon=""
-          prepend-inner-icon="mdi-file-upload"
           @update:modelValue="readJson"
         />
       </v-col>
@@ -85,19 +89,12 @@ function readJson() {
   text-align: center;
 }
 
-.fertilizerData {
+.panelSize {
   position: absolute;
   left: 10px;
-  bottom: 10px;
+  bottom: calc(50vh - 210px);
   width: 350px;
-  height: calc(50vh - 40px);
-  min-height: calc(50vh - 40px);
+  height: 180px;
   overflow: auto;
-}
-
-.boxHeader .v-col {
-  height: 30px;
-  line-height: 30px;
-  background-color: #777;
 }
 </style>
