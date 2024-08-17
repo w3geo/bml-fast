@@ -57,4 +57,9 @@ const drawer = ref(false);
     min-height: -webkit-fill-available;
   }
 }
+
+.boxHeader .v-col {
+  height: 30px;
+  line-height: 30px;
+}
 </style>

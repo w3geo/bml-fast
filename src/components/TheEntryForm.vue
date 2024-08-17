@@ -628,6 +628,7 @@ function saveData() {
   }
 
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
+  tempData.value = { basic: null, programs: null };
   allData.value.datawindow = false;
   panelInit.value = ['basisdaten', 'kulturen'];
 }
@@ -743,12 +744,6 @@ div.obligatory div.v-input--disabled {
   height: calc(100vh - 70px);
   min-height: calc(100vh - 70px);
   overflow: auto;
-}
-
-.boxHeader .v-col {
-  height: 30px;
-  line-height: 30px;
-  background-color: #777;
 }
 
 .schlagTools button {
