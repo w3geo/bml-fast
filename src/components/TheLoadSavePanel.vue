@@ -18,7 +18,7 @@
       <v-col cols="8" class="pa-2">
         <v-file-input
           accept=".txt"
-          label="Text-File wählen"
+          label="Datei wählen"
           variant="outlined"
           density="compact"
           v-model="inputFile"
@@ -29,6 +29,13 @@
       </v-col>
     </v-row>
   </v-card>
+  <v-snackbar :color="showAlert.color" v-model="showAlert.show">
+    {{ showAlert.text }}
+
+    <template v-slot:actions>
+      <v-btn icon="mdi-close" variant="text" @click="showAlert.show = false" />
+    </template>
+  </v-snackbar>
 </template>
 
 <script setup>
@@ -38,6 +45,7 @@ import { ref } from 'vue';
 
 const { allData } = useDataEntries();
 const inputFile = ref(null);
+const showAlert = ref({ color: 'green', text: '', show: false });
 
 function downloadJson() {
   const data = JSON.stringify(allData.value.saved);
@@ -55,9 +63,15 @@ function readJson() {
         const imported = JSON.parse(reader.result.toString());
         allData.value.saved = imported;
         localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
+        showAlert.value.text = 'Import erfolgreich. Die Daten wurden eingelesen.';
+        showAlert.value.color = 'green';
+        showAlert.value.show = true;
         inputFile.value = null;
       } catch (e) {
-        alert('Import fehlgeschlagen');
+        showAlert.value.text = 'Achtung: Fehlerhafte Datei - Import fehlgeschlagen';
+        showAlert.value.color = 'red';
+        showAlert.value.show = true;
+        inputFile.value = null;
       }
     };
   }
