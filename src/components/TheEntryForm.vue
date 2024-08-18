@@ -1,6 +1,6 @@
 <template>
   <v-card class="entryForm" v-if="allData.datawindow">
-    <v-row no-gutters class="boxHeader">
+    <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-list-box </v-icon>
         Datenfenster
@@ -19,40 +19,44 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <v-row no-gutters>
-                  <v-col cols="6" class="px-4">
+                  <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       v-model="entry.schlagnummer"
                       label="Schlagnummer"
                       variant="outlined"
+                      hide-details
                       density="compact"
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4">
+                  <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       v-model="entry.feldstuecksname"
                       label="Feldstücksname"
                       variant="outlined"
+                      hide-details
                       density="compact"
                     />
                   </v-col>
                 </v-row>
 
                 <v-row no-gutters>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
                       v-model="lookup.feldstücknutzungsarten[entry.flaechennutzungsart]"
                       label="Flächennutzungsart"
                       variant="outlined"
                       density="compact"
+                      hide-details
                       disabled
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
                       v-model="entry.flaeche"
                       label="Fläche (ha)"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
                 </v-row>
@@ -60,37 +64,40 @@
                 <v-divider color="grey" thickness="4" class="py-2" />
 
                 <v-row no-gutters>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
                       v-model="nitratRisikoGebiet"
                       label="Nitratrisikogebiet"
                       variant="outlined"
                       density="compact"
+                      hide-details
                       disabled
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
                       v-model="entry.duengeklasse_grundwasserschutz"
                       :items="lookup.wrrl"
                       label="Düngeklasse Grundwasserschutz"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
                 </v-row>
 
                 <v-row no-gutters>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
                       v-model="bdfl_l16"
                       label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
                       variant="outlined"
                       density="compact"
+                      hide-details
                       disabled
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4">
+                  <v-col cols="6" class="px-4 mb-3">
                     <v-select
                       v-if="bdfl_l16 > 0"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
@@ -98,26 +105,29 @@
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
                 </v-row>
 
                 <v-row no-gutters v-if="entry.teilnahme_grundwasserschutz_acker">
-                  <v-col cols="6" class="px-4">
+                  <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       v-model="entry.stickstoffueberschuss"
                       label="Stickstoffüberschuss"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
                       v-model="entry.gw_acker_gebietszuteilung"
                       :items="itemsGWAcker"
                       label="GW-Acker Gebietszuteilung"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
                 </v-row>
@@ -125,43 +135,47 @@
                 <v-divider color="grey" thickness="4" class="py-2" />
 
                 <v-row no-gutters>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
                       v-model="entry.phosphor_gehaltsklasse"
                       :items="itemsABCDE"
                       label="Phosphor Gehaltsklasse"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
                       v-model="entry.kalium_gehaltsklasse"
                       :items="itemsABCDE"
                       label="Kalium Gehaltsklasse"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
                 </v-row>
 
                 <v-row no-gutters>
-                  <v-col cols="6" class="px-4">
+                  <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       v-model="entry.ackerzahl"
                       label="Ackerzahl"
                       variant="outlined"
                       density="compact"
+                      hide-details
                       @update:model-value="allCulturesReset"
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
                       v-model="entry.bodenart"
                       :items="lookup.bodenartenbodenschwere"
                       label="Bodenart"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
                 </v-row>
@@ -169,22 +183,24 @@
                 <v-divider color="grey" thickness="4" class="py-2" />
 
                 <v-row no-gutters>
-                  <v-col cols="6" class="px-4 obligatory">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
                       v-model="entry.jahr"
                       :items="lookup.yearItems"
                       label="Wirtschaftsjahr"
                       variant="outlined"
                       density="compact"
+                      hide-details
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4">
+                  <v-col cols="6" class="px-4 mb-3">
                     <v-select
                       v-model="entry.vorfrucht"
                       :items="lookup.kulturenItems[entry.flaechennutzungsart]"
                       label="Vorfrucht"
                       variant="outlined"
                       density="compact"
+                      hide-details
                       clearable
                     />
                   </v-col>
@@ -194,11 +210,11 @@
 
             <v-expansion-panel value="kulturen" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-teal-darken-3">
-                Hauptkulturen und Zwischenfrüchte
+                Zwischenfrucht / Hauptkulturen
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <v-card class="my-1 pa-0">
-                  <v-row no-gutters class="bg-blue-grey mb-3">
+                <v-card class="mt-1 mb-4 pa-0 cardBorder zwischenfrucht" elevation="0">
+                  <v-row no-gutters class="bg-brown-lighten-3 mb-3">
                     <v-col cols="10" class="pl-2">
                       <span class="text-button">Zwischenfrucht</span>
                     </v-col>
@@ -206,35 +222,37 @@
                   </v-row>
 
                   <v-row no-gutters>
-                    <v-col cols="12" class="px-4">
+                    <v-col cols="12" class="px-4 mb-3">
                       <v-select
                         v-model="entry.cultures[0].typ"
                         :items="lookup.aussaatTypes[0]"
                         label="Art der Zwischenfrucht"
                         variant="outlined"
                         density="compact"
+                        hide-details
                       />
                     </v-col>
                   </v-row>
                   <v-row no-gutters v-if="entry.cultures[0].typ != ''">
-                    <v-col cols="12" class="px-4">
+                    <v-col cols="12" class="px-4 mb-3">
                       <v-select
                         v-model="entry.cultures[0].kultur"
                         :items="lookup.kulturenItems.zwischen"
                         label="Kultur"
                         variant="outlined"
                         density="compact"
+                        hide-details
                       />
                     </v-col>
                   </v-row>
                 </v-card>
 
                 <v-card
-                  class="my-1 pa-0"
+                  class="mt-1 mb-4 pa-0 cardBorder hauptfrucht"
                   v-for="i in entry.cultures.length - 1"
                   :key="`kultur${i}`"
                 >
-                  <v-row no-gutters class="bg-blue-grey">
+                  <v-row no-gutters class="bg-brown-lighten-2">
                     <v-col cols="10" class="pl-2">
                       <span class="text-button">{{ i }}. Hauptfrucht</span>
                     </v-col>
@@ -250,20 +268,21 @@
                   </v-row>
 
                   <v-row no-gutters>
-                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1"
+                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4"
                       >Aussaat / Erwartete Ertragslage</v-col
                     >
-                    <v-col cols="12" class="px-4 obligatory">
+                    <v-col cols="12" class="px-4 obligatory mb-3">
                       <v-select
                         v-model="entry.cultures[i].kultur"
                         :items="lookup.kulturenItems[entry.flaechennutzungsart]"
                         label="Kultur"
                         variant="outlined"
                         density="compact"
+                        hide-details
                         @update:model-value="cultureChanged(i)"
                       />
                     </v-col>
-                    <v-col cols="12" class="px-4 obligatory">
+                    <v-col cols="12" class="px-4 obligatory mb-2">
                       <v-select
                         v-if="entry.cultures[i].kultur != ''"
                         v-model="entry.cultures[i].ertragslage"
@@ -271,11 +290,12 @@
                         label="Erwartete Ertragslage"
                         variant="outlined"
                         density="compact"
+                        hide-details
                       />
                     </v-col>
                   </v-row>
                   <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
-                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Düngung(en)</v-col>
+                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngung(en)</v-col>
                     <v-card
                       v-for="f in entry.cultures[i].duengung.length"
                       :key="`kultur${i}duengung${f}`"
@@ -355,6 +375,7 @@
                             label="P2O5(%)"
                             variant="outlined"
                             density="compact"
+                            hide-details
                           />
                         </v-col>
                         <v-col
@@ -367,6 +388,7 @@
                             label="K2O(%)"
                             variant="outlined"
                             density="compact"
+                            hide-details
                           />
                         </v-col>
 
@@ -382,6 +404,7 @@
                         block
                         color="light-green-lighten-1"
                         density="compact"
+                        hide-details
                         prepend-icon="mdi-plus"
                         @click.stop="addFertilization(i)"
                         >Düngung hinzufügen</v-btn
@@ -389,7 +412,7 @@
                     >
                   </v-row>
                   <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
-                    <v-col cols="12" class="mb-2 pa-1 bg-grey-lighten-1">Ernte / Ertrag</v-col>
+                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
                     <v-col cols="6" class="pa-2">
                       <v-select
                         v-if="ertragsTyp(entry.cultures[i].kultur, 'einheit') == 'EL Auswahl'"
@@ -398,6 +421,7 @@
                         label="Ertrag (Klasse)"
                         variant="outlined"
                         density="compact"
+                        hide-details
                       />
                       <v-text-field
                         v-if="['t', 'm3'].includes(ertragsTyp(entry.cultures[i].kultur, 'einheit'))"
@@ -405,6 +429,7 @@
                         :label="`Ernte (in ${ertragsTyp(entry.cultures[i].kultur, 'einheit')})`"
                         variant="outlined"
                         density="compact"
+                        hide-details
                       />
                     </v-col>
 
@@ -418,6 +443,7 @@
                         label="Kornfeuchte"
                         variant="outlined"
                         density="compact"
+                        hide-details
                       />
                     </v-col>
                     <v-col cols="3" class="pa-2">
@@ -430,6 +456,7 @@
                         label="Proteingehalt"
                         variant="outlined"
                         density="compact"
+                        hide-details
                       />
                     </v-col>
                   </v-row>
@@ -463,10 +490,18 @@
         </v-form>
       </v-col>
     </v-row>
-    <v-row no-gutters class="bg-grey-lighten-3"
-      ><v-col cols="6" class="pa-2"> <v-btn block @click.stop="cancelData">Abbrechen</v-btn> </v-col
+    <v-row no-gutters class="bg-grey-darken-2"
       ><v-col cols="6" class="pa-2">
-        <v-btn v-if="tempData.basic || allData.current !== null" block @click.stop="saveData"
+        <v-btn color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
+          >Abbrechen</v-btn
+        > </v-col
+      ><v-col cols="6" class="pa-2">
+        <v-btn
+          v-if="tempData.basic || allData.current !== null"
+          color="green"
+          prepend-icon="mdi-check"
+          block
+          @click.stop="saveData"
           >Speichern</v-btn
         >
       </v-col></v-row
@@ -748,5 +783,18 @@ div.obligatory div.v-input--disabled {
 
 .schlagTools button {
   display: block;
+}
+
+.cardBorder {
+  border: 2px solid;
+  border-bottom: 5px solid;
+}
+
+.cardBorder.zwischenfrucht {
+  border-color: #bcaaa4;
+}
+
+.cardBorder.hauptfrucht {
+  border-color: #a1887f;
 }
 </style>
