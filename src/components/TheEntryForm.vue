@@ -14,7 +14,7 @@
         <v-form ref="entryform" v-if="tempData.basic || allData.current !== null">
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
-              <v-expansion-panel-title static class="bg-teal-darken-3">
+              <v-expansion-panel-title static class="bg-grey-darken-1">
                 Basisdaten
               </v-expansion-panel-title>
               <v-expansion-panel-text>
@@ -209,7 +209,7 @@
             </v-expansion-panel>
 
             <v-expansion-panel value="kulturen" rounded="0" elevation="0">
-              <v-expansion-panel-title static class="bg-teal-darken-3">
+              <v-expansion-panel-title static class="bg-grey-darken-1">
                 Zwischenfrucht / Hauptkulturen
               </v-expansion-panel-title>
               <v-expansion-panel-text>
@@ -249,6 +249,7 @@
 
                 <v-card
                   class="mt-1 mb-4 pa-0 cardBorder hauptfrucht"
+                  elevation="0"
                   v-for="i in entry.cultures.length - 1"
                   :key="`kultur${i}`"
                 >
@@ -257,13 +258,9 @@
                       <span class="text-button">{{ i }}. Hauptfrucht</span>
                     </v-col>
                     <v-col cols="2" class="text-right">
-                      <v-icon
-                        class="mt-1"
-                        size="24"
-                        color="red"
-                        icon="mdi-close-circle"
-                        @click="deleteCulture(i)"
-                      />
+                      <v-btn icon size="20" @click="deleteCulture(i)" class="mt-2 mr-2">
+                        <v-icon size="20" color="red" icon="mdi-close"
+                      /></v-btn>
                     </v-col>
                   </v-row>
 
@@ -295,12 +292,29 @@
                     </v-col>
                   </v-row>
                   <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
-                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngung(en)</v-col>
+                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
                     <v-card
                       v-for="f in entry.cultures[i].duengung.length"
                       :key="`kultur${i}duengung${f}`"
                       class="border-md mx-1 mb-2 w-100"
+                      elevation="0"
                     >
+                      <v-row no-gutters class="bg-light-green-lighten-3">
+                        <v-col cols="10" class="pl-2">
+                          <span class="text-subtitle-2">{{ f }}. Düngung</span>
+                        </v-col>
+                        <v-col cols="2" class="text-right">
+                          <v-btn
+                            icon
+                            size="18"
+                            @click.stop="deleteFertilization(i, f - 1)"
+                            class="mt-0 mr-1"
+                          >
+                            <v-icon size="18" color="red" icon="mdi-close"
+                          /></v-btn>
+                        </v-col>
+                      </v-row>
+
                       <v-row no-gutters>
                         <v-col cols="5" class="pa-2">
                           <v-select
@@ -313,7 +327,7 @@
                             @update:model-value="fertilizationChanged('typ', i, f - 1)"
                           />
                         </v-col>
-                        <v-col cols="6" class="pa-2">
+                        <v-col cols="7" class="pa-2">
                           <v-select
                             v-if="
                               entry.cultures[i].duengung[f - 1].typ != '' &&
@@ -328,11 +342,6 @@
                             @update:model-value="fertilizationChanged('id', i, f - 1)"
                           />
                         </v-col>
-                        <v-col cols="1" class="pa-2 pt-4 text-right"
-                          ><v-icon color="red" @click.stop="deleteFertilization(i, f - 1)"
-                            >mdi-close-circle</v-icon
-                          ></v-col
-                        >
                         <v-col
                           cols="3"
                           class="pa-2"
@@ -402,9 +411,9 @@
                     <v-col cols="12" class="pa-2">
                       <v-btn
                         block
-                        color="light-green-lighten-1"
+                        flat
+                        color="light-green-lighten-3"
                         density="compact"
-                        hide-details
                         prepend-icon="mdi-plus"
                         @click.stop="addFertilization(i)"
                         >Düngung hinzufügen</v-btn
@@ -463,14 +472,14 @@
                 </v-card>
                 <v-btn
                   block
+                  flat
                   class="mt-5"
                   prepend-icon="mdi-plus"
-                  color="green-lighten-4"
+                  color="brown-lighten-2"
                   size="small"
                   @click="addCulture"
-                  >Hauptkultur hinzufügen</v-btn
+                  >Hauptfrucht hinzufügen</v-btn
                 >
-                <br /><br /><br /><br />
               </v-expansion-panel-text>
             </v-expansion-panel>
 
