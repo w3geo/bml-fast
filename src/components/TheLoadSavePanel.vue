@@ -8,14 +8,14 @@
     </v-row>
     <v-row no-gutters class="mt-2">
       <v-col cols="4" class="pa-2 pt-4">
-        <v-icon size="20" class="mr-2">mdi-file-download</v-icon>Export:</v-col
+        <v-icon color="grey" size="20" class="mr-2">mdi-file-download</v-icon>Export:</v-col
       >
       <v-col cols="8" class="pa-2">
         <v-btn color="grey-lighten-4" block @click.stop="downloadJson">Download</v-btn>
       </v-col>
       <v-divider class="my-3" />
       <v-col cols="4" class="pa-2 pt-4">
-        <v-icon size="20" class="mr-2">mdi-file-upload</v-icon>Import:</v-col
+        <v-icon color="grey" size="20" class="mr-2">mdi-file-upload</v-icon>Import:</v-col
       >
       <v-col cols="8" class="pa-2">
         <v-file-input
