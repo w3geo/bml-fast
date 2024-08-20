@@ -671,6 +671,7 @@ function saveData() {
     allData.value.saved.sort(dataSort);
   }
 
+  console.log(allData.value.saved);
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   tempData.value = { basic: null, programs: null };
   allData.value.datawindow = false;

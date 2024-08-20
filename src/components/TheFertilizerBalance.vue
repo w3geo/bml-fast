@@ -3,7 +3,7 @@
     <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
-        Düngemittel-Bilanz
+        Nährstoff-Bilanz
       </v-col>
     </v-row>
     <v-row class="theList" no-gutters
