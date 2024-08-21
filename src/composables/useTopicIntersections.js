@@ -12,7 +12,7 @@ import { topics } from './useTopics.js';
 import { schlagInfo } from './useSchlag.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
 
-/** @typedef {'nitrataktionsprogramm' | 'bdfl_l16_grundwasserschutz_acker' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_2' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_1' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel_10' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_niedrig'} Topic */
+/** @typedef {'nitrataktionsprogramm' | 'bdfl_l16_grundwasserschutz_acker' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_2' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_1' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel_10' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_niedrig' | 'schwere_boeden'} Topic */
 /** @typedef {(feature: import("ol/Feature.js").FeatureLike) => boolean} Filter */
 
 /** @type {{[Key in Topic]: Filter}} */
@@ -39,6 +39,7 @@ const filtersByTopic = {
   'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_niedrig': (feature) =>
     feature.get('layer') === 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen' &&
     feature.get('el') === 'EL niedrig',
+  schwere_boeden: (feature) => feature.get('layer') === 'schwere_boeden',
 };
 
 const topicKeys = Object.keys(filtersByTopic);
