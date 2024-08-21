@@ -1,5 +1,9 @@
 <template>
-  <v-card class="entryForm" v-if="allData.datawindow">
+  <v-card
+    :class="!tempData.basic && allData.current === null ? 'beforeEntryForm' : 'entryForm'"
+    v-if="allData.datawindow"
+    elevation="10"
+  >
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-list-box </v-icon>
@@ -500,12 +504,13 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col cols="6" class="pa-2">
-        <v-btn color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
+      ><v-col :cols="!tempData.basic && allData.current === null ? 12 : 6" class="pa-2">
+        <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
-      ><v-col cols="6" class="pa-2">
+      ><v-col cols="6" class="pa-2" v-if="tempData.basic && allData.current !== null">
         <v-btn
+          density="compact"
           v-if="tempData.basic || allData.current !== null"
           color="green"
           prepend-icon="mdi-check"
@@ -528,7 +533,7 @@ import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
 
-const debug = false; // TRUE FÜR DEBUG PANEL
+const debug = true; // TRUE FÜR DEBUG PANEL
 
 const { allData, emptyCulture, emptyFertilization, entry } = useDataEntries();
 const { schlagInfo } = useSchlag();
@@ -767,7 +772,7 @@ div.obligatory div.v-input--disabled {
 </style>
 <style scoped>
 .theForm {
-  height: calc(100% - 82px);
+  height: calc(100% - 70px);
   overflow: auto;
   font-size: 13px;
 }
@@ -788,6 +793,16 @@ div.obligatory div.v-input--disabled {
   width: 650px;
   height: calc(100vh - 70px);
   min-height: calc(100vh - 70px);
+  overflow: auto;
+}
+
+.beforeEntryForm {
+  position: absolute;
+  left: 10px;
+  top: 60px;
+  width: 350px;
+  height: calc(50vh - 40px);
+  min-height: calc(50vh - 40px);
   overflow: auto;
 }
 
