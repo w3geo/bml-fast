@@ -1,14 +1,14 @@
-﻿Bodenart;Bodenschwere
-S - Sand;leicht (< 15 % Ton)
-uS - schluffiger Sand;leicht (< 15 % Ton)
-lS - lehmiger Sand;leicht (< 15 % Ton)
-sU - sandiger Schluff;leicht (< 15 % Ton)
-tS - toniger Sand;mittel (15 - 25 % Ton)
-U - Schluff;mittel (15 - 25 % Ton)
-lU - lehmiger Schluff;mittel (15 - 25 % Ton)
-sL - sandiger Lehm;mittel (15 - 25 % Ton)
-L - Lehm;schwer (> 25 % Ton)
-uL - schluffiger Lehm;schwer (> 25 % Ton)
-sT - sandiger Ton;schwer (> 25 % Ton)
-lT - lehmiger Ton;schwer (> 25 % Ton)
-T - Ton;schwer (> 25 % Ton)
+﻿Bodenart;Bodenschwere;1=leicht, 2=mittel, 3=schwer
+S - Sand;leicht (< 15 % Ton);1
+uS - schluffiger Sand;leicht (< 15 % Ton);1
+lS - lehmiger Sand;leicht (< 15 % Ton);1
+sU - sandiger Schluff;leicht (< 15 % Ton);1
+tS - toniger Sand;mittel (15 - 25 % Ton);2
+U - Schluff;mittel (15 - 25 % Ton);2
+lU - lehmiger Schluff;mittel (15 - 25 % Ton);2
+sL - sandiger Lehm;mittel (15 - 25 % Ton);2
+L - Lehm;schwer (> 25 % Ton);3
+uL - schluffiger Lehm;schwer (> 25 % Ton);3
+sT - sandiger Ton;schwer (> 25 % Ton);3
+lT - lehmiger Ton;schwer (> 25 % Ton);3
+T - Ton;schwer (> 25 % Ton);3

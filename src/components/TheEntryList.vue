@@ -99,7 +99,7 @@ function deleteEntry(nr) {
 }
 
 .theList {
-  height: calc(100% - 82px);
+  height: calc(100% - 70px);
   overflow: auto;
 }
 

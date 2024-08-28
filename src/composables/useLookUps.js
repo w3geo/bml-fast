@@ -58,7 +58,7 @@ const yearItems = [];
 
 const fertilizationTypes = [
   { title: 'Keine', value: '' },
-  { title: 'Eigene', value: 'eigene' },
+  { title: 'Eigener Handelsdünger', value: 'eigene' },
   { title: 'Handelsdünger', value: 'handelsdünger' },
   { title: 'Sekundärrohstoffe', value: 'sekundärrohstoffe' },
   { title: 'Wirtschaftsdünger', value: 'wirtschaftsdünger' },
@@ -120,7 +120,7 @@ async function getJson(what) {
       }
     }
     for (let k in kulturenItems) {
-      kulturenItems[k].push({ title: 'Keine', value: '' });
+      kulturenItems[k].splice(0, 0, { title: 'Keine', value: '' });
     }
   }
 }
