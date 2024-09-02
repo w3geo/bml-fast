@@ -508,14 +508,8 @@
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
-      ><v-col cols="6" class="pa-2" v-if="tempData.basic && allData.current !== null">
-        <v-btn
-          density="compact"
-          v-if="tempData.basic || allData.current !== null"
-          color="green"
-          prepend-icon="mdi-check"
-          block
-          @click.stop="saveData"
+      ><v-col cols="6" class="pa-2">
+        <v-btn density="compact" color="green" prepend-icon="mdi-check" block @click.stop="saveData"
           >Speichern</v-btn
         >
       </v-col></v-row
@@ -676,17 +670,18 @@ function saveData() {
     allData.value.saved.sort(dataSort);
   }
 
-  console.log(allData.value.saved);
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   tempData.value = { basic: null, programs: null };
   allData.value.datawindow = false;
   panelInit.value = ['basisdaten', 'kulturen'];
+  schlagInfo.value = null;
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
   allData.value.datawindow = false;
   panelInit.value = ['basisdaten', 'kulturen'];
+  schlagInfo.value = null;
 }
 
 watch(schlagInfo, (value) => {
@@ -695,6 +690,7 @@ watch(schlagInfo, (value) => {
     if (tempData.value.basic) {
       entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
+      entry.value.schlaginfo.basic = schlagInfo.value;
 
       entry.value.extent = tempData.value.basic.extent;
 
@@ -715,6 +711,7 @@ watch(topicHectars, (value) => {
   tempData.value.programs = value;
   if (tempData.value.programs) {
     entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
+    entry.value.schlaginfo.programs = value;
 
     entry.value.duengeklasse_grundwasserschutz = '-';
     let currentDuengeklasse = 0;

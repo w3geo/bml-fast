@@ -40,6 +40,7 @@ import { ref } from 'vue';
  * @property {string} vorfrucht
  * @property {number} stickstoffueberschuss
  * @property {Array<number>} extent
+ * @property {Object} schlaginfo
  * @property {Array<culture>} cultures
  */
 
@@ -71,6 +72,7 @@ export const emptyEntry = {
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
+  schlaginfo: { basic: null, programs: null },
   cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
 
