@@ -202,7 +202,7 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-select
                       v-model="entry.vorfrucht"
-                      :items="lookup.kulturenItems[entry.flaechennutzungsart]"
+                      :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
                       variant="outlined"
                       density="compact"
@@ -297,7 +297,14 @@
                       />
                     </v-col>
                   </v-row>
-                  <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
+                  <v-row
+                    no-gutters
+                    v-if="
+                      entry.cultures[i].kultur != '' &&
+                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
+                        'Düngeverbot'
+                    "
+                  >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
                     <v-card
                       v-for="f in entry.cultures[i].duengung.length"
@@ -604,6 +611,11 @@ function allCulturesReset() {
   for (let c = 0; c < entry.value.cultures.length; c++) {
     entry.value.cultures[c].ertragslage = '';
   }
+}
+
+function kulturAttribut(id, attrib) {
+  const dataRow = lookup.value.kulturen.find((k) => k.ID == id);
+  return dataRow[attrib] ? dataRow[attrib] : null;
 }
 
 function ertragsTyp(kultur, what) {
