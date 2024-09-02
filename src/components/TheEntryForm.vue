@@ -163,8 +163,10 @@
 
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 mb-3">
-                    <v-text-field
+                    <v-select
+                      v-if="entry.flaechennutzungsart === 'A'"
                       v-model="entry.ackerzahl"
+                      :items="lookup.ackerzahlItems"
                       label="Ackerzahl"
                       variant="outlined"
                       density="compact"

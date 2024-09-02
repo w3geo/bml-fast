@@ -62,6 +62,11 @@ const yearItems = [];
   }
 }
 
+const ackerzahlItems = [
+  { title: 'Größer 30', value: 31 },
+  { title: 'Kleiner/gleich 30', value: 30 },
+];
+
 const fertilizationTypes = [
   { title: 'Keine', value: '' },
   { title: 'Eigener Handelsdünger', value: 'eigene' },
@@ -116,6 +121,7 @@ for (let k in kulturenItems) {
  */
 export const lookup = shallowRef({
   yearItems: yearItems,
+  ackerzahlItems: ackerzahlItems,
   wrrl: wrrl,
   ertragsLagen: ertragsLagen,
   limitAckerzahl: limitAckerzahl,

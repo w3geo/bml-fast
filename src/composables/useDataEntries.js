@@ -65,7 +65,7 @@ export const emptyEntry = {
   duengeklasse_grundwasserschutz: '-',
   teilnahme_grundwasserschutz_acker: false,
   gw_acker_gebietszuteilung: 'Trockengebiet',
-  ackerzahl: 0,
+  ackerzahl: 31,
   phosphor_gehaltsklasse: 'C',
   kalium_gehaltsklasse: 'C',
   bodenart: 'sU - sandiger Schluff',
