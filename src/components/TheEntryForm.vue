@@ -1,7 +1,7 @@
 <template>
   <v-card
     :class="!tempData.basic && allData.current === null ? 'beforeEntryForm' : 'entryForm'"
-    v-if="allData.datawindow"
+    v-if="allData.datawindow > 0"
     elevation="10"
   >
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
@@ -672,14 +672,14 @@ function saveData() {
 
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = false;
+  allData.value.datawindow = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = false;
+  allData.value.datawindow = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
 }
@@ -695,6 +695,8 @@ watch(schlagInfo, (value) => {
       entry.value.extent = tempData.value.basic.extent;
 
       entry.value.jahr = new Date().getFullYear();
+
+      allData.value.datawindow = 2;
     }
     if (tempData.value.basic && tempData.value.basic.parts) {
       delete tempData.value.basic.parts;

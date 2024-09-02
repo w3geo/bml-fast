@@ -82,11 +82,11 @@ export const entry = ref({ ...emptyEntry });
  * @typedef allData
  * @property {Array<dataEntry>} saved
  * @property {number} current
- * @property {boolean} datawindow
+ * @property {number} datawindow
  */
 
 /** @type {import('vue').Ref<allData>} */
-export const allData = ref({ saved: [], current: null, datawindow: false });
+export const allData = ref({ saved: [], current: null, datawindow: 0 });
 
 // load from local storage, if existing
 {

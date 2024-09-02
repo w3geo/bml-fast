@@ -124,7 +124,7 @@ async function setSchlagInfo(feature) {
 }
 
 map.on('click', (event) => {
-  if (allData.value.datawindow) {
+  if (allData.value.datawindow === 1) {
     const selectedRenderFeature = getSchlagAtPixel(event.pixel);
     setSchlagInfo(
       schlagInfo.value?.id !== selectedRenderFeature?.getId() ? selectedRenderFeature : null,
@@ -135,7 +135,8 @@ map.on('pointermove', (event) => {
   if (!allData.value.datawindow || event.dragging) {
     return;
   }
-  map.getTargetElement().style.cursor = getSchlagAtPixel(event.pixel) ? 'pointer' : '';
+  map.getTargetElement().style.cursor =
+    allData.value.datawindow === 1 && getSchlagAtPixel(event.pixel) ? 'pointer' : '';
 });
 
 watch(schlagInfo, (value, oldValue) => {

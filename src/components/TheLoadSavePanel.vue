@@ -1,5 +1,5 @@
 <template>
-  <v-card class="panelSize" v-if="!allData.datawindow" elevation="10">
+  <v-card class="panelSize" v-if="allData.datawindow === 0" elevation="10">
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-file-arrow-up-down </v-icon>
