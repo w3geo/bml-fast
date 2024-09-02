@@ -329,7 +329,15 @@
                       </v-row>
 
                       <v-row no-gutters>
-                        <v-col cols="5" class="pa-2">
+                        <v-col
+                          :cols="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                              ? 5
+                              : 12
+                          "
+                          class="pa-2"
+                        >
                           <v-select
                             v-model="entry.cultures[i].duengung[f - 1].typ"
                             :items="lookup.fertilizationTypes"
@@ -340,15 +348,18 @@
                             @update:model-value="fertilizationChanged('typ', i, f - 1)"
                           />
                         </v-col>
-                        <v-col cols="7" class="pa-2">
+                        <v-col
+                          cols="7"
+                          class="pa-2"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                          "
+                        >
                           <v-select
-                            v-if="
-                              entry.cultures[i].duengung[f - 1].typ != '' &&
-                              entry.cultures[i].duengung[f - 1].typ != 'eigene'
-                            "
                             v-model="entry.cultures[i].duengung[f - 1].id"
                             :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
-                            :label="entry.cultures[i].duengung[f - 1].typ"
+                            :label="firstUppercase(entry.cultures[i].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -358,11 +369,17 @@
                         <v-col
                           cols="3"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
                             v-model="entry.cultures[i].duengung[f - 1].menge"
-                            label="Menge (in T)"
+                            :label="`Menge (in ${entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i].duengung[f - 1].id, 'Einheit') : 'm³'})`"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -371,15 +388,28 @@
                         <v-col
                           cols="2"
                           class="pa-2 text-right"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         ></v-col>
 
                         <v-col
                           cols="2"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
+                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
                             v-model="entry.cultures[i].duengung[f - 1].n"
                             label="N(%)"
                             variant="outlined"
@@ -390,11 +420,18 @@
                         <v-col
                           cols="2"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
+                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
                             v-model="entry.cultures[i].duengung[f - 1].p"
-                            label="P2O5(%)"
+                            label="P₂O₅(%)"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -403,11 +440,18 @@
                         <v-col
                           cols="2"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
+                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
                             v-model="entry.cultures[i].duengung[f - 1].k"
-                            label="K2O(%)"
+                            label="K₂O(%)"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -417,7 +461,13 @@
                         <v-col
                           cols="1"
                           class="pa-2 text-right"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         ></v-col>
                       </v-row>
                     </v-card>
@@ -544,30 +594,27 @@ const { map } = useMap();
 const route = useRoute();
 const router = useRouter();
 const { topicHectars } = useTopicIntersections();
-
 const emit = defineEmits(['schlag']);
-
 const schlaegeLastModified = ref();
-
 const { lookup } = useLookup();
-
 const tempData = ref({ basic: null, programs: null });
-
 const panelInit = ref(['basisdaten', 'kulturen']);
-
 const itemsJaNein = [
   { value: true, title: 'Ja' },
   { value: false, title: 'Nein' },
 ];
-
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
-
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
 
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
+
+function firstUppercase(input) {
+  const strinput = input.toString();
+  return strinput.charAt(0).toUpperCase() + strinput.slice(1);
+}
 
 function addFertilization(cindex) {
   entry.value.cultures[cindex].duengung.push({ ...emptyFertilization });
@@ -611,6 +658,11 @@ function allCulturesReset() {
   for (let c = 0; c < entry.value.cultures.length; c++) {
     entry.value.cultures[c].ertragslage = '';
   }
+}
+
+function tableAttribut(table, id, attrib) {
+  const dataRow = lookup.value[table].find((k) => k.ID == id);
+  return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
 }
 
 function kulturAttribut(id, attrib) {
@@ -777,10 +829,6 @@ div.obligatory div.v-field {
 
 div.obligatory div.v-input--disabled {
   font-style: italic;
-}
-
-.v-field-label--floating {
-  text-transform: capitalize;
 }
 </style>
 <style scoped>
