@@ -141,49 +141,6 @@ export const lookup = shallowRef({
   entzugstabelleBraugerste,
 });
 
-async function getJson(what) {
-  const response = await fetch(`data/${what}.json`);
-  const data = await response.json();
-  lookup.value[what] = data;
-
-  if (what === 'kulturen') {
-    kulturenItems.zwischen = [];
-    kulturenItems.alle = [];
-
-    for (let k = 0; k < data.length; k++) {
-      if (aussaatTypeFilter.zwischenU.includes(data[k].ID)) {
-        kulturenItems.zwischen.push({ value: data[k].ID, title: data[k].Kultur });
-      } else if (aussaatTypeFilter.zwischenG.includes(data[k].ID)) {
-        kulturenItems.zwischen.push({ value: data[k].ID, title: data[k].Kultur });
-      } else {
-        kulturenItems.alle.push({ value: data[k].ID, title: data[k].Kultur });
-        const alleFNA = data[k].Feldstücknutzungsart.split(';');
-        for (let f = 0; f < alleFNA.length; f++) {
-          if (kulturenItems[alleFNA[f]]) {
-            kulturenItems[alleFNA[f]].push({ value: data[k].ID, title: data[k].Kultur });
-          } else {
-            kulturenItems[alleFNA[f]] = [{ value: data[k].ID, title: data[k].Kultur }];
-          }
-        }
-      }
-    }
-    for (let k in kulturenItems) {
-      kulturenItems[k].splice(0, 0, { title: 'Keine', value: '' });
-    }
-  }
-}
-
-{
-  getJson('feldstücknutzungsarten');
-  getJson('bodenartenbodenschwere');
-  getJson('kulturen');
-  getJson('wirtschaftsdünger');
-  getJson('sekundärrohstoffe');
-  getJson('handelsdünger');
-  getJson('entzugstabelle-weizen');
-  getJson('entzugstabelle-braugerste');
-}
-
 /**
  * @returns {{ lookup: import('vue').ShallowRef<Object> }}
  */
