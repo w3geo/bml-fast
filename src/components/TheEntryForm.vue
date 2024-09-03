@@ -754,6 +754,15 @@ watch(schlagInfo, (value) => {
   if (value?.id !== Number(route.params.schlagId)) {
     tempData.value.basic = schlagInfo.value;
     if (tempData.value.basic) {
+      if (tempData.value.programs) {
+        if (
+          tempData.value.basic.sl_flaeche_brutto_ha / 2 <
+          tempData.value.programs.schwere_boeden
+        ) {
+          entry.value.bodenart = 'sL - sandiger Lehm';
+        }
+      }
+
       entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
       entry.value.schlaginfo.basic = schlagInfo.value;
@@ -778,6 +787,12 @@ watch(schlagInfo, (value) => {
 watch(topicHectars, (value) => {
   tempData.value.programs = value;
   if (tempData.value.programs) {
+    if (tempData.value.basic) {
+      if (tempData.value.basic.sl_flaeche_brutto_ha / 2 < tempData.value.programs.schwere_boeden) {
+        entry.value.bodenart = 'sL - sandiger Lehm';
+      }
+    }
+
     entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
     entry.value.schlaginfo.programs = value;
 

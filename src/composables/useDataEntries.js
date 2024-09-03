@@ -68,7 +68,7 @@ export const emptyEntry = {
   ackerzahl: 31,
   phosphor_gehaltsklasse: 'C',
   kalium_gehaltsklasse: 'C',
-  bodenart: 'sU - sandiger Schluff',
+  bodenart: 'lS - lehmiger Sand',
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
