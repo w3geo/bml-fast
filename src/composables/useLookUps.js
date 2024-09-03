@@ -103,7 +103,7 @@ for (let k = 0; k < kulturen.length; k++) {
   } else if (aussaatTypeFilter.zwischenG.includes(kulturen[k].ID)) {
     kulturenItems.zwischen.push({ value: kulturen[k].ID, title: kulturen[k].Kultur });
   } else {
-    kulturenItems.alle.push({ value: data[k].ID, title: data[k].Kultur });
+    kulturenItems.alle.push({ value: kulturen[k].ID, title: kulturen[k].Kultur });
     const alleFNA = kulturen[k].Feldstücknutzungsart.split(';');
     for (let f = 0; f < alleFNA.length; f++) {
       if (kulturenItems[alleFNA[f]]) {
