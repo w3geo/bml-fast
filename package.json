@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
+    "dev": "npm run data && vite --host",
+    "build": "npm run data && vite build",
     "data": "node install/csv2json.js",
     "prepare": "npm run data",
     "preview": "vite preview",
