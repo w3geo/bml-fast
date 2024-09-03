@@ -1,7 +1,7 @@
 <template>
   <v-card
     :class="!tempData.basic && allData.current === null ? 'beforeEntryForm' : 'entryForm'"
-    v-if="allData.datawindow"
+    v-if="allData.datawindow > 0"
     elevation="10"
   >
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
@@ -163,8 +163,10 @@
 
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 mb-3">
-                    <v-text-field
+                    <v-select
+                      v-if="entry.flaechennutzungsart === 'A'"
                       v-model="entry.ackerzahl"
+                      :items="lookup.ackerzahlItems"
                       label="Ackerzahl"
                       variant="outlined"
                       density="compact"
@@ -200,7 +202,7 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-select
                       v-model="entry.vorfrucht"
-                      :items="lookup.kulturenItems[entry.flaechennutzungsart]"
+                      :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
                       variant="outlined"
                       density="compact"
@@ -295,7 +297,14 @@
                       />
                     </v-col>
                   </v-row>
-                  <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
+                  <v-row
+                    no-gutters
+                    v-if="
+                      entry.cultures[i].kultur != '' &&
+                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
+                        'Düngeverbot'
+                    "
+                  >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
                     <v-card
                       v-for="f in entry.cultures[i].duengung.length"
@@ -320,7 +329,15 @@
                       </v-row>
 
                       <v-row no-gutters>
-                        <v-col cols="5" class="pa-2">
+                        <v-col
+                          :cols="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                              ? 5
+                              : 12
+                          "
+                          class="pa-2"
+                        >
                           <v-select
                             v-model="entry.cultures[i].duengung[f - 1].typ"
                             :items="lookup.fertilizationTypes"
@@ -331,15 +348,18 @@
                             @update:model-value="fertilizationChanged('typ', i, f - 1)"
                           />
                         </v-col>
-                        <v-col cols="7" class="pa-2">
+                        <v-col
+                          cols="7"
+                          class="pa-2"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                          "
+                        >
                           <v-select
-                            v-if="
-                              entry.cultures[i].duengung[f - 1].typ != '' &&
-                              entry.cultures[i].duengung[f - 1].typ != 'eigene'
-                            "
                             v-model="entry.cultures[i].duengung[f - 1].id"
                             :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
-                            :label="entry.cultures[i].duengung[f - 1].typ"
+                            :label="firstUppercase(entry.cultures[i].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -349,11 +369,17 @@
                         <v-col
                           cols="3"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
                             v-model="entry.cultures[i].duengung[f - 1].menge"
-                            label="Menge (in T)"
+                            :label="`Menge (in ${entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i].duengung[f - 1].id, 'Einheit') : 'm³'})`"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -362,15 +388,28 @@
                         <v-col
                           cols="2"
                           class="pa-2 text-right"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         ></v-col>
 
                         <v-col
                           cols="2"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
+                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
                             v-model="entry.cultures[i].duengung[f - 1].n"
                             label="N(%)"
                             variant="outlined"
@@ -381,11 +420,18 @@
                         <v-col
                           cols="2"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
+                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
                             v-model="entry.cultures[i].duengung[f - 1].p"
-                            label="P2O5(%)"
+                            label="P₂O₅(%)"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -394,11 +440,18 @@
                         <v-col
                           cols="2"
                           class="pa-2"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         >
                           <v-text-field
+                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
                             v-model="entry.cultures[i].duengung[f - 1].k"
-                            label="K2O(%)"
+                            label="K₂O(%)"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -408,7 +461,13 @@
                         <v-col
                           cols="1"
                           class="pa-2 text-right"
-                          v-if="entry.cultures[i].duengung[f - 1].typ != ''"
+                          v-if="
+                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            !(
+                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i].duengung[f - 1].id == ''
+                            )
+                          "
                         ></v-col>
                       </v-row>
                     </v-card>
@@ -508,14 +567,8 @@
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
-      ><v-col cols="6" class="pa-2" v-if="tempData.basic && allData.current !== null">
-        <v-btn
-          density="compact"
-          v-if="tempData.basic || allData.current !== null"
-          color="green"
-          prepend-icon="mdi-check"
-          block
-          @click.stop="saveData"
+      ><v-col cols="6" class="pa-2">
+        <v-btn density="compact" color="green" prepend-icon="mdi-check" block @click.stop="saveData"
           >Speichern</v-btn
         >
       </v-col></v-row
@@ -541,30 +594,27 @@ const { map } = useMap();
 const route = useRoute();
 const router = useRouter();
 const { topicHectars } = useTopicIntersections();
-
 const emit = defineEmits(['schlag']);
-
 const schlaegeLastModified = ref();
-
 const { lookup } = useLookup();
-
 const tempData = ref({ basic: null, programs: null });
-
 const panelInit = ref(['basisdaten', 'kulturen']);
-
 const itemsJaNein = [
   { value: true, title: 'Ja' },
   { value: false, title: 'Nein' },
 ];
-
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
-
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
 
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
+
+function firstUppercase(input) {
+  const strinput = input.toString();
+  return strinput.charAt(0).toUpperCase() + strinput.slice(1);
+}
 
 function addFertilization(cindex) {
   entry.value.cultures[cindex].duengung.push({ ...emptyFertilization });
@@ -608,6 +658,16 @@ function allCulturesReset() {
   for (let c = 0; c < entry.value.cultures.length; c++) {
     entry.value.cultures[c].ertragslage = '';
   }
+}
+
+function tableAttribut(table, id, attrib) {
+  const dataRow = lookup.value[table].find((k) => k.ID == id);
+  return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
+}
+
+function kulturAttribut(id, attrib) {
+  const dataRow = lookup.value.kulturen.find((k) => k.ID == id);
+  return dataRow[attrib] ? dataRow[attrib] : null;
 }
 
 function ertragsTyp(kultur, what) {
@@ -676,29 +736,42 @@ function saveData() {
     allData.value.saved.sort(dataSort);
   }
 
-  console.log(allData.value.saved);
   localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
   tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = false;
+  allData.value.datawindow = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
+  schlagInfo.value = null;
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = false;
+  allData.value.datawindow = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
+  schlagInfo.value = null;
 }
 
 watch(schlagInfo, (value) => {
   if (value?.id !== Number(route.params.schlagId)) {
     tempData.value.basic = schlagInfo.value;
     if (tempData.value.basic) {
+      if (tempData.value.programs) {
+        if (
+          tempData.value.basic.sl_flaeche_brutto_ha / 2 <
+          tempData.value.programs.schwere_boeden
+        ) {
+          entry.value.bodenart = 'sL - sandiger Lehm';
+        }
+      }
+
       entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
+      entry.value.schlaginfo.basic = schlagInfo.value;
 
       entry.value.extent = tempData.value.basic.extent;
 
       entry.value.jahr = new Date().getFullYear();
+
+      allData.value.datawindow = 2;
     }
     if (tempData.value.basic && tempData.value.basic.parts) {
       delete tempData.value.basic.parts;
@@ -714,7 +787,14 @@ watch(schlagInfo, (value) => {
 watch(topicHectars, (value) => {
   tempData.value.programs = value;
   if (tempData.value.programs) {
+    if (tempData.value.basic) {
+      if (tempData.value.basic.sl_flaeche_brutto_ha / 2 < tempData.value.programs.schwere_boeden) {
+        entry.value.bodenart = 'sL - sandiger Lehm';
+      }
+    }
+
     entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
+    entry.value.schlaginfo.programs = value;
 
     entry.value.duengeklasse_grundwasserschutz = '-';
     let currentDuengeklasse = 0;
@@ -764,10 +844,6 @@ div.obligatory div.v-field {
 
 div.obligatory div.v-input--disabled {
   font-style: italic;
-}
-
-.v-field-label--floating {
-  text-transform: capitalize;
 }
 </style>
 <style scoped>

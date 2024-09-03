@@ -40,6 +40,7 @@ import { ref } from 'vue';
  * @property {string} vorfrucht
  * @property {number} stickstoffueberschuss
  * @property {Array<number>} extent
+ * @property {Object} schlaginfo
  * @property {Array<culture>} cultures
  */
 
@@ -64,13 +65,14 @@ export const emptyEntry = {
   duengeklasse_grundwasserschutz: '-',
   teilnahme_grundwasserschutz_acker: false,
   gw_acker_gebietszuteilung: 'Trockengebiet',
-  ackerzahl: 0,
+  ackerzahl: 31,
   phosphor_gehaltsklasse: 'C',
   kalium_gehaltsklasse: 'C',
-  bodenart: 'sU - sandiger Schluff',
+  bodenart: 'lS - lehmiger Sand',
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
+  schlaginfo: { basic: null, programs: null },
   cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
 
@@ -80,11 +82,11 @@ export const entry = ref({ ...emptyEntry });
  * @typedef allData
  * @property {Array<dataEntry>} saved
  * @property {number} current
- * @property {boolean} datawindow
+ * @property {number} datawindow
  */
 
 /** @type {import('vue').Ref<allData>} */
-export const allData = ref({ saved: [], current: null, datawindow: false });
+export const allData = ref({ saved: [], current: null, datawindow: 0 });
 
 // load from local storage, if existing
 {

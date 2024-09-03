@@ -1,6 +1,6 @@
 <template>
   <v-card class="entryList" elevation="10">
-    <div class="greyOut" v-if="allData.datawindow" />
+    <div class="greyOut" v-if="allData.datawindow > 0" />
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-view-list </v-icon>
@@ -60,19 +60,16 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 
-const { allData, emptyEntry, emptyCulture, entry } = useDataEntries();
+const { allData, emptyEntry, entry } = useDataEntries();
 
 function editEntry(nr) {
   allData.value.current = nr;
   if (nr !== null) {
-    entry.value = allData.value.saved[nr];
+    entry.value = JSON.parse(JSON.stringify(allData.value.saved[nr]));
   } else {
-    entry.value = { ...emptyEntry };
-    entry.value.cultures = [{ ...emptyCulture }, { ...emptyCulture }];
-    entry.value.cultures[0].duengung = [];
-    entry.value.cultures[1].duengung = [];
+    entry.value = JSON.parse(JSON.stringify(emptyEntry));
   }
-  allData.value.datawindow = true;
+  allData.value.datawindow = nr === null ? 1 : 2;
 }
 
 function deleteEntry(nr) {
