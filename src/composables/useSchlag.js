@@ -132,7 +132,7 @@ map.on('click', (event) => {
   }
 });
 map.on('pointermove', (event) => {
-  if (!allData.value.datawindow || event.dragging) {
+  if (event.dragging) {
     return;
   }
   map.getTargetElement().style.cursor =
