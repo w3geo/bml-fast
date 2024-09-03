@@ -65,13 +65,15 @@
 </template>
 
 <script setup>
+import { useSchlag } from '../composables/useSchlag.js';
 import { useDataEntries } from '../composables/useDataEntries.js';
 
 const { allData, emptyEntry, entry } = useDataEntries();
+const { showSchlagParts } = useSchlag();
 
 function zoomTo(nr) {
   entry.value = JSON.parse(JSON.stringify(allData.value.saved[nr]));
-  console.log(entry.value.schlaginfo.basic.parts);
+  showSchlagParts(allData.value.saved[nr].schlaginfo.basic.parts);
 }
 
 function editEntry(nr) {

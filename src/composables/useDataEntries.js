@@ -23,7 +23,7 @@ import { ref } from 'vue';
  */
 
 /**
- * @typedef dataEntry
+ * @typedef DataEntry
  * @property {number} jahr
  * @property {string} schlagnummer
  * @property {string} feldstuecksname
@@ -80,7 +80,7 @@ export const entry = ref({ ...emptyEntry });
 
 /**
  * @typedef allData
- * @property {Array<dataEntry>} saved
+ * @property {Array<DataEntry>} saved
  * @property {number} current
  * @property {number} datawindow
  */
@@ -97,7 +97,7 @@ export const allData = ref({ saved: [], current: null, datawindow: 0 });
 }
 
 /**
- * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
+ * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: DataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
   return { allData, emptyFertilization, emptyCulture, emptyEntry, entry };
