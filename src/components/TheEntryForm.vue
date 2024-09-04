@@ -594,7 +594,6 @@ const { map } = useMap();
 const route = useRoute();
 const router = useRouter();
 const { topicHectars } = useTopicIntersections();
-const emit = defineEmits(['schlag']);
 const schlaegeLastModified = ref();
 const { lookup } = useLookup();
 const tempData = ref({ basic: null, programs: null });
@@ -777,9 +776,6 @@ watch(schlagInfo, (value) => {
       delete tempData.value.basic.parts;
     }
     router.push({ params: { ...route.params, schlagId: value?.id } });
-  }
-  if (value && !value.loading) {
-    emit('schlag', true);
   }
 });
 
