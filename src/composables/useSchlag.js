@@ -1,4 +1,4 @@
-import { getSource, setFeatureState } from 'ol-mapbox-style';
+import { getSource } from 'ol-mapbox-style';
 import { createEmpty, extend } from 'ol/extent';
 import { transformExtent } from 'ol/proj';
 import { toGeometry } from 'ol/render/Feature';
@@ -21,7 +21,7 @@ import VectorSource from 'ol/source/Vector.js';
  * @property {string} [fnar_code]
  * @property {string} [kz_bio_oepul_jn]
  * @property {import("ol/extent").Extent} [extent]
- * @property {Array<import('ol/format/GeoJSON').GeoJSONGeometry>} [parts]
+ * @property {Array<import('geojson').Polygon>} [parts]
  */
 
 const geojson = new GeoJSON();
@@ -145,28 +145,36 @@ map.on('pointermove', (event) => {
     allData.value.datawindow === 1 && getSchlagAtPixel(event.pixel) ? 'pointer' : '';
 });
 
-watch(schlagInfo, (value, oldValue) => {
-  if (oldValue && !oldValue.loading) {
-    setFeatureState(map, { source: 'agrargis', id: oldValue.id }, null);
+watch(schlagInfo, (value) => {
+  removeSchlagParts();
+  if (!value) {
+    return;
   }
-  if (value) {
-    if (value.loading) {
-      findSchlag(value.id).then((feature) => {
-        setSchlagInfo(feature);
-      });
-    } else {
-      setFeatureState(map, { source: 'agrargis', id: value.id }, { selected: true });
-    }
+  if (value?.loading) {
+    findSchlag(value.id).then((feature) => {
+      setSchlagInfo(feature);
+    });
+    return;
   }
+  showSchlagParts(value.parts, { zoom: false });
 });
+
+let partsLayer;
+function removeSchlagParts() {
+  if (!partsLayer) {
+    return;
+  }
+  map.removeLayer(partsLayer);
+}
 
 /**
  * @param {Array<import('geojson').Polygon>} parts
- * @returns {() => void} Call this function to remove schlag parts from the map
  */
-function showSchlagParts(parts) {
-  const partsLayer = new VectorLayer({
+function showSchlagParts(parts, options = { zoom: true }) {
+  removeSchlagParts();
+  partsLayer = new VectorLayer({
     source: new VectorSource({
+      overlaps: false,
       features: geojson.readFeatures({
         type: 'FeatureCollection',
         features: parts.map((geometry) => ({
@@ -175,24 +183,25 @@ function showSchlagParts(parts) {
         })),
       }),
     }),
-    opacity: 0.5,
     style: {
-      'fill-color': 'rgb(30, 30, 30)',
+      'fill-color': 'rgba(255, 0, 0, 0.25)',
     },
   });
-  map
-    .getView()
-    .fit(partsLayer.getSource().getExtent(), { duration: 500, padding: [50, 50, 50, 400] });
+  if (options.zoom) {
+    map
+      .getView()
+      .fit(partsLayer.getSource().getExtent(), { duration: 500, padding: [50, 50, 50, 400] });
+  }
   map.addLayer(partsLayer);
-  return () => map.removeLayer(partsLayer);
 }
 
 /**
  * @returns {{
  *   schlagInfo: import('vue').Ref<SchlagInfo>,
- *   showSchlagParts: (parts: Array<import('geojson').Polygon>) => () => void,
+ *   showSchlagParts: (parts: Array<import('geojson').Polygon>) => void,
+ *   removeSchlagParts: () => void,
  * }}
  */
 export function useSchlag() {
-  return { schlagInfo, showSchlagParts };
+  return { schlagInfo, showSchlagParts, removeSchlagParts };
 }

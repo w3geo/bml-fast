@@ -70,17 +70,14 @@ import { useDataEntries } from '../composables/useDataEntries.js';
 import { watch } from 'vue';
 
 const { allData, emptyEntry, entry } = useDataEntries();
-const { showSchlagParts } = useSchlag();
+const { showSchlagParts, removeSchlagParts } = useSchlag();
 
-let removeSchlagParts;
 watch(entry, (value) => {
-  if (removeSchlagParts) {
-    removeSchlagParts();
-  }
+  removeSchlagParts();
   if (!value.schlaginfo?.basic?.parts) {
     return;
   }
-  removeSchlagParts = showSchlagParts(value.schlaginfo.basic.parts);
+  showSchlagParts(value.schlaginfo.basic.parts);
 });
 function zoomTo(nr) {
   entry.value = JSON.parse(JSON.stringify(allData.value.saved[nr]));
