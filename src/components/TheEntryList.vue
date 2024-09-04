@@ -67,13 +67,22 @@
 <script setup>
 import { useSchlag } from '../composables/useSchlag.js';
 import { useDataEntries } from '../composables/useDataEntries.js';
+import { nextTick, watch } from 'vue';
 
 const { allData, emptyEntry, entry } = useDataEntries();
 const { showSchlagParts } = useSchlag();
 
+let removeSchlagParts;
+watch(entry, (value) => {
+  if (value && removeSchlagParts) {
+    removeSchlagParts();
+  }
+});
 function zoomTo(nr) {
   entry.value = JSON.parse(JSON.stringify(allData.value.saved[nr]));
-  showSchlagParts(allData.value.saved[nr].schlaginfo.basic.parts);
+  nextTick(() => {
+    removeSchlagParts = showSchlagParts(allData.value.saved[nr].schlaginfo.basic.parts);
+  });
 }
 
 function editEntry(nr) {
