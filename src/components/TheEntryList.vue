@@ -24,7 +24,14 @@
             >
             <v-col cols="3" class="text-right">
               <v-icon
-                class="mr-2"
+                class="mr-1"
+                size="22"
+                color="grey"
+                icon="mdi-map-marker"
+                @click="zoomTo(i - 1)"
+              />
+              <v-icon
+                class="mr-1"
                 size="22"
                 color="orange"
                 icon="mdi-pencil-circle"
@@ -61,6 +68,11 @@
 import { useDataEntries } from '../composables/useDataEntries.js';
 
 const { allData, emptyEntry, entry } = useDataEntries();
+
+function zoomTo(nr) {
+  entry.value = JSON.parse(JSON.stringify(allData.value.saved[nr]));
+  console.log(entry.value.schlaginfo.basic.parts);
+}
 
 function editEntry(nr) {
   allData.value.current = nr;
