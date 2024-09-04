@@ -752,7 +752,7 @@ function cancelData() {
 
 watch(schlagInfo, (value) => {
   if (value?.id !== Number(route.params.schlagId)) {
-    tempData.value.basic = schlagInfo.value;
+    tempData.value.basic = JSON.parse(JSON.stringify(schlagInfo.value));
     if (tempData.value.basic) {
       if (tempData.value.programs) {
         if (
@@ -794,7 +794,7 @@ watch(topicHectars, (value) => {
     }
 
     entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
-    entry.value.schlaginfo.programs = value;
+    entry.value.schlaginfo.programs = JSON.parse(JSON.stringify(value));
 
     entry.value.duengeklasse_grundwasserschutz = '-';
     let currentDuengeklasse = 0;
