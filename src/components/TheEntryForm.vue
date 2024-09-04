@@ -764,9 +764,7 @@ watch(schlagInfo, (value) => {
 
       entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
       entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
-      entry.value.schlaginfo.basic = schlagInfo.value;
-
-      entry.value.extent = tempData.value.basic.extent;
+      entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
 
       entry.value.jahr = new Date().getFullYear();
 
