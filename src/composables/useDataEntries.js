@@ -78,27 +78,34 @@ export const emptyEntry = {
 
 export const entry = ref({ ...emptyEntry });
 
-/**
- * @typedef allData
- * @property {Array<DataEntry>} saved
- * @property {number} current
- * @property {number} datawindow
- */
+/** @type {import('vue').Ref<Array>} */
+export const savedData = ref([]);
 
-/** @type {import('vue').Ref<allData>} */
-export const allData = ref({ saved: [], current: null, datawindow: 0 });
+/** @type {import('vue').Ref<Number>} */
+export const currentSaved = ref(null);
+
+/** @type {import('vue').Ref<Number>} */
+export const dataWindow = ref(0);
 
 // load from local storage, if existing
 {
   const saved = localStorage.getItem('fasttool');
   if (saved) {
-    allData.value.saved = JSON.parse(saved);
+    savedData.value = JSON.parse(saved);
   }
 }
 
 /**
- * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: DataEntry, entry: import('vue').Ref<Object> }}
+ * @returns {{ currentSaved: import('vue').Ref<Number>, dataWindow:import('vue').Ref<Number>, savedData: import('vue').Ref<Array> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: DataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
-  return { allData, emptyFertilization, emptyCulture, emptyEntry, entry };
+  return {
+    currentSaved,
+    dataWindow,
+    savedData,
+    emptyFertilization,
+    emptyCulture,
+    emptyEntry,
+    entry,
+  };
 }

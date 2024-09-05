@@ -1,6 +1,6 @@
 <template>
   <v-card class="entryList" elevation="10">
-    <div class="greyOut" v-if="allData.datawindow > 0" />
+    <div class="greyOut" v-if="dataWindow > 0" />
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-view-list </v-icon>
@@ -9,18 +9,17 @@
     </v-row>
     <v-row class="theList" no-gutters
       ><v-col>
-        <div class="noEntry" v-if="allData.saved.length === 0">Keine gespeicherten Einträge.</div>
-        <div v-for="i in allData.saved.length" :key="i" class="pa-0 ma-0">
+        <div class="noEntry" v-if="savedData.length === 0">Keine gespeicherten Einträge.</div>
+        <div v-for="i in savedData.length" :key="i" class="pa-0 ma-0">
           <div
             class="bg-grey pa-1"
-            v-if="i == 1 || (i > 1 && allData.saved[i - 1].jahr > allData.saved[i - 2].jahr)"
+            v-if="i == 1 || (i > 1 && savedData[i - 1].jahr > savedData[i - 2].jahr)"
           >
-            {{ allData.saved[i - 1].jahr }}
+            {{ savedData[i - 1].jahr }}
           </div>
           <v-row no-gutters class="bg-grey-lighten-3 my-1 pa-1 text-subtitle-2">
             <v-col cols="9"
-              >{{ allData.saved[i - 1].schlagnummer }} /
-              {{ allData.saved[i - 1].feldstuecksname }}</v-col
+              >{{ savedData[i - 1].schlagnummer }} / {{ savedData[i - 1].feldstuecksname }}</v-col
             >
             <v-col cols="3" class="text-right">
               <v-icon
@@ -69,7 +68,7 @@ import { useSchlag } from '../composables/useSchlag.js';
 import { useDataEntries } from '../composables/useDataEntries.js';
 import { watch } from 'vue';
 
-const { allData, emptyEntry, entry } = useDataEntries();
+const { savedData, currentSaved, dataWindow, emptyEntry, entry } = useDataEntries();
 const { showSchlagParts, removeSchlagParts } = useSchlag();
 
 watch(entry, (value) => {
@@ -80,22 +79,22 @@ watch(entry, (value) => {
   showSchlagParts(value.schlaginfo.basic.parts);
 });
 function zoomTo(nr) {
-  entry.value = JSON.parse(JSON.stringify(allData.value.saved[nr]));
+  entry.value = JSON.parse(JSON.stringify(savedData.value[nr]));
 }
 
 function editEntry(nr) {
-  allData.value.current = nr;
+  currentSaved.value = nr;
   if (nr !== null) {
-    entry.value = JSON.parse(JSON.stringify(allData.value.saved[nr]));
+    entry.value = JSON.parse(JSON.stringify(savedData.value[nr]));
   } else {
     entry.value = JSON.parse(JSON.stringify(emptyEntry));
   }
-  allData.value.datawindow = nr === null ? 1 : 2;
+  dataWindow.value = nr === null ? 1 : 2;
 }
 
 function deleteEntry(nr) {
-  allData.value.saved.splice(nr, 1);
-  localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
+  savedData.value.splice(nr, 1);
+  localStorage.setItem('fasttool', JSON.stringify(savedData.value));
 }
 </script>
 

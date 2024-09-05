@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :class="!tempData.basic && allData.current === null ? 'beforeEntryForm' : 'entryForm'"
-    v-if="allData.datawindow > 0"
+    :class="!tempData.basic && currentSaved === null ? 'beforeEntryForm' : 'entryForm'"
+    v-if="dataWindow > 0"
     elevation="10"
   >
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
@@ -12,10 +12,10 @@
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
-        <div class="selectSchlag" v-if="!tempData.basic && allData.current === null">
+        <div class="selectSchlag" v-if="!tempData.basic && currentSaved === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="tempData.basic || allData.current !== null">
+        <v-form ref="entryform" v-if="tempData.basic || currentSaved !== null">
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-darken-1">
@@ -563,7 +563,7 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col :cols="!tempData.basic && allData.current === null ? 12 : 6" class="pa-2">
+      ><v-col :cols="!tempData.basic && currentSaved === null ? 12 : 6" class="pa-2">
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
@@ -588,7 +588,8 @@ import { useLookup } from '../composables/useLookUps.js';
 
 const debug = true; // TRUE FÜR DEBUG PANEL
 
-const { allData, emptyCulture, emptyFertilization, entry } = useDataEntries();
+const { savedData, currentSaved, dataWindow, emptyCulture, emptyFertilization, entry } =
+  useDataEntries();
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
 const route = useRoute();
@@ -728,23 +729,23 @@ function dataSort(a, b) {
 }
 
 function saveData() {
-  if (allData.value.current !== null) {
-    allData.value.saved[allData.value.current] = { ...entry.value };
+  if (currentSaved.value !== null) {
+    savedData.value[currentSaved.value] = { ...entry.value };
   } else {
-    allData.value.saved.push(entry.value);
-    allData.value.saved.sort(dataSort);
+    savedData.value.push(entry.value);
+    savedData.value.sort(dataSort);
   }
 
-  localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
+  localStorage.setItem('fasttool', JSON.stringify(savedData.value));
   tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = 0;
+  dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
 }
 
 function cancelData() {
   tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = 0;
+  dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
 }
@@ -768,7 +769,7 @@ watch(schlagInfo, (value) => {
 
       entry.value.jahr = new Date().getFullYear();
 
-      allData.value.datawindow = 2;
+      dataWindow.value = 2;
     }
     if (tempData.value.basic && tempData.value.basic.parts) {
       delete tempData.value.basic.parts;

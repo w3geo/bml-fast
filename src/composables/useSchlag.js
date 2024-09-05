@@ -6,7 +6,7 @@ import { shallowRef, watch } from 'vue';
 import { GeoJSON } from 'ol/format';
 import { SCHLAEGE_SOURCE } from '../constants.js';
 import { map, mapReady } from './useMap.js';
-import { allData } from '../composables/useDataEntries.js';
+import { dataWindow } from '../composables/useDataEntries.js';
 import VectorLayer from 'ol/layer/Vector.js';
 import VectorSource from 'ol/source/Vector.js';
 
@@ -130,7 +130,7 @@ async function setSchlagInfo(feature) {
 }
 
 map.on('click', (event) => {
-  if (allData.value.datawindow === 1) {
+  if (dataWindow.value === 1) {
     const selectedRenderFeature = getSchlagAtPixel(event.pixel);
     setSchlagInfo(
       schlagInfo.value?.id !== selectedRenderFeature?.getId() ? selectedRenderFeature : null,
@@ -142,7 +142,7 @@ map.on('pointermove', (event) => {
     return;
   }
   map.getTargetElement().style.cursor =
-    allData.value.datawindow === 1 && getSchlagAtPixel(event.pixel) ? 'pointer' : '';
+    dataWindow.value === 1 && getSchlagAtPixel(event.pixel) ? 'pointer' : '';
 });
 
 watch(schlagInfo, (value) => {
