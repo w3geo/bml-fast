@@ -1,6 +1,6 @@
 <template>
   <v-card
-    :class="!tempData.basic && currentSaved === null ? 'beforeEntryForm' : 'entryForm'"
+    :class="entry.flaeche === 0 && currentSaved === null ? 'beforeEntryForm' : 'entryForm'"
     v-if="dataWindow > 0"
     elevation="10"
   >
@@ -12,10 +12,10 @@
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
-        <div class="selectSchlag" v-if="!tempData.basic && currentSaved === null">
+        <div class="selectSchlag" v-if="entry.flaeche === 0 && currentSaved === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="tempData.basic || currentSaved !== null">
+        <v-form ref="entryform" v-if="entry.flaeche > 0 || currentSaved !== null">
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-darken-1">
@@ -93,7 +93,7 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
-                      v-model="bdfl_l16"
+                      v-model="entry.flaeche_grundwasserschutz"
                       label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
                       variant="outlined"
                       density="compact"
@@ -103,7 +103,7 @@
                   </v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-select
-                      v-if="bdfl_l16 > 0"
+                      v-if="entry.flaeche_grundwasserschutz > 0"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
@@ -553,8 +553,8 @@
               <v-expansion-panel-text>
                 <div class="pa-2 bg-blue-lighten-5" style="overflow: hidden">
                   SCHLAG-DATEN:<br />
-                  <pre>{{ tempData.basic }}</pre>
-                  <pre>{{ tempData.programs }}</pre>
+                  <pre>{{ entry.schlaginfo.basic }}</pre>
+                  <pre>{{ entry.schlaginfo.programs }}</pre>
                 </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -563,7 +563,7 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col :cols="!tempData.basic && currentSaved === null ? 12 : 6" class="pa-2">
+      ><v-col :cols="entry.flaeche === 0 && currentSaved === null ? 12 : 6" class="pa-2">
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
@@ -597,7 +597,6 @@ const router = useRouter();
 const { topicHectars } = useTopicIntersections();
 const schlaegeLastModified = ref();
 const { lookup } = useLookup();
-const tempData = ref({ basic: null, programs: null });
 const panelInit = ref(['basisdaten', 'kulturen']);
 const itemsJaNein = [
   { value: true, title: 'Ja' },
@@ -737,65 +736,65 @@ function saveData() {
   }
 
   localStorage.setItem('fasttool', JSON.stringify(savedData.value));
-  tempData.value = { basic: null, programs: null };
   dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
 }
 
 function cancelData() {
-  tempData.value = { basic: null, programs: null };
   dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
 }
 
 watch(schlagInfo, (value) => {
+  console.log(value);
   if (value?.id !== Number(route.params.schlagId)) {
-    tempData.value.basic = JSON.parse(JSON.stringify(schlagInfo.value));
-    if (tempData.value.basic) {
-      if (tempData.value.programs) {
-        if (
-          tempData.value.basic.sl_flaeche_brutto_ha / 2 <
-          tempData.value.programs.schwere_boeden
-        ) {
+    if (value) {
+      if (entry.value.flaeche_schwereboeden) {
+        if (value.sl_flaeche_brutto_ha / 2 < entry.value.flaeche_schwereboeden) {
           entry.value.bodenart = 'sL - sandiger Lehm';
         }
       }
 
-      entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
-      entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
+      entry.value.flaechennutzungsart = value.fnar_code;
+      entry.value.flaeche = value.sl_flaeche_brutto_ha;
+      entry.value.extent = value.extent;
+      entry.value.parts = value.parts;
+      entry.value.flaeche = value.sl_flaeche_brutto_ha;
+
+      // Remove after Test Phase!
       entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
 
       entry.value.jahr = new Date().getFullYear();
 
       dataWindow.value = 2;
     }
-    if (tempData.value.basic && tempData.value.basic.parts) {
-      delete tempData.value.basic.parts;
-    }
+
     router.push({ params: { ...route.params, schlagId: value?.id } });
   }
 });
 
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
-  tempData.value.programs = value;
-  if (tempData.value.programs) {
-    if (tempData.value.basic) {
-      if (tempData.value.basic.sl_flaeche_brutto_ha / 2 < tempData.value.programs.schwere_boeden) {
+  if (value) {
+    if (entry.value.flaeche) {
+      if (entry.value.flaeche / 2 < value.schwere_boeden) {
         entry.value.bodenart = 'sL - sandiger Lehm';
       }
     }
 
-    entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
+    entry.value.flaeche_nitratrisikogebiet = value.nitrataktionsprogramm;
+    entry.value.flaeche_grundwasserschutz = value.bdfl_l16_grundwasserschutz_acker;
+
+    // Remove after Test Phase!
     entry.value.schlaginfo.programs = JSON.parse(JSON.stringify(value));
 
     entry.value.duengeklasse_grundwasserschutz = '-';
     let currentDuengeklasse = 0;
     for (let l = 1; l < lookup.value.wrrl.length; l++) {
-      if (tempData.value.programs[lookup.value.wrrl[l].code] > currentDuengeklasse) {
-        currentDuengeklasse = tempData.value.programs[lookup.value.wrrl[l].code];
+      if (value[lookup.value.wrrl[l].code] > currentDuengeklasse) {
+        currentDuengeklasse = value[lookup.value.wrrl[l].code];
         entry.value.duengeklasse_grundwasserschutz = lookup.value.wrrl[l].value;
       }
     }
@@ -814,12 +813,6 @@ map.on('singleclick', (event) => {
 
 const nitratRisikoGebiet = computed(() => {
   return entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? 'JA' : 'NEIN';
-});
-
-const bdfl_l16 = computed(() => {
-  return tempData.value.programs && tempData.value.programs.bdfl_l16_grundwasserschutz_acker
-    ? tempData.value.programs.bdfl_l16_grundwasserschutz_acker
-    : 0;
 });
 
 watch(() => route.params.schlagId, setSchlagId);

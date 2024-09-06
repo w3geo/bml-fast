@@ -30,6 +30,8 @@ import { ref } from 'vue';
  * @property {string} flaechennutzungsart
  * @property {number} flaeche
  * @property {number} flaeche_nitratrisikogebiet
+ * @property {number} flaeche_schwereboeden
+ * @property {number} flaeche_grundwasserschutz
  * @property {string} duengeklasse_grundwasserschutz
  * @property {boolean} teilnahme_grundwasserschutz_acker
  * @property {string} gw_acker_gebietszuteilung
@@ -40,6 +42,7 @@ import { ref } from 'vue';
  * @property {string} vorfrucht
  * @property {number} stickstoffueberschuss
  * @property {Array<number>} extent
+ * @property {Array<number>} parts
  * @property {Object} schlaginfo
  * @property {Array<culture>} cultures
  */
@@ -62,6 +65,8 @@ export const emptyEntry = {
   flaechennutzungsart: '',
   flaeche: 0,
   flaeche_nitratrisikogebiet: 0,
+  flaeche_schwereboeden: 0,
+  flaeche_grundwasserschutz: 0,
   duengeklasse_grundwasserschutz: '-',
   teilnahme_grundwasserschutz_acker: false,
   gw_acker_gebietszuteilung: 'Trockengebiet',
@@ -72,6 +77,7 @@ export const emptyEntry = {
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
+  parts: [],
   schlaginfo: { basic: null, programs: null },
   cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
