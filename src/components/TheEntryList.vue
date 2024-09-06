@@ -73,10 +73,10 @@ const { showSchlagParts, removeSchlagParts } = useSchlag();
 
 watch(entry, (value) => {
   removeSchlagParts();
-  if (!value.schlaginfo?.basic?.parts) {
+  if (!value?.parts) {
     return;
   }
-  showSchlagParts(value.schlaginfo.basic.parts);
+  showSchlagParts(value.parts);
 });
 function zoomTo(nr) {
   entry.value = JSON.parse(JSON.stringify(savedData.value[nr]));
