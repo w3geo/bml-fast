@@ -631,7 +631,7 @@ function fertilizationChanged(what, cindex, findex) {
     entry.value.cultures[cindex].duengung[findex].id = '';
   }
   if (what == 'id' && entry.value.cultures[cindex].duengung[findex].typ == 'handelsdünger') {
-    const hDuenger = lookup.value[entry.value.cultures[cindex].duengung[findex].typ].find(
+    const hDuenger = lookup[entry.value.cultures[cindex].duengung[findex].typ].find(
       (d) => d.ID == entry.value.cultures[cindex].duengung[findex].id,
     );
     if (hDuenger) {
@@ -659,17 +659,17 @@ function allCulturesReset() {
 }
 
 function tableAttribut(table, id, attrib) {
-  const dataRow = lookup.value[table].find((k) => k.ID == id);
+  const dataRow = lookup[table].find((k) => k.ID == id);
   return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
 }
 
 function kulturAttribut(id, attrib) {
-  const dataRow = lookup.value.kulturen.find((k) => k.ID == id);
+  const dataRow = lookup.kulturen.find((k) => k.ID == id);
   return dataRow[attrib] ? dataRow[attrib] : null;
 }
 
 function ertragsTyp(kultur, what) {
-  const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
+  const dataRow = lookup.kulturen.find((k) => k.ID == kultur);
   if (what == 'einheit') {
     return dataRow.Ertragserfassungsart ? dataRow.Ertragserfassungsart : 't';
   } else {
@@ -684,14 +684,14 @@ function ertragsTyp(kultur, what) {
 }
 
 function ertragsLagen(kultur) {
-  const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
+  const dataRow = lookup.kulturen.find((k) => k.ID == kultur);
   const itemReturn = [{ title: 'Keine', value: '' }];
   if (dataRow) {
-    for (const el of lookup.value.ertragsLagen) {
+    for (const el of lookup.ertragsLagen) {
       if (dataRow[`EL ${el} Bereich`] != '') {
         if (entry.value.flaechennutzungsart == 'A' && entry.value.ackerzahl < 30) {
           // Sonderfall Ackerzahl < 30, Ackerkultur
-          if (lookup.value.limitAckerzahl.includes(el)) {
+          if (lookup.limitAckerzahl.includes(el)) {
             itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
           }
         } else {
@@ -776,10 +776,10 @@ watch(topicHectars, (value) => {
 
     entry.value.duengeklasse_grundwasserschutz = '-';
     let currentDuengeklasse = 0;
-    for (let l = 1; l < lookup.value.wrrl.length; l++) {
-      if (value[lookup.value.wrrl[l].code] > currentDuengeklasse) {
-        currentDuengeklasse = value[lookup.value.wrrl[l].code];
-        entry.value.duengeklasse_grundwasserschutz = lookup.value.wrrl[l].value;
+    for (let l = 1; l < lookup.wrrl.length; l++) {
+      if (value[lookup.wrrl[l].code] > currentDuengeklasse) {
+        currentDuengeklasse = value[lookup.wrrl[l].code];
+        entry.value.duengeklasse_grundwasserschutz = lookup.wrrl[l].value;
       }
     }
   }

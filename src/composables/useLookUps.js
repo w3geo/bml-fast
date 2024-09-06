@@ -1,4 +1,4 @@
-import { shallowRef } from 'vue';
+import { reactive } from 'vue';
 import feldstücknutzungsarten from '../assets/data/feldstücknutzungsarten.json';
 import bodenartenbodenschwere from '../assets/data/bodenartenbodenschwere.json';
 import kulturen from '../assets/data/kulturen.json';
@@ -118,10 +118,7 @@ for (let k in kulturenItems) {
   kulturenItems[k].splice(0, 0, { title: 'Keine', value: '' });
 }
 
-/**
- * @type {import('vue').ShallowRef<Object>}
- */
-export const lookup = shallowRef({
+export const lookup = reactive({
   yearItems: yearItems,
   ackerzahlItems: ackerzahlItems,
   wrrl: wrrl,
@@ -141,9 +138,6 @@ export const lookup = shallowRef({
   entzugstabelleBraugerste,
 });
 
-/**
- * @returns {{ lookup: import('vue').ShallowRef<Object> }}
- */
 export function useLookup() {
   return { lookup };
 }
