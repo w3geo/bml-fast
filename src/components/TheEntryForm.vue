@@ -581,7 +581,6 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 import { watch, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
@@ -594,8 +593,6 @@ const { savedData, currentSaved, dataWindow, emptyCulture, emptyFertilization, e
   useDataEntries();
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
-const route = useRoute();
-const router = useRouter();
 const { topicHectars } = useTopicIntersections();
 const schlaegeLastModified = ref();
 const { lookup } = useLookup();
@@ -706,17 +703,6 @@ function ertragsLagen(kultur) {
   return itemReturn;
 }
 
-function setSchlagId(id) {
-  if (Number(id) !== schlagInfo.value?.id) {
-    schlagInfo.value = id
-      ? {
-          loading: true,
-          id: Number(id),
-        }
-      : null;
-  }
-}
-
 function deleteCulture(nr) {
   entry.value.cultures.splice(nr, 1);
 }
@@ -747,32 +733,29 @@ function cancelData() {
   dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
+  topicHectars.value = null;
 }
 
 watch(schlagInfo, (value) => {
-  if (value?.id !== Number(route.params.schlagId)) {
-    if (value) {
-      if (entry.value.flaeche_schwereboeden) {
-        if (value.sl_flaeche_brutto_ha / 2 < entry.value.flaeche_schwereboeden) {
-          entry.value.bodenart = 'sL - sandiger Lehm';
-        }
+  if (value) {
+    if (entry.value.flaeche_schwereboeden) {
+      if (value.sl_flaeche_brutto_ha / 2 < entry.value.flaeche_schwereboeden) {
+        entry.value.bodenart = 'sL - sandiger Lehm';
       }
-
-      entry.value.flaechennutzungsart = value.fnar_code;
-      entry.value.flaeche = value.sl_flaeche_brutto_ha;
-      entry.value.extent = value.extent;
-      entry.value.parts = value.parts;
-      entry.value.flaeche = value.sl_flaeche_brutto_ha;
-
-      // Remove after Test Phase!
-      entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
-
-      entry.value.jahr = new Date().getFullYear();
-
-      dataWindow.value = 2;
     }
 
-    router.push({ params: { ...route.params, schlagId: value?.id } });
+    entry.value.flaechennutzungsart = value.fnar_code;
+    entry.value.flaeche = value.sl_flaeche_brutto_ha;
+    entry.value.extent = value.extent;
+    entry.value.parts = value.parts;
+    entry.value.flaeche = value.sl_flaeche_brutto_ha;
+
+    // Remove after Test Phase!
+    entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
+
+    entry.value.jahr = new Date().getFullYear();
+
+    dataWindow.value = 2;
   }
 });
 
@@ -811,9 +794,6 @@ map.on('singleclick', (event) => {
     });
   }
 });
-
-watch(() => route.params.schlagId, setSchlagId);
-setSchlagId(route.params.schlagId);
 </script>
 
 <style>

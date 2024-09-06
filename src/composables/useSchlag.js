@@ -171,6 +171,9 @@ function removeSchlagParts() {
  * @param {Array<import('geojson').Polygon>} parts
  */
 function showSchlagParts(parts, options = { zoom: true }) {
+  if (!parts.length) {
+    return;
+  }
   removeSchlagParts();
   partsLayer = new VectorLayer({
     source: new VectorSource({
