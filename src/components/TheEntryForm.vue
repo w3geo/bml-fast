@@ -70,7 +70,9 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
-                      v-model="nitratRisikoGebiet"
+                      :model-value="
+                        entry.flaeche_nitratrisikogebiet > entry.flaeche / 2 ? 'JA' : 'NEIN'
+                      "
                       label="Nitratrisikogebiet"
                       variant="outlined"
                       density="compact"
@@ -578,7 +580,7 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-import { watch, ref, computed } from 'vue';
+import { watch, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
@@ -748,7 +750,6 @@ function cancelData() {
 }
 
 watch(schlagInfo, (value) => {
-  console.log(value);
   if (value?.id !== Number(route.params.schlagId)) {
     if (value) {
       if (entry.value.flaeche_schwereboeden) {
@@ -809,10 +810,6 @@ map.on('singleclick', (event) => {
       duration: 500,
     });
   }
-});
-
-const nitratRisikoGebiet = computed(() => {
-  return entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? 'JA' : 'NEIN';
 });
 
 watch(() => route.params.schlagId, setSchlagId);
