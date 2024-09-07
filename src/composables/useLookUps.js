@@ -118,6 +118,9 @@ for (let k in kulturenItems) {
   kulturenItems[k].splice(0, 0, { title: 'Keine', value: '' });
 }
 
+/**
+ * @type Object lookup
+ */
 export const lookup = reactive({
   yearItems: yearItems,
   ackerzahlItems: ackerzahlItems,
@@ -138,6 +141,9 @@ export const lookup = reactive({
   entzugstabelleBraugerste,
 });
 
+/**
+ * @returns {{ lookup: Object }}
+ */
 export function useLookup() {
   return { lookup };
 }
