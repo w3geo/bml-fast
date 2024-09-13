@@ -1,5 +1,5 @@
 <template>
-  <v-card class="panelSize" v-if="allData.datawindow === 0" elevation="10">
+  <v-card class="panelSize" v-if="dataWindow === 0" elevation="10">
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-file-arrow-up-down </v-icon>
@@ -44,15 +44,15 @@
 
 <script setup>
 import download from 'downloadjs';
-import { useDataEntries } from '../composables/useDataEntries.js';
+import { dataWindow, useDataEntries } from '../composables/useDataEntries.js';
 import { ref } from 'vue';
 
-const { allData } = useDataEntries();
+const { savedData } = useDataEntries();
 const inputFile = ref(null);
 const showAlert = ref({ color: 'green', text: '', show: false });
 
 function downloadJson() {
-  const data = JSON.stringify(allData.value.saved);
+  const data = JSON.stringify(savedData.value);
   const today = new Date();
   const filename = `fast-export-${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.txt`;
   download(data, filename, 'text/plain');
@@ -65,8 +65,8 @@ function readJson() {
     reader.onload = () => {
       try {
         const imported = JSON.parse(reader.result.toString());
-        allData.value.saved = imported;
-        localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
+        savedData.value = imported;
+        localStorage.setItem('fasttool', JSON.stringify(savedData.value));
         showAlert.value.text = 'Import erfolgreich. Die Daten wurden eingelesen.';
         showAlert.value.color = 'green';
         showAlert.value.show = true;

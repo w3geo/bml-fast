@@ -142,7 +142,7 @@ export const lookup = shallowRef({
 });
 
 /**
- * @returns {{ lookup: import('vue').ShallowRef<Object> }}
+ * @returns {{ lookup: Object }}
  */
 export function useLookup() {
   return { lookup };

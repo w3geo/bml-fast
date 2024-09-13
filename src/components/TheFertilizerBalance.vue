@@ -1,5 +1,5 @@
 <template>
-  <v-card class="fertilizerData" v-if="allData.datawindow === 2" elevation="10">
+  <v-card class="fertilizerData" v-if="dataWindow === 2" elevation="10">
     <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
@@ -17,7 +17,7 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 
-const { allData } = useDataEntries();
+const { dataWindow } = useDataEntries();
 </script>
 
 <style scoped>

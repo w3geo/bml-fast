@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :class="!tempData.basic && allData.current === null ? 'beforeEntryForm' : 'entryForm'"
-    v-if="allData.datawindow > 0"
+    :class="entry.flaeche === 0 && currentSaved === null ? 'beforeEntryForm' : 'entryForm'"
+    v-if="dataWindow > 0"
     elevation="10"
   >
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
@@ -12,10 +12,10 @@
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
-        <div class="selectSchlag" v-if="!tempData.basic && allData.current === null">
+        <div class="selectSchlag" v-if="entry.flaeche === 0 && currentSaved === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="tempData.basic || allData.current !== null">
+        <v-form ref="entryform" v-if="entry.flaeche > 0 || currentSaved !== null">
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-darken-1">
@@ -70,7 +70,9 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
-                      v-model="nitratRisikoGebiet"
+                      :model-value="
+                        entry.flaeche_nitratrisikogebiet > entry.flaeche / 2 ? 'JA' : 'NEIN'
+                      "
                       label="Nitratrisikogebiet"
                       variant="outlined"
                       density="compact"
@@ -93,7 +95,7 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
-                      v-model="bdfl_l16"
+                      v-model="entry.flaeche_grundwasserschutz"
                       label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
                       variant="outlined"
                       density="compact"
@@ -103,7 +105,7 @@
                   </v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-select
-                      v-if="bdfl_l16 > 0"
+                      v-if="entry.flaeche_grundwasserschutz > 0"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
@@ -553,8 +555,8 @@
               <v-expansion-panel-text>
                 <div class="pa-2 bg-blue-lighten-5" style="overflow: hidden">
                   SCHLAG-DATEN:<br />
-                  <pre>{{ tempData.basic }}</pre>
-                  <pre>{{ tempData.programs }}</pre>
+                  <pre>{{ entry.schlaginfo.basic }}</pre>
+                  <pre>{{ entry.schlaginfo.programs }}</pre>
                 </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -563,7 +565,7 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col :cols="!tempData.basic && allData.current === null ? 12 : 6" class="pa-2">
+      ><v-col :cols="entry.flaeche === 0 && currentSaved === null ? 12 : 6" class="pa-2">
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
@@ -578,8 +580,7 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-import { watch, ref, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { watch, ref } from 'vue';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
@@ -588,16 +589,13 @@ import { useLookup } from '../composables/useLookUps.js';
 
 const debug = true; // TRUE FÜR DEBUG PANEL
 
-const { allData, emptyCulture, emptyFertilization, entry } = useDataEntries();
+const { savedData, currentSaved, dataWindow, emptyCulture, emptyFertilization, entry } =
+  useDataEntries();
 const { schlagInfo } = useSchlag();
 const { map } = useMap();
-const route = useRoute();
-const router = useRouter();
 const { topicHectars } = useTopicIntersections();
-const emit = defineEmits(['schlag']);
 const schlaegeLastModified = ref();
 const { lookup } = useLookup();
-const tempData = ref({ basic: null, programs: null });
 const panelInit = ref(['basisdaten', 'kulturen']);
 const itemsJaNein = [
   { value: true, title: 'Ja' },
@@ -633,7 +631,7 @@ function fertilizationChanged(what, cindex, findex) {
     entry.value.cultures[cindex].duengung[findex].id = '';
   }
   if (what == 'id' && entry.value.cultures[cindex].duengung[findex].typ == 'handelsdünger') {
-    const hDuenger = lookup.value[entry.value.cultures[cindex].duengung[findex].typ].find(
+    const hDuenger = lookup[entry.value.cultures[cindex].duengung[findex].typ].find(
       (d) => d.ID == entry.value.cultures[cindex].duengung[findex].id,
     );
     if (hDuenger) {
@@ -661,7 +659,7 @@ function allCulturesReset() {
 }
 
 function tableAttribut(table, id, attrib) {
-  const dataRow = lookup.value[table].find((k) => k.ID == id);
+  const dataRow = lookup[table].find((k) => k.ID == id);
   return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
 }
 
@@ -705,17 +703,6 @@ function ertragsLagen(kultur) {
   return itemReturn;
 }
 
-function setSchlagId(id) {
-  if (Number(id) !== schlagInfo.value?.id) {
-    schlagInfo.value = id
-      ? {
-          loading: true,
-          id: Number(id),
-        }
-      : null;
-  }
-}
-
 function deleteCulture(nr) {
   entry.value.cultures.splice(nr, 1);
 }
@@ -729,79 +716,70 @@ function dataSort(a, b) {
 }
 
 function saveData() {
-  if (allData.value.current !== null) {
-    allData.value.saved[allData.value.current] = { ...entry.value };
+  if (currentSaved.value !== null) {
+    savedData.value[currentSaved.value] = { ...entry.value };
   } else {
-    allData.value.saved.push(entry.value);
-    allData.value.saved.sort(dataSort);
+    savedData.value.push(entry.value);
+    savedData.value.sort(dataSort);
   }
 
-  localStorage.setItem('fasttool', JSON.stringify(allData.value.saved));
-  tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = 0;
+  localStorage.setItem('fasttool', JSON.stringify(savedData.value));
+  dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
 }
 
 function cancelData() {
-  tempData.value = { basic: null, programs: null };
-  allData.value.datawindow = 0;
+  dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
   schlagInfo.value = null;
+  topicHectars.value = null;
 }
 
 watch(schlagInfo, (value) => {
-  if (value?.id !== Number(route.params.schlagId)) {
-    tempData.value.basic = schlagInfo.value;
-    if (tempData.value.basic) {
-      if (tempData.value.programs) {
-        if (
-          tempData.value.basic.sl_flaeche_brutto_ha / 2 <
-          tempData.value.programs.schwere_boeden
-        ) {
-          entry.value.bodenart = 'sL - sandiger Lehm';
-        }
+  if (value) {
+    if (entry.value.flaeche_schwereboeden) {
+      if (value.sl_flaeche_brutto_ha / 2 < entry.value.flaeche_schwereboeden) {
+        entry.value.bodenart = 'sL - sandiger Lehm';
       }
-
-      entry.value.flaechennutzungsart = tempData.value.basic.fnar_code;
-      entry.value.flaeche = tempData.value.basic.sl_flaeche_brutto_ha;
-      entry.value.schlaginfo.basic = schlagInfo.value;
-
-      entry.value.extent = tempData.value.basic.extent;
-
-      entry.value.jahr = new Date().getFullYear();
-
-      allData.value.datawindow = 2;
     }
-    if (tempData.value.basic && tempData.value.basic.parts) {
-      delete tempData.value.basic.parts;
-    }
-    router.push({ params: { ...route.params, schlagId: value?.id } });
-  }
-  if (value && !value.loading) {
-    emit('schlag', true);
+
+    entry.value.flaechennutzungsart = value.fnar_code;
+    entry.value.flaeche = value.sl_flaeche_brutto_ha;
+    entry.value.extent = value.extent;
+    entry.value.parts = value.parts;
+    entry.value.flaeche = value.sl_flaeche_brutto_ha;
+
+    // Remove after Test Phase!
+    entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
+
+    entry.value.jahr = new Date().getFullYear();
+
+    dataWindow.value = 2;
   }
 });
 
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
-  tempData.value.programs = value;
-  if (tempData.value.programs) {
-    if (tempData.value.basic) {
-      if (tempData.value.basic.sl_flaeche_brutto_ha / 2 < tempData.value.programs.schwere_boeden) {
+  if (value) {
+    if (entry.value.flaeche) {
+      if (entry.value.flaeche / 2 < value.schwere_boeden) {
         entry.value.bodenart = 'sL - sandiger Lehm';
       }
     }
 
-    entry.value.flaeche_nitratrisikogebiet = tempData.value.programs.nitrataktionsprogramm;
-    entry.value.schlaginfo.programs = value;
+    entry.value.flaeche_nitratrisikogebiet = value.nitrataktionsprogramm;
+    entry.value.flaeche_grundwasserschutz = value.bdfl_l16_grundwasserschutz_acker;
+
+    // Remove after Test Phase!
+    entry.value.schlaginfo.programs = JSON.parse(JSON.stringify(value));
 
     entry.value.duengeklasse_grundwasserschutz = '-';
     let currentDuengeklasse = 0;
     for (let l = 1; l < lookup.value.wrrl.length; l++) {
-      if (tempData.value.programs[lookup.value.wrrl[l].code] > currentDuengeklasse) {
-        currentDuengeklasse = tempData.value.programs[lookup.value.wrrl[l].code];
-        entry.value.duengeklasse_grundwasserschutz = lookup.value.wrrl[l].value;
+      if (value[lookup.value.wrrl[l].code] > currentDuengeklasse) {
+        currentDuengeklasse = value[lookup.wrrl[l].code];
+        entry.value.duengeklasse_grundwasserschutz = lookup.wrrl[l].value;
       }
     }
   }
@@ -816,19 +794,6 @@ map.on('singleclick', (event) => {
     });
   }
 });
-
-const nitratRisikoGebiet = computed(() => {
-  return entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? 'JA' : 'NEIN';
-});
-
-const bdfl_l16 = computed(() => {
-  return tempData.value.programs && tempData.value.programs.bdfl_l16_grundwasserschutz_acker
-    ? tempData.value.programs.bdfl_l16_grundwasserschutz_acker
-    : 0;
-});
-
-watch(() => route.params.schlagId, setSchlagId);
-setSchlagId(route.params.schlagId);
 </script>
 
 <style>

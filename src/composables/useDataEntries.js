@@ -23,13 +23,15 @@ import { ref } from 'vue';
  */
 
 /**
- * @typedef dataEntry
+ * @typedef DataEntry
  * @property {number} jahr
  * @property {string} schlagnummer
  * @property {string} feldstuecksname
  * @property {string} flaechennutzungsart
  * @property {number} flaeche
  * @property {number} flaeche_nitratrisikogebiet
+ * @property {number} flaeche_schwereboeden
+ * @property {number} flaeche_grundwasserschutz
  * @property {string} duengeklasse_grundwasserschutz
  * @property {boolean} teilnahme_grundwasserschutz_acker
  * @property {string} gw_acker_gebietszuteilung
@@ -40,6 +42,7 @@ import { ref } from 'vue';
  * @property {string} vorfrucht
  * @property {number} stickstoffueberschuss
  * @property {Array<number>} extent
+ * @property {Array<number>} parts
  * @property {Object} schlaginfo
  * @property {Array<culture>} cultures
  */
@@ -62,6 +65,8 @@ export const emptyEntry = {
   flaechennutzungsart: '',
   flaeche: 0,
   flaeche_nitratrisikogebiet: 0,
+  flaeche_schwereboeden: 0,
+  flaeche_grundwasserschutz: 0,
   duengeklasse_grundwasserschutz: '-',
   teilnahme_grundwasserschutz_acker: false,
   gw_acker_gebietszuteilung: 'Trockengebiet',
@@ -72,33 +77,41 @@ export const emptyEntry = {
   vorfrucht: '',
   stickstoffueberschuss: 0,
   extent: [],
+  parts: [],
   schlaginfo: { basic: null, programs: null },
   cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
 
 export const entry = ref({ ...emptyEntry });
 
-/**
- * @typedef allData
- * @property {Array<dataEntry>} saved
- * @property {number} current
- * @property {number} datawindow
- */
+/** @type {import('vue').Ref<Array>} */
+export const savedData = ref([]);
 
-/** @type {import('vue').Ref<allData>} */
-export const allData = ref({ saved: [], current: null, datawindow: 0 });
+/** @type {import('vue').Ref<Number|null>} */
+export const currentSaved = ref(null);
+
+/** @type {import('vue').Ref<Number>} */
+export const dataWindow = ref(0);
 
 // load from local storage, if existing
 {
   const saved = localStorage.getItem('fasttool');
   if (saved) {
-    allData.value.saved = JSON.parse(saved);
+    savedData.value = JSON.parse(saved);
   }
 }
 
 /**
- * @returns {{ allData: import('vue').Ref<allData> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: dataEntry, entry: import('vue').Ref<Object> }}
+ * @returns {{ currentSaved: import('vue').Ref<Number>, dataWindow:import('vue').Ref<Number>, savedData: import('vue').Ref<Array> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: DataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
-  return { allData, emptyFertilization, emptyCulture, emptyEntry, entry };
+  return {
+    currentSaved,
+    dataWindow,
+    savedData,
+    emptyFertilization,
+    emptyCulture,
+    emptyEntry,
+    entry,
+  };
 }

@@ -1,4 +1,4 @@
-import { getSource, setFeatureState } from 'ol-mapbox-style';
+import { getSource } from 'ol-mapbox-style';
 import { createEmpty, extend } from 'ol/extent';
 import { transformExtent } from 'ol/proj';
 import { toGeometry } from 'ol/render/Feature';
@@ -6,7 +6,9 @@ import { shallowRef, watch } from 'vue';
 import { GeoJSON } from 'ol/format';
 import { SCHLAEGE_SOURCE } from '../constants.js';
 import { map, mapReady } from './useMap.js';
-import { allData } from '../composables/useDataEntries.js';
+import { dataWindow } from '../composables/useDataEntries.js';
+import VectorLayer from 'ol/layer/Vector.js';
+import VectorSource from 'ol/source/Vector.js';
 
 /** @typedef {Array<{x: number, y: number}>} Vectors */
 
@@ -19,7 +21,7 @@ import { allData } from '../composables/useDataEntries.js';
  * @property {string} [fnar_code]
  * @property {string} [kz_bio_oepul_jn]
  * @property {import("ol/extent").Extent} [extent]
- * @property {Array<import('ol/format/GeoJSON').GeoJSONGeometry>} [parts]
+ * @property {Array<import('geojson').Polygon>} [parts]
  */
 
 const geojson = new GeoJSON();
@@ -112,19 +114,23 @@ async function setSchlagInfo(feature) {
   const features = await getSchlagParts(feature);
   const extent = createEmpty();
   features.forEach((polygon) => extend(extent, polygon.getExtent()));
+  /** @type {Array<import("geojson").Polygon>} */
+  const parts = /** @type {Array<import("geojson").Polygon>} */ (
+    features.map((f) =>
+      geojson.writeGeometryObject(toGeometry(f), { featureProjection: 'EPSG:3857' }),
+    )
+  );
   schlagInfo.value = {
     ...feature.getProperties(),
     loading: false,
     id: feature.getId(),
     extent: transformExtent(extent, 'EPSG:3857', 'EPSG:4326'),
-    parts: features.map((f) =>
-      geojson.writeGeometryObject(toGeometry(f), { featureProjection: 'EPSG:3857' }),
-    ),
+    parts,
   };
 }
 
 map.on('click', (event) => {
-  if (allData.value.datawindow === 1) {
+  if (dataWindow.value === 1) {
     const selectedRenderFeature = getSchlagAtPixel(event.pixel);
     setSchlagInfo(
       schlagInfo.value?.id !== selectedRenderFeature?.getId() ? selectedRenderFeature : null,
@@ -136,29 +142,69 @@ map.on('pointermove', (event) => {
     return;
   }
   map.getTargetElement().style.cursor =
-    allData.value.datawindow === 1 && getSchlagAtPixel(event.pixel) ? 'pointer' : '';
+    dataWindow.value === 1 && getSchlagAtPixel(event.pixel) ? 'pointer' : '';
 });
 
-watch(schlagInfo, (value, oldValue) => {
-  if (oldValue && !oldValue.loading) {
-    setFeatureState(map, { source: 'agrargis', id: oldValue.id }, null);
+watch(schlagInfo, (value) => {
+  removeSchlagParts();
+  if (!value) {
+    return;
   }
-  if (value) {
-    if (value.loading) {
-      findSchlag(value.id).then((feature) => {
-        setSchlagInfo(feature);
-      });
-    } else {
-      setFeatureState(map, { source: 'agrargis', id: value.id }, { selected: true });
-    }
+  if (value?.loading) {
+    findSchlag(value.id).then((feature) => {
+      setSchlagInfo(feature);
+    });
+    return;
   }
+  showSchlagParts(value.parts, { zoom: false });
 });
+
+let partsLayer;
+function removeSchlagParts() {
+  if (!partsLayer) {
+    return;
+  }
+  map.removeLayer(partsLayer);
+}
+
+/**
+ * @param {Array<import('geojson').Polygon>} parts
+ */
+function showSchlagParts(parts, options = { zoom: true }) {
+  if (!parts.length) {
+    return;
+  }
+  removeSchlagParts();
+  partsLayer = new VectorLayer({
+    source: new VectorSource({
+      overlaps: false,
+      features: geojson.readFeatures({
+        type: 'FeatureCollection',
+        features: parts.map((geometry) => ({
+          type: 'Feature',
+          geometry,
+        })),
+      }),
+    }),
+    style: {
+      'fill-color': 'rgba(255, 0, 0, 0.25)',
+    },
+  });
+  if (options.zoom) {
+    map
+      .getView()
+      .fit(partsLayer.getSource().getExtent(), { duration: 500, padding: [50, 50, 50, 400] });
+  }
+  map.addLayer(partsLayer);
+}
 
 /**
  * @returns {{
  *   schlagInfo: import('vue').Ref<SchlagInfo>,
+ *   showSchlagParts: (parts: Array<import('geojson').Polygon>) => void,
+ *   removeSchlagParts: () => void,
  * }}
  */
 export function useSchlag() {
-  return { schlagInfo };
+  return { schlagInfo, showSchlagParts, removeSchlagParts };
 }

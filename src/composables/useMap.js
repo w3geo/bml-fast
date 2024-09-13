@@ -8,7 +8,7 @@ import { apply, applyStyle, getLayer, getSource, renderTransparent } from 'ol-ma
 import { getCenter } from 'ol/extent.js';
 import { shallowRef } from 'vue';
 import VectorTileLayer from 'ol/layer/VectorTile.js';
-import { INITIAL_EXTENT } from '../constants.js';
+import { AGRARATLAS_STYLE_URL, INITIAL_EXTENT } from '../constants.js';
 
 /**
  * @typedef {Object} MapView
@@ -65,7 +65,7 @@ map.on('moveend', () => {
   };
 });
 
-export const mapReady = apply(map, './map/style.json').then(() => {
+export const mapReady = apply(map, AGRARATLAS_STYLE_URL).then(() => {
   const { layers } = map.get('mapbox-style');
   layers.forEach((layer) => {
     const source = getSource(map, layer.source);
@@ -89,7 +89,7 @@ export const filterStyle = mapReady.then(async () => {
     }
   });
   const filterLayer = new VectorTileLayer();
-  await applyStyle(filterLayer, style, 'agrargis', './map/style.json');
+  await applyStyle(filterLayer, style, 'agrargis', AGRARATLAS_STYLE_URL);
   return filterLayer.getStyle();
 });
 
