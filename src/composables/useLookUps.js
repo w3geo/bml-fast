@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { shallowRef } from 'vue';
 import feldstücknutzungsarten from '../assets/data/feldstücknutzungsarten.json';
 import bodenartenbodenschwere from '../assets/data/bodenartenbodenschwere.json';
 import kulturen from '../assets/data/kulturen.json';
@@ -119,9 +119,9 @@ for (let k in kulturenItems) {
 }
 
 /**
- * @type Object lookup
+ * @type {import('vue').ShallowRef<Object>}
  */
-export const lookup = reactive({
+export const lookup = shallowRef({
   yearItems: yearItems,
   ackerzahlItems: ackerzahlItems,
   wrrl: wrrl,

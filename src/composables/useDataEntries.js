@@ -87,7 +87,7 @@ export const entry = ref({ ...emptyEntry });
 /** @type {import('vue').Ref<Array>} */
 export const savedData = ref([]);
 
-/** @type {import('vue').Ref<Number>} */
+/** @type {import('vue').Ref<Number|null>} */
 export const currentSaved = ref(null);
 
 /** @type {import('vue').Ref<Number>} */

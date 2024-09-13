@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { shallowRef } from 'vue';
 import { map, mapReady } from './useMap.js';
 
 /**
@@ -15,12 +15,14 @@ import { map, mapReady } from './useMap.js';
  * @property {string|undefined} category
  */
 
-/** @type {Array<Topic>} */
-export const topics = reactive([]);
+/**
+ * @type {import('vue').ShallowRef<Array>}
+ */
+export const topics = shallowRef([]);
 
 mapReady.then(() => {
   const { layers } = map.get('mapbox-style');
-  topics.push(
+  topics.value.push(
     ...Object.values(
       layers
         .filter((l) => l.metadata?.group === 'one' && l.type !== 'raster')
