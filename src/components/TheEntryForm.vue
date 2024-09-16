@@ -92,7 +92,7 @@
                   </v-col>
                 </v-row>
 
-                <v-row no-gutters>
+                <v-row no-gutters v-if="entry.flaechennutzungsart === 'A'">
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
                       v-model="entry.flaeche_grundwasserschutz"
@@ -232,18 +232,6 @@
                   <v-row no-gutters>
                     <v-col cols="12" class="px-4 mb-3">
                       <v-select
-                        v-model="entry.cultures[0].typ"
-                        :items="lookup.aussaatTypes[0]"
-                        label="Art der Zwischenfrucht"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters v-if="entry.cultures[0].typ != ''">
-                    <v-col cols="12" class="px-4 mb-3">
-                      <v-select
                         v-model="entry.cultures[0].kultur"
                         :items="lookup.kulturenItems.zwischen"
                         label="Kultur"
@@ -291,7 +279,7 @@
                       <v-select
                         v-if="entry.cultures[i].kultur != ''"
                         v-model="entry.cultures[i].ertragslage"
-                        :items="ertragsLagen(entry.cultures[i].kultur)"
+                        :items="ertragsLagen(entry.cultures[i].kultur, false)"
                         label="Erwartete Ertragslage"
                         variant="outlined"
                         density="compact"
@@ -491,7 +479,7 @@
                       <v-select
                         v-if="ertragsTyp(entry.cultures[i].kultur, 'einheit') == 'EL Auswahl'"
                         v-model="entry.cultures[i].ertragslageernte"
-                        :items="ertragsLagen(entry.cultures[i].kultur)"
+                        :items="ertragsLagen(entry.cultures[i].kultur, true)"
                         label="Ertrag (Klasse)"
                         variant="outlined"
                         density="compact"
@@ -631,7 +619,7 @@ function fertilizationChanged(what, cindex, findex) {
     entry.value.cultures[cindex].duengung[findex].id = '';
   }
   if (what == 'id' && entry.value.cultures[cindex].duengung[findex].typ == 'handelsdünger') {
-    const hDuenger = lookup[entry.value.cultures[cindex].duengung[findex].typ].find(
+    const hDuenger = lookup.value[entry.value.cultures[cindex].duengung[findex].typ].find(
       (d) => d.ID == entry.value.cultures[cindex].duengung[findex].id,
     );
     if (hDuenger) {
@@ -659,7 +647,7 @@ function allCulturesReset() {
 }
 
 function tableAttribut(table, id, attrib) {
-  const dataRow = lookup[table].find((k) => k.ID == id);
+  const dataRow = lookup.value[table].find((k) => k.ID == id);
   return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
 }
 
@@ -683,13 +671,13 @@ function ertragsTyp(kultur, what) {
   }
 }
 
-function ertragsLagen(kultur) {
+function ertragsLagen(kultur, istErnte) {
   const dataRow = lookup.value.kulturen.find((k) => k.ID == kultur);
   const itemReturn = [{ title: 'Keine', value: '' }];
   if (dataRow) {
     for (const el of lookup.value.ertragsLagen) {
       if (dataRow[`EL ${el} Bereich`] != '') {
-        if (entry.value.flaechennutzungsart == 'A' && entry.value.ackerzahl < 30) {
+        if (entry.value.flaechennutzungsart == 'A' && !istErnte && entry.value.ackerzahl < 30) {
           // Sonderfall Ackerzahl < 30, Ackerkultur
           if (lookup.value.limitAckerzahl.includes(el)) {
             itemReturn.push({ title: `${el} (${dataRow[`EL ${el} Bereich`]})`, value: el });
