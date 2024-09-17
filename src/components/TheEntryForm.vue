@@ -120,7 +120,7 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       v-model="entry.stickstoffueberschuss"
-                      label="Stickstoffüberschuss"
+                      label="Stickstoffüberschuss (kg N/ha)"
                       variant="outlined"
                       density="compact"
                       hide-details
