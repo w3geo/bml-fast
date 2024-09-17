@@ -681,7 +681,6 @@ function allCulturesReset() {
 }
 
 function tableAttribut(table, id, attrib) {
-  console.log(table, id, attrib);
   const dataRow = lookup.value[table].find((k) => k.ID == id);
   return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
 }
