@@ -12,7 +12,6 @@ import { ref } from 'vue';
 
 /**
  * @typedef culture
- * @property {string} typ
  * @property {string} kultur
  * @property {string} ertragslage
  * @property {number} ernte
@@ -50,7 +49,6 @@ import { ref } from 'vue';
 
 export const emptyFertilization = { typ: '', id: '', menge: 0, n: 0, p: 0, k: 0 };
 export const emptyCulture = {
-  typ: '',
   kultur: '',
   ertragslage: '',
   ernte: 0,
