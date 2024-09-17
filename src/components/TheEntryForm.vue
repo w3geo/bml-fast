@@ -213,6 +213,22 @@
                     />
                   </v-col>
                 </v-row>
+
+                <v-row
+                  no-gutters
+                  v-if="tableAttribut('kulturen', entry.vorfrucht, 'Gemüsekultur') === 'x'"
+                >
+                  <v-col cols="6" class="px-4 obligatory mb-3"> &nbsp; </v-col>
+                  <v-col cols="6" class="px-4 mb-3">
+                    <v-text-field
+                      v-model="entry.vorfruchtnmin"
+                      label="NMin"
+                      variant="outlined"
+                      density="compact"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
               </v-expansion-panel-text>
             </v-expansion-panel>
 
@@ -665,6 +681,7 @@ function allCulturesReset() {
 }
 
 function tableAttribut(table, id, attrib) {
+  console.log(table, id, attrib);
   const dataRow = lookup.value[table].find((k) => k.ID == id);
   return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
 }
