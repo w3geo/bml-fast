@@ -275,9 +275,18 @@
                         @update:model-value="cultureChanged(i)"
                       />
                     </v-col>
-                    <v-col cols="12" class="px-4 obligatory mb-2">
+                    <v-col
+                      cols="12"
+                      class="px-4 obligatory mb-2"
+                      v-if="
+                        entry.cultures[i].kultur != '' &&
+                        kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
+                          'Düngeverbot' &&
+                        kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
+                          'keine Ertragserfassung'
+                      "
+                    >
                       <v-select
-                        v-if="entry.cultures[i].kultur != ''"
                         v-model="entry.cultures[i].ertragslage"
                         :items="ertragsLagen(entry.cultures[i].kultur, false)"
                         label="Erwartete Ertragslage"
@@ -473,7 +482,16 @@
                       ></v-col
                     >
                   </v-row>
-                  <v-row no-gutters v-if="entry.cultures[i].kultur != ''">
+                  <v-row
+                    no-gutters
+                    v-if="
+                      entry.cultures[i].kultur != '' &&
+                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
+                        'Düngeverbot' &&
+                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
+                        'keine Ertragserfassung'
+                    "
+                  >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
                     <v-col cols="6" class="pa-2">
                       <v-select
