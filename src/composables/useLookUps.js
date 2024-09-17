@@ -75,19 +75,6 @@ const fertilizationTypes = [
   { title: 'Wirtschaftsdünger', value: 'wirtschaftsdünger' },
 ];
 
-const aussaatTypes = {
-  0: [
-    { title: 'Keine', value: '' },
-    { title: 'Genutzt / Ungenutzt', value: 'zwischen' },
-  ],
-  1: [
-    { title: 'Keine', value: '' },
-    { title: 'Ungenutzte Zwischenfrucht', value: 'zwischenU' },
-    { title: 'Genutzte Zwischenfrucht', value: 'zwischenG' },
-    { title: 'Hauptfrucht', value: 'haupt' },
-  ],
-};
-
 const aussaatTypeFilter = {
   zwischenU: ['1.1.600', '1.1.610', '1.1.620'],
   zwischenG: ['1.1.630', '1.1.640', '1.1.650'],
@@ -98,9 +85,10 @@ const kulturenItems = {
   alle: [],
 };
 for (let k = 0; k < kulturen.length; k++) {
-  if (aussaatTypeFilter.zwischenU.includes(kulturen[k].ID)) {
-    kulturenItems.zwischen.push({ value: kulturen[k].ID, title: kulturen[k].Kultur });
-  } else if (aussaatTypeFilter.zwischenG.includes(kulturen[k].ID)) {
+  if (
+    aussaatTypeFilter.zwischenU.includes(kulturen[k].ID) ||
+    aussaatTypeFilter.zwischenG.includes(kulturen[k].ID)
+  ) {
     kulturenItems.zwischen.push({ value: kulturen[k].ID, title: kulturen[k].Kultur });
   } else {
     kulturenItems.alle.push({ value: kulturen[k].ID, title: kulturen[k].Kultur });
@@ -129,7 +117,6 @@ export const lookup = shallowRef({
   limitAckerzahl: limitAckerzahl,
   kulturenItems: kulturenItems,
   fertilizationTypes: fertilizationTypes,
-  aussaatTypes: aussaatTypes,
   aussaatTypeFilter: aussaatTypeFilter,
   feldstücknutzungsarten,
   bodenartenbodenschwere,

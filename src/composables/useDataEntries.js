@@ -40,6 +40,7 @@ import { ref } from 'vue';
  * @property {string} kalium_gehaltsklasse
  * @property {string} bodenart
  * @property {string} vorfrucht
+ * @property {number} vorfruchtnmin
  * @property {number} stickstoffueberschuss
  * @property {Array<number>} extent
  * @property {Array<number>} parts
@@ -75,6 +76,7 @@ export const emptyEntry = {
   kalium_gehaltsklasse: 'C',
   bodenart: 'lS - lehmiger Sand',
   vorfrucht: '',
+  vorfruchtnmin: 0,
   stickstoffueberschuss: 0,
   extent: [],
   parts: [],
