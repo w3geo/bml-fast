@@ -11,7 +11,7 @@
       :key="`error${index}`"
       no-gutters
       class="ma-1 mx-2 error"
-      ><v-col cols="12" class="pa-1 pl-3"
+      ><v-col cols="12" class="pa-1 pl-4"
         ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
       </v-col></v-row
     >
@@ -20,11 +20,11 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-// import { useLookup } from '../composables/useLookUps.js';
+import { useLookup } from '../composables/useLookUps.js';
 import { watch, ref } from 'vue';
 
 const { dataWindow, entry } = useDataEntries();
-// const { lookup } = useLookup();
+const { tableAttribut } = useLookup();
 
 const bilanz = ref([]);
 const errors = ref([]);
@@ -47,15 +47,30 @@ function calculateBilanz() {
 
   // Kulturen
   for (let c = 1; c < entry.value.cultures.length; c++) {
+    let kulturErrors = false;
     if (entry.value.cultures[c].kultur != '') {
-      if (entry.value.cultures[c].ertragslage === '') {
-        errors.value.push(`${c}. Hauptfrucht: Erwartete Ertragslage nicht angegeben`);
+      if (
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Ertragserfassungsart') !==
+          'Düngeverbot' &&
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Ertragserfassungsart') !==
+          'keine Ertragserfassung'
+      ) {
+        if (entry.value.cultures[c].ertragslage === '') {
+          errors.value.push(`${c}. Hauptfrucht: Erwartete Ertragslage nicht angegeben`);
+          kulturErrors = true;
+        }
+        if (entry.value.cultures[c].ertragslageernte === '') {
+          errors.value.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
+          kulturErrors = true;
+        }
+      }
+      if (!kulturErrors) {
+        console.log(entry.value.cultures);
       }
     } else {
       errors.value.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
     }
   }
-  console.log(entry.value.cultures);
   bilanz.value = [];
 }
 </script>
@@ -76,7 +91,6 @@ function calculateBilanz() {
   border: 1px solid red;
   font-size: 12px;
   color: red;
-  text-align: center;
 }
 </style>
 
