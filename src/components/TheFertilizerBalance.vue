@@ -1,6 +1,6 @@
 <template>
   <v-card class="fertilizerData" v-if="dataWindow === 2" elevation="10">
-    <v-row no-gutters class="boxHeader bg-grey-darken-3">
+    <v-row no-gutters class="boxHeader bg-grey-darken-3 mb-3">
       <v-col class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
         Nährstoff-Bilanz
@@ -10,9 +10,10 @@
       v-for="(message, index) in errors"
       :key="`error${index}`"
       no-gutters
-      class="ma-1 pa-1 error"
-      ><v-col cols="1"><v-icon>mdi-alert</v-icon></v-col
-      ><v-col cols="11">{{ message }} </v-col></v-row
+      class="ma-1 mx-2 error"
+      ><v-col cols="12" class="pa-1 pl-3"
+        ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
+      </v-col></v-row
     >
   </v-card>
 </template>
@@ -47,9 +48,11 @@ function calculateBilanz() {
   // Kulturen
   for (let c = 1; c < entry.value.cultures.length; c++) {
     if (entry.value.cultures[c].kultur != '') {
-      // hurra
+      if (entry.value.cultures[c].ertragslage === '') {
+        errors.value.push(`${c}. Hauptfrucht: Erwartete Ertragslage nicht angegeben`);
+      }
     } else {
-      errors.value.push(`Keine Kultur für Hauptfrucht N° ${c} definiert`);
+      errors.value.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
     }
   }
   console.log(entry.value.cultures);
@@ -69,9 +72,18 @@ function calculateBilanz() {
 }
 
 .error {
+  position: relative;
   border: 1px solid red;
-  font-size: 13px;
+  font-size: 12px;
   color: red;
   text-align: center;
+}
+</style>
+
+<style>
+.error .v-icon {
+  position: absolute;
+  left: -2px;
+  top: -2px;
 }
 </style>
