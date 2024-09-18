@@ -159,7 +159,17 @@ watch(schlagInfo, (value) => {
   showSchlagParts(value.parts, { zoom: false });
 });
 
-let partsLayer;
+export const partsSource = new VectorSource({
+  overlaps: false,
+});
+
+const partsLayer = new VectorLayer({
+  source: partsSource,
+  style: {
+    'fill-color': 'rgba(255, 0, 0, 0.25)',
+  },
+});
+
 function removeSchlagParts() {
   if (!partsLayer) {
     return;
@@ -175,21 +185,16 @@ function showSchlagParts(parts, options = { zoom: true }) {
     return;
   }
   removeSchlagParts();
-  partsLayer = new VectorLayer({
-    source: new VectorSource({
-      overlaps: false,
-      features: geojson.readFeatures({
-        type: 'FeatureCollection',
-        features: parts.map((geometry) => ({
-          type: 'Feature',
-          geometry,
-        })),
-      }),
+  partsSource.clear();
+  partsSource.addFeatures(
+    geojson.readFeatures({
+      type: 'FeatureCollection',
+      features: parts.map((geometry) => ({
+        type: 'Feature',
+        geometry,
+      })),
     }),
-    style: {
-      'fill-color': 'rgba(255, 0, 0, 0.25)',
-    },
-  });
+  );
   if (options.zoom) {
     map
       .getView()

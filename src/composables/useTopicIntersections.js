@@ -9,8 +9,8 @@ import { Style, Fill } from 'ol/style';
 import { getBottomLeft, getCenter, getHeight, getTopRight, getWidth } from 'ol/extent';
 import { map, mapReady } from './useMap.js';
 import { topics } from './useTopics.js';
-import { schlagInfo } from './useSchlag.js';
-import { SCHLAEGE_SOURCE } from '../constants.js';
+import { partsSource, schlagInfo } from './useSchlag.js';
+import VectorLayer from 'ol/layer/Vector.js';
 
 /** @typedef {'nitrataktionsprogramm' | 'bdfl_l16_grundwasserschutz_acker' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_2' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_1' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel_10' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_niedrig' | 'schwere_boeden'} Topic */
 /** @typedef {(feature: import("ol/Feature.js").FeatureLike) => boolean} Filter */
@@ -125,13 +125,9 @@ function updateTopicHectars() {
 
 watch([schlagInfo, topics], updateTopicHectars);
 
-const schlagLayer = new VectorTileLayer({
-  renderMode: 'vector',
-  style(feature) {
-    return feature.get('layer') === SCHLAEGE_SOURCE && feature.getId() === schlagInfo.value?.id
-      ? blackFill
-      : null;
-  },
+const schlagLayer = new VectorLayer({
+  style: blackFill,
+  source: partsSource,
 });
 let schlagImageData;
 schlagLayer.on('postrender', (e) => {
