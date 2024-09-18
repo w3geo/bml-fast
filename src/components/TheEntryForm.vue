@@ -12,7 +12,7 @@
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
-        <div class="selectSchlag" v-if="entry.flaeche === 0 && currentSaved === null">
+        <div class="selectSchlag" v-if="dataWindow === 1 && currentSaved === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
         <v-form ref="entryform" v-if="dataWindow === 2">
@@ -69,11 +69,10 @@
 
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
-                    <v-text-field
-                      :model-value="
-                        entry.flaeche_nitratrisikogebiet > entry.flaeche / 2 ? 'JA' : 'NEIN'
-                      "
+                    <v-select
+                      v-model="entry.nitratrisikogebiet"
                       label="Nitratrisikogebiet"
+                      :items="itemsJaNein"
                       variant="outlined"
                       density="compact"
                       hide-details
@@ -82,6 +81,7 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
+                      v-if="entry.nitratrisikogebiet"
                       v-model="entry.duengeklasse_grundwasserschutz"
                       :items="lookup.wrrl"
                       label="Düngeklasse Grundwasserschutz"
@@ -93,19 +93,10 @@
                 </v-row>
 
                 <v-row no-gutters v-if="entry.flaechennutzungsart === 'A'">
-                  <v-col cols="6" class="px-4 obligatory mb-3">
-                    <v-text-field
-                      v-model="entry.flaeche_grundwasserschutz"
-                      label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
-                      variant="outlined"
-                      density="compact"
-                      hide-details
-                      disabled
-                    />
-                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-select
-                      v-if="entry.flaeche_grundwasserschutz > 0"
+                      v-if="entry.nitratrisikogebiet"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
@@ -218,7 +209,7 @@
                   no-gutters
                   v-if="tableAttribut('kulturen', entry.vorfrucht, 'Gemüsekultur') === 'x'"
                 >
-                  <v-col cols="6" class="px-4 obligatory mb-3"> &nbsp; </v-col>
+                  <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       v-model="entry.vorfruchtnmin"
@@ -764,11 +755,18 @@ function cancelData() {
 }
 
 watch(schlagInfo, (value) => {
+  if (currentSaved.value !== null) {
+    return;
+  }
   if (value) {
     if (entry.value.flaeche_schwereboeden) {
       if (value.sl_flaeche_brutto_ha / 2 < entry.value.flaeche_schwereboeden) {
         entry.value.bodenart = 'sL - sandiger Lehm';
       }
+    }
+    if (entry.value.flaeche_nitratrisikogebiet) {
+      entry.value.nitratrisikogebiet =
+        entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? true : false;
     }
 
     entry.value.flaechennutzungsart = value.fnar_code;
@@ -787,6 +785,10 @@ watch(schlagInfo, (value) => {
 
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
+  if (currentSaved.value !== null) {
+    return;
+  }
+
   if (value) {
     if (entry.value.flaeche) {
       if (entry.value.flaeche / 2 < value.schwere_boeden) {
@@ -797,6 +799,11 @@ watch(topicHectars, (value) => {
     entry.value.flaeche_nitratrisikogebiet = value.nitrataktionsprogramm;
     entry.value.flaeche_grundwasserschutz = value.bdfl_l16_grundwasserschutz_acker;
 
+    if (entry.value.flaeche) {
+      entry.value.nitratrisikogebiet =
+        entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? true : false;
+    }
+
     // Remove after Test Phase!
     entry.value.schlaginfo.programs = JSON.parse(JSON.stringify(value));
 
@@ -804,8 +811,8 @@ watch(topicHectars, (value) => {
     let currentDuengeklasse = 0;
     for (let l = 1; l < lookup.value.wrrl.length; l++) {
       if (value[lookup.value.wrrl[l].code] > currentDuengeklasse) {
-        currentDuengeklasse = value[lookup.wrrl[l].code];
-        entry.value.duengeklasse_grundwasserschutz = lookup.wrrl[l].value;
+        currentDuengeklasse = value[lookup.value.wrrl[l].code];
+        entry.value.duengeklasse_grundwasserschutz = lookup.value.wrrl[l].value;
       }
     }
   }

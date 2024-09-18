@@ -29,6 +29,7 @@ import { ref } from 'vue';
  * @property {string} flaechennutzungsart
  * @property {number} flaeche
  * @property {number} flaeche_nitratrisikogebiet
+ * @property {boolean} nitratrisikogebiet
  * @property {number} flaeche_schwereboeden
  * @property {number} flaeche_grundwasserschutz
  * @property {string} duengeklasse_grundwasserschutz
@@ -64,6 +65,7 @@ export const emptyEntry = {
   flaechennutzungsart: '',
   flaeche: 0,
   flaeche_nitratrisikogebiet: 0,
+  nitratrisikogebiet: false,
   flaeche_schwereboeden: 0,
   flaeche_grundwasserschutz: 0,
   duengeklasse_grundwasserschutz: '-',
