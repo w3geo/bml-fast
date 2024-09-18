@@ -15,7 +15,7 @@
         <div class="selectSchlag" v-if="entry.flaeche === 0 && currentSaved === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="entry.flaeche > 0 || currentSaved !== null">
+        <v-form ref="entryform" v-if="dataWindow === 2">
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-darken-1">
@@ -296,10 +296,16 @@
                       class="px-4 obligatory mb-2"
                       v-if="
                         entry.cultures[i].kultur != '' &&
-                        kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                          'Düngeverbot' &&
-                        kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                          'keine Ertragserfassung'
+                        tableAttribut(
+                          'kulturen',
+                          entry.cultures[i].kultur,
+                          'Ertragserfassungsart',
+                        ) !== 'Düngeverbot' &&
+                        tableAttribut(
+                          'kulturen',
+                          entry.cultures[i].kultur,
+                          'Ertragserfassungsart',
+                        ) !== 'keine Ertragserfassung'
                       "
                     >
                       <v-select
@@ -316,8 +322,11 @@
                     no-gutters
                     v-if="
                       entry.cultures[i].kultur != '' &&
-                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                        'Düngeverbot'
+                      tableAttribut(
+                        'kulturen',
+                        entry.cultures[i].kultur,
+                        'Ertragserfassungsart',
+                      ) !== 'Düngeverbot'
                     "
                   >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
@@ -502,10 +511,16 @@
                     no-gutters
                     v-if="
                       entry.cultures[i].kultur != '' &&
-                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                        'Düngeverbot' &&
-                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                        'keine Ertragserfassung'
+                      tableAttribut(
+                        'kulturen',
+                        entry.cultures[i].kultur,
+                        'Ertragserfassungsart',
+                      ) !== 'Düngeverbot' &&
+                      tableAttribut(
+                        'kulturen',
+                        entry.cultures[i].kultur,
+                        'Ertragserfassungsart',
+                      ) !== 'keine Ertragserfassung'
                     "
                   >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
@@ -617,7 +632,7 @@ const { schlagInfo } = useSchlag();
 const { map } = useMap();
 const { topicHectars } = useTopicIntersections();
 const schlaegeLastModified = ref();
-const { lookup } = useLookup();
+const { lookup, tableAttribut } = useLookup();
 const panelInit = ref(['basisdaten', 'kulturen']);
 const itemsJaNein = [
   { value: true, title: 'Ja' },
@@ -678,16 +693,6 @@ function allCulturesReset() {
   for (let c = 0; c < entry.value.cultures.length; c++) {
     entry.value.cultures[c].ertragslage = '';
   }
-}
-
-function tableAttribut(table, id, attrib) {
-  const dataRow = lookup.value[table].find((k) => k.ID == id);
-  return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
-}
-
-function kulturAttribut(id, attrib) {
-  const dataRow = lookup.value.kulturen.find((k) => k.ID == id);
-  return dataRow[attrib] ? dataRow[attrib] : null;
 }
 
 function ertragsTyp(kultur, what) {
@@ -770,7 +775,6 @@ watch(schlagInfo, (value) => {
     entry.value.flaeche = value.sl_flaeche_brutto_ha;
     entry.value.extent = value.extent;
     entry.value.parts = value.parts;
-    entry.value.flaeche = value.sl_flaeche_brutto_ha;
 
     // Remove after Test Phase!
     entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
