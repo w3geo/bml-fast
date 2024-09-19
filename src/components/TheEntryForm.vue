@@ -79,9 +79,8 @@
                       disabled
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory mb-3">
+                  <v-col cols="6" class="px-4 obligatory mb-3" v-if="entry.wrrl">
                     <v-select
-                      v-if="entry.wrrl"
                       v-model="entry.wrrl_duengeklasse"
                       :items="lookup.wrrl"
                       label="Düngeklasse Grundwasserschutz"
@@ -90,11 +89,8 @@
                       hide-details
                     />
                   </v-col>
-                </v-row>
 
-                <v-row no-gutters v-if="entry.flaechennutzungsart === 'A'">
-                  <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
-                  <v-col cols="6" class="px-4 mb-3">
+                  <v-col cols="6" class="px-4 mb-3" v-if="entry.flaechennutzungsart === 'A'">
                     <v-select
                       v-if="entry.nitratrisikogebiet"
                       v-model="entry.teilnahme_grundwasserschutz_acker"

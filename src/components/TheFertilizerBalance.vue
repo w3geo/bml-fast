@@ -65,7 +65,7 @@ function calculateBilanz() {
         }
       }
       if (!kulturErrors) {
-        console.log(entry.value.cultures);
+        // Balance goes here / WIP
       }
     } else {
       errors.value.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
