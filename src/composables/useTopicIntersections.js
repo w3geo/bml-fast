@@ -138,13 +138,13 @@ schlagLayer.on('postrender', (e) => {
 const topicLayers = topicKeys.map(createTopicLayer);
 
 const offscreenMap = new Map({
-  pixelRatio: 1,
+  pixelRatio: 1 / resolution,
   controls: [],
   interactions: [],
   target: document.createElement('div'),
   layers: [...topicLayers, schlagLayer],
   view: new View({
-    resolutions: [resolution],
+    resolutions: [1],
   }),
 });
 
