@@ -86,6 +86,7 @@ function editEntry(nr) {
   currentSaved.value = nr;
   if (nr !== null) {
     entry.value = JSON.parse(JSON.stringify(savedData.value[nr]));
+    console.log(entry.value);
   } else {
     entry.value = JSON.parse(JSON.stringify(emptyEntry));
   }

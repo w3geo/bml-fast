@@ -32,7 +32,8 @@ import { ref } from 'vue';
  * @property {boolean} nitratrisikogebiet
  * @property {number} flaeche_schwereboeden
  * @property {number} flaeche_grundwasserschutz
- * @property {string} duengeklasse_grundwasserschutz
+ * @property {boolean} wrrl
+ * @property {string} wrrl_duengeklasse
  * @property {boolean} teilnahme_grundwasserschutz_acker
  * @property {string} gw_acker_gebietszuteilung
  * @property {number} ackerzahl
@@ -68,7 +69,8 @@ export const emptyEntry = {
   nitratrisikogebiet: false,
   flaeche_schwereboeden: 0,
   flaeche_grundwasserschutz: 0,
-  duengeklasse_grundwasserschutz: '-',
+  wrrl: false,
+  wrrl_duengeklasse: '-',
   teilnahme_grundwasserschutz_acker: false,
   gw_acker_gebietszuteilung: 'Trockengebiet',
   ackerzahl: 31,

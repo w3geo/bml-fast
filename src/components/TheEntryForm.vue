@@ -81,8 +81,8 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
-                      v-if="entry.nitratrisikogebiet"
-                      v-model="entry.duengeklasse_grundwasserschutz"
+                      v-if="entry.wrrl"
+                      v-model="entry.wrrl_duengeklasse"
                       :items="lookup.wrrl"
                       label="Düngeklasse Grundwasserschutz"
                       variant="outlined"
@@ -737,10 +737,9 @@ function saveData() {
   if (currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
   } else {
-    savedData.value.push(entry.value);
+    savedData.value.push({ ...entry.value });
     savedData.value.sort(dataSort);
   }
-
   localStorage.setItem('fasttool', JSON.stringify(savedData.value));
   dataWindow.value = 0;
   panelInit.value = ['basisdaten', 'kulturen'];
@@ -755,7 +754,7 @@ function cancelData() {
 }
 
 watch(schlagInfo, (value) => {
-  if (currentSaved.value !== null) {
+  if (currentSaved.value !== null || value === null) {
     return;
   }
   if (value) {
@@ -785,10 +784,9 @@ watch(schlagInfo, (value) => {
 
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
-  if (currentSaved.value !== null) {
+  if (currentSaved.value !== null || value === null) {
     return;
   }
-
   if (value) {
     if (entry.value.flaeche) {
       if (entry.value.flaeche / 2 < value.schwere_boeden) {
@@ -807,12 +805,14 @@ watch(topicHectars, (value) => {
     // Remove after Test Phase!
     entry.value.schlaginfo.programs = JSON.parse(JSON.stringify(value));
 
-    entry.value.duengeklasse_grundwasserschutz = '-';
+    entry.value.wrrl_duengeklasse = '-';
+    entry.value.wrrl = false;
     let currentDuengeklasse = 0;
     for (let l = 1; l < lookup.value.wrrl.length; l++) {
       if (value[lookup.value.wrrl[l].code] > currentDuengeklasse) {
         currentDuengeklasse = value[lookup.value.wrrl[l].code];
-        entry.value.duengeklasse_grundwasserschutz = lookup.value.wrrl[l].value;
+        entry.value.wrrl_duengeklasse = lookup.value.wrrl[l].value;
+        entry.value.wrrl = true;
       }
     }
   }
