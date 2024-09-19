@@ -129,8 +129,16 @@ export const lookup = shallowRef({
 });
 
 /**
- * @returns {{ lookup: Object }}
+ * @returns {any}
+ */
+function tableAttribut(table, id, attrib) {
+  const dataRow = lookup.value[table].find((k) => k.ID == id);
+  return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
+}
+
+/**
+ * @returns {{ lookup: Object, tableAttribut: function }}
  */
 export function useLookup() {
-  return { lookup };
+  return { lookup, tableAttribut };
 }

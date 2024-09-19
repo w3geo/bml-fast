@@ -12,7 +12,6 @@ import { ref } from 'vue';
 
 /**
  * @typedef culture
- * @property {string} typ
  * @property {string} kultur
  * @property {string} ertragslage
  * @property {number} ernte
@@ -30,6 +29,7 @@ import { ref } from 'vue';
  * @property {string} flaechennutzungsart
  * @property {number} flaeche
  * @property {number} flaeche_nitratrisikogebiet
+ * @property {boolean} nitratrisikogebiet
  * @property {number} flaeche_schwereboeden
  * @property {number} flaeche_grundwasserschutz
  * @property {string} duengeklasse_grundwasserschutz
@@ -50,7 +50,6 @@ import { ref } from 'vue';
 
 export const emptyFertilization = { typ: '', id: '', menge: 0, n: 0, p: 0, k: 0 };
 export const emptyCulture = {
-  typ: '',
   kultur: '',
   ertragslage: '',
   ernte: 0,
@@ -66,6 +65,7 @@ export const emptyEntry = {
   flaechennutzungsart: '',
   flaeche: 0,
   flaeche_nitratrisikogebiet: 0,
+  nitratrisikogebiet: false,
   flaeche_schwereboeden: 0,
   flaeche_grundwasserschutz: 0,
   duengeklasse_grundwasserschutz: '-',

@@ -12,10 +12,10 @@
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
-        <div class="selectSchlag" v-if="entry.flaeche === 0 && currentSaved === null">
+        <div class="selectSchlag" v-if="dataWindow === 1 && currentSaved === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="entry.flaeche > 0 || currentSaved !== null">
+        <v-form ref="entryform" v-if="dataWindow === 2">
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-darken-1">
@@ -69,11 +69,10 @@
 
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
-                    <v-text-field
-                      :model-value="
-                        entry.flaeche_nitratrisikogebiet > entry.flaeche / 2 ? 'JA' : 'NEIN'
-                      "
+                    <v-select
+                      v-model="entry.nitratrisikogebiet"
                       label="Nitratrisikogebiet"
+                      :items="itemsJaNein"
                       variant="outlined"
                       density="compact"
                       hide-details
@@ -82,6 +81,7 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
+                      v-if="entry.nitratrisikogebiet"
                       v-model="entry.duengeklasse_grundwasserschutz"
                       :items="lookup.wrrl"
                       label="Düngeklasse Grundwasserschutz"
@@ -93,19 +93,10 @@
                 </v-row>
 
                 <v-row no-gutters v-if="entry.flaechennutzungsart === 'A'">
-                  <v-col cols="6" class="px-4 obligatory mb-3">
-                    <v-text-field
-                      v-model="entry.flaeche_grundwasserschutz"
-                      label="Fläche im Maßnahmengebiet Vorbeugender Grundwasserschutz"
-                      variant="outlined"
-                      density="compact"
-                      hide-details
-                      disabled
-                    />
-                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-select
-                      v-if="entry.flaeche_grundwasserschutz > 0"
+                      v-if="entry.nitratrisikogebiet"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
@@ -218,7 +209,7 @@
                   no-gutters
                   v-if="tableAttribut('kulturen', entry.vorfrucht, 'Gemüsekultur') === 'x'"
                 >
-                  <v-col cols="6" class="px-4 obligatory mb-3"> &nbsp; </v-col>
+                  <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       v-model="entry.vorfruchtnmin"
@@ -296,10 +287,16 @@
                       class="px-4 obligatory mb-2"
                       v-if="
                         entry.cultures[i].kultur != '' &&
-                        kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                          'Düngeverbot' &&
-                        kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                          'keine Ertragserfassung'
+                        tableAttribut(
+                          'kulturen',
+                          entry.cultures[i].kultur,
+                          'Ertragserfassungsart',
+                        ) !== 'Düngeverbot' &&
+                        tableAttribut(
+                          'kulturen',
+                          entry.cultures[i].kultur,
+                          'Ertragserfassungsart',
+                        ) !== 'keine Ertragserfassung'
                       "
                     >
                       <v-select
@@ -316,8 +313,11 @@
                     no-gutters
                     v-if="
                       entry.cultures[i].kultur != '' &&
-                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                        'Düngeverbot'
+                      tableAttribut(
+                        'kulturen',
+                        entry.cultures[i].kultur,
+                        'Ertragserfassungsart',
+                      ) !== 'Düngeverbot'
                     "
                   >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
@@ -502,10 +502,16 @@
                     no-gutters
                     v-if="
                       entry.cultures[i].kultur != '' &&
-                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                        'Düngeverbot' &&
-                      kulturAttribut(entry.cultures[i].kultur, 'Ertragserfassungsart') !==
-                        'keine Ertragserfassung'
+                      tableAttribut(
+                        'kulturen',
+                        entry.cultures[i].kultur,
+                        'Ertragserfassungsart',
+                      ) !== 'Düngeverbot' &&
+                      tableAttribut(
+                        'kulturen',
+                        entry.cultures[i].kultur,
+                        'Ertragserfassungsart',
+                      ) !== 'keine Ertragserfassung'
                     "
                   >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
@@ -617,7 +623,7 @@ const { schlagInfo } = useSchlag();
 const { map } = useMap();
 const { topicHectars } = useTopicIntersections();
 const schlaegeLastModified = ref();
-const { lookup } = useLookup();
+const { lookup, tableAttribut } = useLookup();
 const panelInit = ref(['basisdaten', 'kulturen']);
 const itemsJaNein = [
   { value: true, title: 'Ja' },
@@ -678,16 +684,6 @@ function allCulturesReset() {
   for (let c = 0; c < entry.value.cultures.length; c++) {
     entry.value.cultures[c].ertragslage = '';
   }
-}
-
-function tableAttribut(table, id, attrib) {
-  const dataRow = lookup.value[table].find((k) => k.ID == id);
-  return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
-}
-
-function kulturAttribut(id, attrib) {
-  const dataRow = lookup.value.kulturen.find((k) => k.ID == id);
-  return dataRow[attrib] ? dataRow[attrib] : null;
 }
 
 function ertragsTyp(kultur, what) {
@@ -759,18 +755,24 @@ function cancelData() {
 }
 
 watch(schlagInfo, (value) => {
+  if (currentSaved.value !== null) {
+    return;
+  }
   if (value) {
     if (entry.value.flaeche_schwereboeden) {
       if (value.sl_flaeche_brutto_ha / 2 < entry.value.flaeche_schwereboeden) {
         entry.value.bodenart = 'sL - sandiger Lehm';
       }
     }
+    if (entry.value.flaeche_nitratrisikogebiet) {
+      entry.value.nitratrisikogebiet =
+        entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? true : false;
+    }
 
     entry.value.flaechennutzungsart = value.fnar_code;
     entry.value.flaeche = value.sl_flaeche_brutto_ha;
     entry.value.extent = value.extent;
     entry.value.parts = value.parts;
-    entry.value.flaeche = value.sl_flaeche_brutto_ha;
 
     // Remove after Test Phase!
     entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
@@ -783,6 +785,10 @@ watch(schlagInfo, (value) => {
 
 // Area of relevant topics inside the current schlag
 watch(topicHectars, (value) => {
+  if (currentSaved.value !== null) {
+    return;
+  }
+
   if (value) {
     if (entry.value.flaeche) {
       if (entry.value.flaeche / 2 < value.schwere_boeden) {
@@ -793,6 +799,11 @@ watch(topicHectars, (value) => {
     entry.value.flaeche_nitratrisikogebiet = value.nitrataktionsprogramm;
     entry.value.flaeche_grundwasserschutz = value.bdfl_l16_grundwasserschutz_acker;
 
+    if (entry.value.flaeche) {
+      entry.value.nitratrisikogebiet =
+        entry.value.flaeche_nitratrisikogebiet > entry.value.flaeche / 2 ? true : false;
+    }
+
     // Remove after Test Phase!
     entry.value.schlaginfo.programs = JSON.parse(JSON.stringify(value));
 
@@ -800,8 +811,8 @@ watch(topicHectars, (value) => {
     let currentDuengeklasse = 0;
     for (let l = 1; l < lookup.value.wrrl.length; l++) {
       if (value[lookup.value.wrrl[l].code] > currentDuengeklasse) {
-        currentDuengeklasse = value[lookup.wrrl[l].code];
-        entry.value.duengeklasse_grundwasserschutz = lookup.wrrl[l].value;
+        currentDuengeklasse = value[lookup.value.wrrl[l].code];
+        entry.value.duengeklasse_grundwasserschutz = lookup.value.wrrl[l].value;
       }
     }
   }
