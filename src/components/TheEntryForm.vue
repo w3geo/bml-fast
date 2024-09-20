@@ -106,8 +106,8 @@
                 <v-row no-gutters v-if="entry.teilnahme_grundwasserschutz_acker">
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.stickstoffueberschuss"
-                      label="Stickstoffüberschuss (kg N/ha)"
+                      v-model="entry.nsaldo"
+                      label="N-Saldo (kg N/ha)"
                       variant="outlined"
                       density="compact"
                       hide-details

@@ -18,6 +18,7 @@ import { ref } from 'vue';
  * @property {string} ertragslageernte
  * @property {number} feuchte
  * @property {number} protein
+ * @property {number} nmin
  * @property {Array<fertilization>} duengung
  */
 
@@ -42,7 +43,7 @@ import { ref } from 'vue';
  * @property {string} bodenart
  * @property {string} vorfrucht
  * @property {number} vorfruchtnmin
- * @property {number} stickstoffueberschuss
+ * @property {number} nsaldo
  * @property {Array<number>} extent
  * @property {Array<number>} parts
  * @property {Object} schlaginfo
@@ -57,6 +58,7 @@ export const emptyCulture = {
   ertragslageernte: '',
   feuchte: 0,
   protein: 0,
+  nmin: 0,
   duengung: [],
 };
 export const emptyEntry = {
@@ -79,7 +81,7 @@ export const emptyEntry = {
   bodenart: 'lS - lehmiger Sand',
   vorfrucht: '',
   vorfruchtnmin: 0,
-  stickstoffueberschuss: 0,
+  nsaldo: 0,
   extent: [],
   parts: [],
   schlaginfo: { basic: null, programs: null },
