@@ -729,6 +729,13 @@ function dataSort(a, b) {
   return a.jahr < b.jahr ? -1 : 1;
 }
 
+function FloatTrunc(input) {
+  let result = 0;
+  const parts = input.toString().split('.');
+  result = parseFloat(parts[0] + (parts[1] ? '.' + parts[1].substr(0, 4) : ''));
+  return result;
+}
+
 function saveData() {
   if (currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
@@ -755,7 +762,7 @@ watch(schlagInfo, (value) => {
   }
   if (value) {
     if (entry.value.flaeche_schwereboeden) {
-      if (value.sl_flaeche_brutto_ha / 2 < entry.value.flaeche_schwereboeden) {
+      if (FloatTrunc(value.sl_flaeche_brutto_ha) / 2 < entry.value.flaeche_schwereboeden) {
         entry.value.bodenart = 'sL - sandiger Lehm';
       }
     }
@@ -765,7 +772,7 @@ watch(schlagInfo, (value) => {
     }
 
     entry.value.flaechennutzungsart = value.fnar_code;
-    entry.value.flaeche = value.sl_flaeche_brutto_ha;
+    entry.value.flaeche = FloatTrunc(value.sl_flaeche_brutto_ha);
     entry.value.extent = value.extent;
     entry.value.parts = value.parts;
 
