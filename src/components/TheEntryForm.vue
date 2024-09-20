@@ -197,6 +197,7 @@
                       density="compact"
                       hide-details
                       clearable
+                      @update:model-value="cultureChanged(-1)"
                     />
                   </v-col>
                 </v-row>
@@ -687,12 +688,20 @@ function fertilizationChanged(what, cindex, findex) {
 }
 
 function cultureChanged(index) {
-  entry.value.cultures[index].ertragslage = '';
-  entry.value.cultures[index].nmin = tableAttribut(
-    'kulturen',
-    entry.value.cultures[index].kultur,
-    'VFW | Nmin selbes Jahr',
-  );
+  if (index === -1) {
+    entry.value.vorfruchtnmin = tableAttribut(
+      'kulturen',
+      entry.value.vorfrucht,
+      'VFW | Nmin Folgejahr',
+    );
+  } else {
+    entry.value.cultures[index].ertragslage = '';
+    entry.value.cultures[index].nmin = tableAttribut(
+      'kulturen',
+      entry.value.cultures[index].kultur,
+      'VFW | Nmin selbes Jahr',
+    );
+  }
 }
 
 function allCulturesReset() {
