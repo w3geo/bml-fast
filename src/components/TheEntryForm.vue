@@ -224,40 +224,26 @@
                 Zwischenfrucht / Hauptkulturen
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <v-card class="mt-1 mb-4 pa-0 cardBorder zwischenfrucht" elevation="0">
-                  <v-row no-gutters class="bg-brown-lighten-3 mb-3">
-                    <v-col cols="10" class="pl-2">
-                      <span class="text-button">Zwischenfrucht</span>
-                    </v-col>
-                    <v-col cols="2" class="text-right"> </v-col>
-                  </v-row>
-
-                  <v-row no-gutters>
-                    <v-col cols="12" class="px-4 mb-3">
-                      <v-select
-                        v-model="entry.cultures[0].kultur"
-                        :items="lookup.kulturenItems.zwischen"
-                        label="Kultur"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                      />
-                    </v-col>
-                  </v-row>
-                </v-card>
-
                 <v-card
-                  class="mt-1 mb-4 pa-0 cardBorder hauptfrucht"
+                  class="mt-1 mb-12 pa-0 cardBorder hauptfrucht"
                   elevation="0"
-                  v-for="i in entry.cultures.length - 1"
-                  :key="`kultur${i}`"
+                  v-for="i in entry.cultures.length"
+                  :key="`kultur${i - 1}`"
                 >
                   <v-row no-gutters class="bg-brown-lighten-2">
                     <v-col cols="10" class="pl-2">
-                      <span class="text-button">{{ i }}. Hauptfrucht</span>
+                      <span class="text-button">{{
+                        i === 1 ? 'Zwischenfrucht' : `${i - 1}. Hauptfrucht`
+                      }}</span>
                     </v-col>
                     <v-col cols="2" class="text-right">
-                      <v-btn icon size="20" @click="deleteCulture(i)" class="mt-2 mr-2">
+                      <v-btn
+                        v-if="i > 1"
+                        icon
+                        size="20"
+                        @click="deleteCulture(i - 1)"
+                        class="mt-2 mr-2"
+                      >
                         <v-icon size="20" color="red" icon="mdi-close"
                       /></v-btn>
                     </v-col>
@@ -265,39 +251,43 @@
 
                   <v-row no-gutters>
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4"
-                      >Aussaat / Erwartete Ertragslage</v-col
+                      >Aussaat {{ i > 1 ? '/ Erwartete Ertragslage' : '' }}</v-col
                     >
                     <v-col cols="12" class="px-4 obligatory mb-3">
                       <v-select
-                        v-model="entry.cultures[i].kultur"
-                        :items="lookup.kulturenItems[entry.flaechennutzungsart]"
+                        v-model="entry.cultures[i - 1].kultur"
+                        :items="
+                          i > 1
+                            ? lookup.kulturenItems[entry.flaechennutzungsart]
+                            : lookup.kulturenItems.zwischen
+                        "
                         label="Kultur"
                         variant="outlined"
                         density="compact"
                         hide-details
-                        @update:model-value="cultureChanged(i)"
+                        @update:model-value="cultureChanged(i - 1)"
                       />
                     </v-col>
                     <v-col
                       cols="12"
                       class="px-4 obligatory mb-2"
                       v-if="
-                        entry.cultures[i].kultur != '' &&
+                        entry.cultures[i - 1].kultur != '' &&
                         tableAttribut(
                           'kulturen',
-                          entry.cultures[i].kultur,
+                          entry.cultures[i - 1].kultur,
                           'Ertragserfassungsart',
                         ) !== 'Düngeverbot' &&
                         tableAttribut(
                           'kulturen',
-                          entry.cultures[i].kultur,
+                          entry.cultures[i - 1].kultur,
                           'Ertragserfassungsart',
                         ) !== 'keine Ertragserfassung'
                       "
                     >
                       <v-select
-                        v-model="entry.cultures[i].ertragslage"
-                        :items="ertragsLagen(entry.cultures[i].kultur, false)"
+                        v-model="entry.cultures[i - 1].ertragslage"
+                        :items="ertragsLagen(entry.cultures[i - 1].kultur, false)"
                         label="Erwartete Ertragslage"
                         variant="outlined"
                         density="compact"
@@ -308,17 +298,17 @@
                   <v-row
                     no-gutters
                     v-if="
-                      entry.cultures[i].kultur != '' &&
+                      entry.cultures[i - 1].kultur != '' &&
                       tableAttribut(
                         'kulturen',
-                        entry.cultures[i].kultur,
+                        entry.cultures[i - 1].kultur,
                         'Ertragserfassungsart',
                       ) !== 'Düngeverbot'
                     "
                   >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
                     <v-card
-                      v-for="f in entry.cultures[i].duengung.length"
+                      v-for="f in entry.cultures[i - 1].duengung.length"
                       :key="`kultur${i}duengung${f}`"
                       class="border-md mx-1 mb-2 w-100"
                       elevation="0"
@@ -331,7 +321,7 @@
                           <v-btn
                             icon
                             size="18"
-                            @click.stop="deleteFertilization(i, f - 1)"
+                            @click.stop="deleteFertilization(i - 1, f - 1)"
                             class="mt-0 mr-1"
                           >
                             <v-icon size="18" color="red" icon="mdi-close"
@@ -342,55 +332,55 @@
                       <v-row no-gutters>
                         <v-col
                           :cols="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
-                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene'
                               ? 5
                               : 12
                           "
                           class="pa-2"
                         >
                           <v-select
-                            v-model="entry.cultures[i].duengung[f - 1].typ"
+                            v-model="entry.cultures[i - 1].duengung[f - 1].typ"
                             :items="lookup.fertilizationTypes"
                             label="Typ"
                             variant="outlined"
                             density="compact"
                             hide-details
-                            @update:model-value="fertilizationChanged('typ', i, f - 1)"
+                            @update:model-value="fertilizationChanged('typ', i - 1, f - 1)"
                           />
                         </v-col>
                         <v-col
                           cols="7"
                           class="pa-2"
                           v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
-                            entry.cultures[i].duengung[f - 1].typ != 'eigene'
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene'
                           "
                         >
                           <v-select
-                            v-model="entry.cultures[i].duengung[f - 1].id"
-                            :items="lookup[entry.cultures[i].duengung[f - 1].typ]"
-                            :label="firstUppercase(entry.cultures[i].duengung[f - 1].typ)"
+                            v-model="entry.cultures[i - 1].duengung[f - 1].id"
+                            :items="lookup[entry.cultures[i - 1].duengung[f - 1].typ]"
+                            :label="firstUppercase(entry.cultures[i - 1].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             hide-details
-                            @update:model-value="fertilizationChanged('id', i, f - 1)"
+                            @update:model-value="fertilizationChanged('id', i - 1, f - 1)"
                           />
                         </v-col>
                         <v-col
                           cols="3"
                           class="pa-2"
                           v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
                             !(
-                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i].duengung[f - 1].id == ''
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i - 1].duengung[f - 1].id == ''
                             )
                           "
                         >
                           <v-text-field
-                            v-model="entry.cultures[i].duengung[f - 1].menge"
-                            :label="`Menge (in ${entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            v-model="entry.cultures[i - 1].duengung[f - 1].menge"
+                            :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -400,10 +390,10 @@
                           cols="2"
                           class="pa-2 text-right"
                           v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
                             !(
-                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i].duengung[f - 1].id == ''
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i - 1].duengung[f - 1].id == ''
                             )
                           "
                         ></v-col>
@@ -412,16 +402,16 @@
                           cols="2"
                           class="pa-2"
                           v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
                             !(
-                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i].duengung[f - 1].id == ''
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i - 1].duengung[f - 1].id == ''
                             )
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i].duengung[f - 1].n"
+                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            v-model="entry.cultures[i - 1].duengung[f - 1].n"
                             label="N(%)"
                             variant="outlined"
                             density="compact"
@@ -432,16 +422,16 @@
                           cols="2"
                           class="pa-2"
                           v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
                             !(
-                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i].duengung[f - 1].id == ''
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i - 1].duengung[f - 1].id == ''
                             )
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i].duengung[f - 1].p"
+                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            v-model="entry.cultures[i - 1].duengung[f - 1].p"
                             label="P₂O₅(%)"
                             variant="outlined"
                             density="compact"
@@ -452,16 +442,16 @@
                           cols="2"
                           class="pa-2"
                           v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
                             !(
-                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i].duengung[f - 1].id == ''
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i - 1].duengung[f - 1].id == ''
                             )
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i].duengung[f - 1].k"
+                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            v-model="entry.cultures[i - 1].duengung[f - 1].k"
                             label="K₂O(%)"
                             variant="outlined"
                             density="compact"
@@ -473,10 +463,10 @@
                           cols="1"
                           class="pa-2 text-right"
                           v-if="
-                            entry.cultures[i].duengung[f - 1].typ != '' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
                             !(
-                              entry.cultures[i].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i].duengung[f - 1].id == ''
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
+                              entry.cultures[i - 1].duengung[f - 1].id == ''
                             )
                           "
                         ></v-col>
@@ -489,7 +479,7 @@
                         color="light-green-lighten-3"
                         density="compact"
                         prepend-icon="mdi-plus"
-                        @click.stop="addFertilization(i)"
+                        @click.stop="addFertilization(i - 1)"
                         >Düngung hinzufügen</v-btn
                       ></v-col
                     >
@@ -497,15 +487,15 @@
                   <v-row
                     no-gutters
                     v-if="
-                      entry.cultures[i].kultur != '' &&
+                      entry.cultures[i - 1].kultur != '' &&
                       tableAttribut(
                         'kulturen',
-                        entry.cultures[i].kultur,
+                        entry.cultures[i - 1].kultur,
                         'Ertragserfassungsart',
                       ) !== 'Düngeverbot' &&
                       tableAttribut(
                         'kulturen',
-                        entry.cultures[i].kultur,
+                        entry.cultures[i - 1].kultur,
                         'Ertragserfassungsart',
                       ) !== 'keine Ertragserfassung'
                     "
@@ -513,18 +503,20 @@
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
                     <v-col cols="6" class="pa-2">
                       <v-select
-                        v-if="ertragsTyp(entry.cultures[i].kultur, 'einheit') == 'EL Auswahl'"
-                        v-model="entry.cultures[i].ertragslageernte"
-                        :items="ertragsLagen(entry.cultures[i].kultur, true)"
+                        v-if="ertragsTyp(entry.cultures[i - 1].kultur, 'einheit') == 'EL Auswahl'"
+                        v-model="entry.cultures[i - 1].ertragslageernte"
+                        :items="ertragsLagen(entry.cultures[i - 1].kultur, true)"
                         label="Ertrag (Klasse)"
                         variant="outlined"
                         density="compact"
                         hide-details
                       />
                       <v-text-field
-                        v-if="['t', 'm3'].includes(ertragsTyp(entry.cultures[i].kultur, 'einheit'))"
-                        v-model="entry.cultures[i].ernte"
-                        :label="`Ernte (in ${ertragsTyp(entry.cultures[i].kultur, 'einheit')})`"
+                        v-if="
+                          ['t', 'm3'].includes(ertragsTyp(entry.cultures[i - 1].kultur, 'einheit'))
+                        "
+                        v-model="entry.cultures[i - 1].ernte"
+                        :label="`Ernte (in ${ertragsTyp(entry.cultures[i - 1].kultur, 'einheit')})`"
                         variant="outlined"
                         density="compact"
                         hide-details
@@ -534,10 +526,10 @@
                     <v-col cols="3" class="pa-2">
                       <v-text-field
                         v-if="
-                          ertragsTyp(entry.cultures[i].kultur, '') == 4 ||
-                          ertragsTyp(entry.cultures[i].kultur, '') == 5
+                          ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
+                          ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
-                        v-model="entry.cultures[i].feuchte"
+                        v-model="entry.cultures[i - 1].feuchte"
                         label="Kornfeuchte"
                         variant="outlined"
                         density="compact"
@@ -547,10 +539,10 @@
                     <v-col cols="3" class="pa-2">
                       <v-text-field
                         v-if="
-                          ertragsTyp(entry.cultures[i].kultur, '') == 4 ||
-                          ertragsTyp(entry.cultures[i].kultur, '') == 5
+                          ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
+                          ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
-                        v-model="entry.cultures[i].protein"
+                        v-model="entry.cultures[i - 1].protein"
                         label="Proteingehalt"
                         variant="outlined"
                         density="compact"
