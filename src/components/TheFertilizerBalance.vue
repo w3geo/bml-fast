@@ -20,13 +20,13 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-import { useLookup } from '../composables/useLookUps.js';
+//import { useLookup } from '../composables/useLookUps.js';
 import { watch, ref } from 'vue';
 
 const { dataWindow, entry } = useDataEntries();
-const { tableAttribut } = useLookup();
+//const { tableAttribut } = useLookup();
 
-const bilanz = ref([]);
+//const bilanz = ref([]);
 const errors = ref([]);
 
 watch(
@@ -38,6 +38,8 @@ watch(
 );
 
 function calculateBilanz() {
+  return;
+  /** 
   errors.value = [];
 
   // Pflichtangaben
@@ -65,13 +67,14 @@ function calculateBilanz() {
         }
       }
       if (!kulturErrors) {
-        console.log(entry.value.cultures);
+        // Balance goes here / WIP
       }
     } else {
       errors.value.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
     }
   }
   bilanz.value = [];
+  */
 }
 </script>
 

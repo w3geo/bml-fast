@@ -132,8 +132,12 @@ export const lookup = shallowRef({
  * @returns {any}
  */
 function tableAttribut(table, id, attrib) {
-  const dataRow = lookup.value[table].find((k) => k.ID == id);
-  return dataRow && dataRow[attrib] ? dataRow[attrib] : '?';
+  let result = '';
+  if (id && id != '') {
+    const dataRow = lookup.value[table].find((k) => k.ID == id);
+    result = dataRow && dataRow[attrib] ? dataRow[attrib] : '';
+  }
+  return result;
 }
 
 /**

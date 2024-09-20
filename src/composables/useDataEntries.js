@@ -18,6 +18,7 @@ import { ref } from 'vue';
  * @property {string} ertragslageernte
  * @property {number} feuchte
  * @property {number} protein
+ * @property {number} nmin
  * @property {Array<fertilization>} duengung
  */
 
@@ -32,7 +33,8 @@ import { ref } from 'vue';
  * @property {boolean} nitratrisikogebiet
  * @property {number} flaeche_schwereboeden
  * @property {number} flaeche_grundwasserschutz
- * @property {string} duengeklasse_grundwasserschutz
+ * @property {boolean} wrrl
+ * @property {string} wrrl_duengeklasse
  * @property {boolean} teilnahme_grundwasserschutz_acker
  * @property {string} gw_acker_gebietszuteilung
  * @property {number} ackerzahl
@@ -41,7 +43,7 @@ import { ref } from 'vue';
  * @property {string} bodenart
  * @property {string} vorfrucht
  * @property {number} vorfruchtnmin
- * @property {number} stickstoffueberschuss
+ * @property {number} nsaldo
  * @property {Array<number>} extent
  * @property {Array<number>} parts
  * @property {Object} schlaginfo
@@ -56,6 +58,7 @@ export const emptyCulture = {
   ertragslageernte: '',
   feuchte: 0,
   protein: 0,
+  nmin: 0,
   duengung: [],
 };
 export const emptyEntry = {
@@ -68,7 +71,8 @@ export const emptyEntry = {
   nitratrisikogebiet: false,
   flaeche_schwereboeden: 0,
   flaeche_grundwasserschutz: 0,
-  duengeklasse_grundwasserschutz: '-',
+  wrrl: false,
+  wrrl_duengeklasse: '-',
   teilnahme_grundwasserschutz_acker: false,
   gw_acker_gebietszuteilung: 'Trockengebiet',
   ackerzahl: 31,
@@ -77,7 +81,7 @@ export const emptyEntry = {
   bodenart: 'lS - lehmiger Sand',
   vorfrucht: '',
   vorfruchtnmin: 0,
-  stickstoffueberschuss: 0,
+  nsaldo: 0,
   extent: [],
   parts: [],
   schlaginfo: { basic: null, programs: null },
