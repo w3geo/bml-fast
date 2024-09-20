@@ -9,6 +9,14 @@ module.exports = {
     'plugin:import/recommended',
     '@vue/eslint-config-prettier/skip-formatting',
   ],
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.ts', '.tsx'],
+        moduleDirectory: ['src', 'node_modules'],
+      },
+    },
+  },
   parserOptions: {
     ecmaVersion: 'latest',
   },

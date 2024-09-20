@@ -156,6 +156,7 @@ mapReady.then(() => {
     format: new MVT(),
     minZoom: 15,
     maxZoom: 15,
+    tileLoadFunction: templateSource.getTileLoadFunction(),
     tileUrlFunction: templateSource.getTileUrlFunction(),
   });
   offscreenMap
