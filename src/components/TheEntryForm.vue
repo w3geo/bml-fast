@@ -269,7 +269,12 @@
                       />
                     </v-col>
                     <v-col
-                      cols="12"
+                      :cols="
+                        tableAttribut('kulturen', entry.cultures[i - 1].kultur, 'Gemüsekultur') ===
+                        'x'
+                          ? 9
+                          : 12
+                      "
                       class="px-4 obligatory mb-2"
                       v-if="
                         entry.cultures[i - 1].kultur != '' &&
@@ -289,6 +294,23 @@
                         v-model="entry.cultures[i - 1].ertragslage"
                         :items="ertragsLagen(entry.cultures[i - 1].kultur, false)"
                         label="Erwartete Ertragslage"
+                        variant="outlined"
+                        density="compact"
+                        hide-details
+                      />
+                    </v-col>
+
+                    <v-col
+                      v-if="
+                        tableAttribut('kulturen', entry.cultures[i - 1].kultur, 'Gemüsekultur') ===
+                        'x'
+                      "
+                      cols="3"
+                      class="px-4 mb-3"
+                    >
+                      <v-text-field
+                        v-model="entry.cultures[i - 1].nmin"
+                        label="NMin"
                         variant="outlined"
                         density="compact"
                         hide-details
@@ -666,6 +688,11 @@ function fertilizationChanged(what, cindex, findex) {
 
 function cultureChanged(index) {
   entry.value.cultures[index].ertragslage = '';
+  entry.value.cultures[index].nmin = tableAttribut(
+    'kulturen',
+    entry.value.cultures[index].kultur,
+    'VFW | Nmin selbes Jahr',
+  );
 }
 
 function allCulturesReset() {
