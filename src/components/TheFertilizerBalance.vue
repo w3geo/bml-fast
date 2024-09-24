@@ -57,8 +57,8 @@ function calculateBilanz() {
   }
 
   // Kulturen
-  for (let c = 1; c < entry.value.cultures.length; c++) {
-    let kulturErrors = false;
+  for (let c = 0; c < entry.value.cultures.length; c++) {
+    let anyErrors = false;
     if (entry.value.cultures[c].kultur != '') {
       if (
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Ertragserfassungsart') !==
@@ -68,18 +68,44 @@ function calculateBilanz() {
       ) {
         if (entry.value.cultures[c].ertragslage === '') {
           errors.value.push(`${c}. Hauptfrucht: Erwartete Ertragslage nicht angegeben`);
-          kulturErrors = true;
+          anyErrors = true;
         }
-        if (entry.value.cultures[c].ertragslageernte === '') {
+        if (
+          entry.value.cultures[c].ertragslageernte === '' &&
+          parseFloat(entry.value.cultures[c].ernte) === 0
+        ) {
           errors.value.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
-          kulturErrors = true;
+          anyErrors = true;
         }
       }
-      if (!kulturErrors) {
+      // Düngung
+      if (entry.value.cultures[c].duengung.length > 0) {
+        for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
+          if (entry.value.cultures[c].duengung[d].typ === '') {
+            if (c > 0) {
+              errors.value.push(`${c}. Hauptfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
+            } else {
+              errors.value.push(`Zwischenfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
+            }
+            anyErrors = true;
+          } else if (entry.value.cultures[c].duengung[d].menge <= 0) {
+            if (c > 0) {
+              errors.value.push(`${c}. Hauptfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
+            } else {
+              errors.value.push(`Zwischenfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
+            }
+            anyErrors = true;
+          }
+        }
+      }
+
+      if (!anyErrors) {
         // Balance goes here / WIP
       }
     } else {
-      errors.value.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
+      if (c > 0) {
+        errors.value.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
+      }
     }
   }
   bilanz.value = [];
