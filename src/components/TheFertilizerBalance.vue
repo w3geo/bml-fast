@@ -1,9 +1,19 @@
 <template>
-  <v-card class="fertilizerData" v-if="dataWindow === 2" elevation="10">
+  <v-card
+    class="fertilizerData"
+    :class="winMaximize ? 'maximized' : ''"
+    v-if="dataWindow === 2"
+    elevation="10"
+  >
     <v-row no-gutters class="boxHeader bg-grey-darken-3 mb-3">
-      <v-col class="text-button text-white">
+      <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
         Nährstoff-Bilanz
+      </v-col>
+      <v-col cols="2" class="text-right">
+        <v-icon class="mr-2" @click.stop="winMaximize = !winMaximize"
+          >{{ winMaximize ? 'mdi-window-restore' : 'mdi-window-maximize' }}
+        </v-icon>
       </v-col>
     </v-row>
     <v-row
@@ -20,13 +30,14 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-//import { useLookup } from '../composables/useLookUps.js';
+import { useLookup } from '../composables/useLookUps.js';
 import { watch, ref } from 'vue';
 
 const { dataWindow, entry } = useDataEntries();
-//const { tableAttribut } = useLookup();
+const { tableAttribut } = useLookup();
 
-//const bilanz = ref([]);
+const winMaximize = ref(false);
+const bilanz = ref([]);
 const errors = ref([]);
 
 watch(
@@ -38,8 +49,6 @@ watch(
 );
 
 function calculateBilanz() {
-  return;
-  /** 
   errors.value = [];
 
   // Pflichtangaben
@@ -74,7 +83,6 @@ function calculateBilanz() {
     }
   }
   bilanz.value = [];
-  */
 }
 </script>
 
@@ -87,6 +95,11 @@ function calculateBilanz() {
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;
+}
+
+.fertilizerData.maximized {
+  height: calc(100% - 70px);
+  width: 1010px;
 }
 
 .error {
