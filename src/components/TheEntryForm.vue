@@ -60,6 +60,7 @@
                       label="Fläche (ha)"
                       variant="outlined"
                       density="compact"
+                      type="number"
                       hide-details
                     />
                   </v-col>
@@ -213,6 +214,7 @@
                       label="NMin"
                       variant="outlined"
                       density="compact"
+                      type="number"
                       hide-details
                     />
                   </v-col>
@@ -314,6 +316,7 @@
                         label="NMin"
                         variant="outlined"
                         density="compact"
+                        type="number"
                         hide-details
                       />
                     </v-col>
@@ -406,6 +409,7 @@
                             :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
                             variant="outlined"
                             density="compact"
+                            type="number"
                             hide-details
                           />
                         </v-col>
@@ -438,6 +442,7 @@
                             label="N(%)"
                             variant="outlined"
                             density="compact"
+                            type="number"
                             hide-details
                           />
                         </v-col>
@@ -458,6 +463,7 @@
                             label="P₂O₅(%)"
                             variant="outlined"
                             density="compact"
+                            type="number"
                             hide-details
                           />
                         </v-col>
@@ -478,6 +484,7 @@
                             label="K₂O(%)"
                             variant="outlined"
                             density="compact"
+                            type="number"
                             hide-details
                           />
                         </v-col>
@@ -542,6 +549,7 @@
                         :label="`Ernte (in ${ertragsTyp(entry.cultures[i - 1].kultur, 'einheit')})`"
                         variant="outlined"
                         density="compact"
+                        type="number"
                         hide-details
                       />
                     </v-col>
