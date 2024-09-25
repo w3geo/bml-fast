@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 
 /**
- * @typedef fertilization
+ * @typedef Fertilization
  * @property {string} typ
  * @property {string} id
  * @property {number} menge
@@ -11,7 +11,7 @@ import { ref } from 'vue';
  */
 
 /**
- * @typedef culture
+ * @typedef Culture
  * @property {string} kultur
  * @property {string} ertragslage
  * @property {number} ernte
@@ -19,7 +19,7 @@ import { ref } from 'vue';
  * @property {number} feuchte
  * @property {number} protein
  * @property {number} nmin
- * @property {Array<fertilization>} duengung
+ * @property {Array<Fertilization>} duengung
  */
 
 /**
@@ -46,8 +46,8 @@ import { ref } from 'vue';
  * @property {number} nsaldo
  * @property {Array<number>} extent
  * @property {Array<number>} parts
- * @property {Object} schlaginfo
- * @property {Array<culture>} cultures
+ * @property {{basic: import('./useSchlag').SchlagInfo, programs: import('./useTopicIntersections').TopicHectars}} schlaginfo
+ * @property {Array<Culture>} cultures
  */
 
 export const emptyFertilization = { typ: '', id: '', menge: 0, n: 0, p: 0, k: 0 };
@@ -61,6 +61,8 @@ export const emptyCulture = {
   nmin: 0,
   duengung: [],
 };
+
+/** @tpye {DataEntry} */
 export const emptyEntry = {
   jahr: 0,
   schlagnummer: '',
@@ -88,6 +90,7 @@ export const emptyEntry = {
   cultures: [{ ...emptyCulture }, { ...emptyCulture }],
 };
 
+/** @type {import('vue').Ref<DataEntry>} */
 export const entry = ref({ ...emptyEntry });
 
 /** @type {import('vue').Ref<Array>} */
@@ -108,7 +111,7 @@ export const dataWindow = ref(0);
 }
 
 /**
- * @returns {{ currentSaved: import('vue').Ref<Number>, dataWindow:import('vue').Ref<Number>, savedData: import('vue').Ref<Array> , emptyFertilization: fertilization, emptyCulture: culture, emptyEntry: DataEntry, entry: import('vue').Ref<Object> }}
+ * @returns {{ currentSaved: import('vue').Ref<Number>, dataWindow:import('vue').Ref<Number>, savedData: import('vue').Ref<Array> , emptyFertilization: Fertilization, emptyCulture: Culture, emptyEntry: DataEntry, entry: import('vue').Ref<Object> }}
  */
 export function useDataEntries() {
   return {

@@ -17,7 +17,7 @@
       </v-col>
     </v-row>
     <v-row
-      v-for="(message, index) in errors"
+      v-for="(message, index) in bilanz.errors"
       :key="`error${index}`"
       no-gutters
       class="ma-1 mx-2 error"
@@ -31,23 +31,14 @@
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
 import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
-import { watch, ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const { dataWindow, entry } = useDataEntries();
 const { updateBilanz } = useBalanceCalculator();
 
-const bilanz = ref([]);
-const errors = ref([]);
-
 const winMaximize = ref(false);
 
-watch(
-  entry,
-  () => {
-    [bilanz.value, errors.value] = updateBilanz(entry.value);
-  },
-  { deep: true },
-);
+const bilanz = computed(() => updateBilanz(entry.value));
 </script>
 
 <style scoped>

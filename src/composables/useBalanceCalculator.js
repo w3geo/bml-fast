@@ -1,11 +1,18 @@
 import { tableAttribut } from './useLookUps.js';
 
+/**
+ * @typedef {Object} Bilanzeintrag
+ */
+
+/** @type {Array<Bilanzeintrag>} */
 let bilanz = [];
+/** @type {Array<string>} */
 let errors = [];
+/** @type {Array<import('./useDataEntries.js').Culture>} */
 let calcCultures = [];
 
 /**
- * returns Array
+ * @returns {Array<Bilanzeintrag>}
  */
 function calculateBilanz() {
   console.log('calc', calcCultures);
@@ -13,7 +20,8 @@ function calculateBilanz() {
 }
 
 /**
- * returns Array
+ * @param {import('./useDataEntries.js').DataEntry} entry
+ * @returns {{bilanz: Array<Bilanzeintrag>, errors: Array<string>}}}
  */
 export function updateBilanz(entry) {
   errors = [];
@@ -40,7 +48,8 @@ export function updateBilanz(entry) {
         }
         if (
           entry.cultures[c].ertragslageernte === '' &&
-          (parseFloat(entry.cultures[c].ernte) === 0 || entry.cultures[c].ernte === '')
+          //TODO Maybe ernte could be undefined?
+          entry.cultures[c].ernte === 0
         ) {
           errors.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
           anyErrors = true;
@@ -80,12 +89,9 @@ export function updateBilanz(entry) {
   }
 
   bilanz = anyErrors ? [] : calculateBilanz();
-  return [bilanz, errors];
+  return { bilanz, errors };
 }
 
-/**
- * @returns {{ updateBilanz: function }}
- */
 export function useBalanceCalculator() {
   return { updateBilanz };
 }
