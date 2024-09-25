@@ -129,9 +129,9 @@ export const lookup = shallowRef({
 });
 
 /**
- * @returns {any}
+ * @returns {*}
  */
-function tableAttribut(table, id, attrib) {
+export function tableAttribut(table, id, attrib) {
   let result = '';
   if (id && id != '') {
     const dataRow = lookup.value[table].find((k) => k.ID == id);
