@@ -15,8 +15,11 @@ let calcCultures = [];
  * @returns {Array<Bilanzeintrag>}
  */
 function calculateBilanz() {
-  console.log('calc', calcCultures);
-  return [];
+  const retVal = [];
+  for (let c = 0; c < calcCultures.length; c++) {
+    console.log(calcCultures[c]);
+  }
+  return retVal;
 }
 
 /**
@@ -48,8 +51,7 @@ export function updateBilanz(entry) {
         }
         if (
           entry.cultures[c].ertragslageernte === '' &&
-          //TODO Maybe ernte could be undefined?
-          entry.cultures[c].ernte === 0
+          (entry.cultures[c].ernte === 0 || entry.cultures[c].ernte.toString() === '')
         ) {
           errors.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
           anyErrors = true;

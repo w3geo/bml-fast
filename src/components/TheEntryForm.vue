@@ -56,7 +56,7 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
-                      v-model="entry.flaeche"
+                      v-model.number="entry.flaeche"
                       label="Fläche (ha)"
                       variant="outlined"
                       density="compact"
@@ -210,7 +210,7 @@
                   <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.vorfruchtnmin"
+                      v-model.number="entry.vorfruchtnmin"
                       label="NMin"
                       variant="outlined"
                       density="compact"
@@ -312,7 +312,7 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
-                        v-model="entry.cultures[i - 1].nmin"
+                        v-model.number="entry.cultures[i - 1].nmin"
                         label="NMin"
                         variant="outlined"
                         density="compact"
@@ -405,8 +405,9 @@
                           "
                         >
                           <v-text-field
-                            v-model="entry.cultures[i - 1].duengung[f - 1].menge"
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
                             :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            min="0"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -438,7 +439,7 @@
                         >
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i - 1].duengung[f - 1].n"
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
                             label="N(%)"
                             variant="outlined"
                             density="compact"
@@ -459,7 +460,7 @@
                         >
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i - 1].duengung[f - 1].p"
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
                             label="P₂O₅(%)"
                             variant="outlined"
                             density="compact"
@@ -480,7 +481,7 @@
                         >
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i - 1].duengung[f - 1].k"
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
                             label="K₂O(%)"
                             variant="outlined"
                             density="compact"
@@ -545,7 +546,7 @@
                         v-if="
                           ['t', 'm3'].includes(ertragsTyp(entry.cultures[i - 1].kultur, 'einheit'))
                         "
-                        v-model="entry.cultures[i - 1].ernte"
+                        v-model.number="entry.cultures[i - 1].ernte"
                         :label="`Ernte (in ${ertragsTyp(entry.cultures[i - 1].kultur, 'einheit')})`"
                         variant="outlined"
                         density="compact"
@@ -773,6 +774,7 @@ function FloatTrunc(input) {
 }
 
 function saveData() {
+  console.log(entry.value);
   if (currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
   } else {
