@@ -33,12 +33,12 @@ import { useDataEntries } from '../composables/useDataEntries.js';
 import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
 import { ref, computed } from 'vue';
 
-const { dataWindow, entry } = useDataEntries();
+const { dataWindow } = useDataEntries();
 const { updateBilanz } = useBalanceCalculator();
 
 const winMaximize = ref(false);
 
-const bilanz = computed(() => updateBilanz(entry.value));
+const bilanz = computed(() => updateBilanz());
 </script>
 
 <style scoped>
