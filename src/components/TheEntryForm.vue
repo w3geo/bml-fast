@@ -613,11 +613,11 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col :cols="entry.flaeche === 0 && currentSaved === null ? 12 : 6" class="pa-2">
+      ><v-col :cols="dataWindow === 1 ? 12 : 6" class="pa-2">
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
-      ><v-col cols="6" class="pa-2">
+      ><v-col cols="6" class="pa-2" v-if="dataWindow === 2">
         <v-btn density="compact" color="green" prepend-icon="mdi-check" block @click.stop="saveData"
           >Speichern</v-btn
         >

@@ -3,51 +3,81 @@ import { tableAttribut } from './useLookUps.js';
 
 /**
  * @typedef {Object} kulturbilanz
- * @property {number} N-Menge aus Handelsdüngern
- * @property {number} N-Menge aus Bewässerung
- * @property {number} N-Menge aus organischen Sekundärrohstoffen
- * @property {number} N-Menge aus Wirtschaftsdüngern
- * @property {number} N-Vorfruchtwert
- * @property {number} Nmin-Wert
- * @property {number} Anrechenbarer Stickstoff
- * @property {number} N-Entzug
- * @property {number} N-Bilanz
- * @property {number} P-Mengen aus Handelsdüngern
- * @property {number} P-Menge aus organischen Sekundärrohstoffen
- * @property {number} P-Menge aus Wirtschaftsdüngern
- * @property {number} P-Düngung
- * @property {number} P-Entzug
- * @property {number} P-Bilanz
- * @property {number} K-Mengen aus Handelsdüngern
- * @property {number} K-Menge aus organischen Sekundärrohstoffen
- * @property {number} K-Menge aus Wirtschaftsdüngern
- * @property {number} K-Düngung
- * @property {number} K-Entzug
- * @property {number} K-Bilanz
+ * @property {number} nmengehd N-Menge aus Handelsdüngern
+ * @property {number} nmengebw N-Menge aus Bewässerung
+ * @property {number} nmengesr N-Menge aus organischen Sekundärrohstoffen
+ * @property {number} nmengewd N-Menge aus Wirtschaftsdüngern
+ * @property {number} nvorfrucht N-Vorfruchtwert
+ * @property {number} nmin Nmin-Wert
+ * @property {number} nanrechenbar Anrechenbarer Stickstoff
+ * @property {number} nentzug N-Entzug
+ * @property {number} nbilanz N-Bilanz
+ * @property {number} pmengehd P-Menge aus Handelsdüngern
+ * @property {number} pmengesr P-Menge aus organischen Sekundärrohstoffen
+ * @property {number} pmengewd P-Menge aus Wirtschaftsdüngern
+ * @property {number} pduengung P-Düngung
+ * @property {number} pentzug P-Entzug
+ * @property {number} pbilanz P-Bilanz
+ * @property {number} kmengehd K-Mengen aus Handelsdüngern
+ * @property {number} kmengesr K-Menge aus organischen Sekundärrohstoffen
+ * @property {number} kmengewd K-Menge aus Wirtschaftsdüngern
+ * @property {number} kduengung K-Düngung
+ * @property {number} kentzug K-Entzug
+ * @property {number} kbilanz K-Bilanz
  */
 
+/**
+ * @type kulturbilanz
+ */
 const emptyKulturbilanz = {
-  'N-Menge aus Handelsdüngern': 0,
-  'N-Menge aus Bewässerung': 0,
-  'N-Menge aus organischen Sekundärrohstoffen': 0,
-  'N-Menge aus Wirtschaftsdüngern': 0,
-  'N-Vorfruchtwert': 0,
-  'Nmin-Wert': 0,
-  'Anrechenbarer Stickstoff': 0,
-  'N-Entzug': 0,
-  'N-Bilanz': 0,
-  'P-Mengen aus Handelsdüngern': 0,
-  'P-Menge aus organischen Sekundärrohstoffen': 0,
-  'P-Menge aus Wirtschaftsdüngern': 0,
-  'P-Düngung': 0,
-  'P-Entzug': 0,
-  'P-Bilanz': 0,
-  'K-Mengen aus Handelsdüngern': 0,
-  'K-Menge aus organischen Sekundärrohstoffen': 0,
-  'K-Menge aus Wirtschaftsdüngern': 0,
-  'K-Düngung': 0,
-  'K-Entzug': 0,
-  'K-Bilanz': 0,
+  nmengehd: 0,
+  nmengebw: 0,
+  nmengesr: 0,
+  nmengewd: 0,
+  nvorfrucht: 0,
+  nmin: 0,
+  nanrechenbar: 0,
+  nentzug: 0,
+  nbilanz: 0,
+  pmengehd: 0,
+  pmengesr: 0,
+  pmengewd: 0,
+  pduengung: 0,
+  pentzug: 0,
+  pbilanz: 0,
+  kmengehd: 0,
+  kmengesr: 0,
+  kmengewd: 0,
+  kduengung: 0,
+  kentzug: 0,
+  kbilanz: 0,
+};
+
+/**
+ * @type object
+ */
+const labels = {
+  nmengehd: 'N-Menge aus Handelsdüngern ',
+  nmengebw: 'N-Menge aus Bewässerung ',
+  nmengesr: 'N-Menge aus organischen Sekundärrohstoffen',
+  nmengewd: 'N-Menge aus Wirtschaftsdüngern',
+  nvorfrucht: 'N-Vorfruchtwert   ',
+  nmin: 'Nmin-Wert   ',
+  nanrechenbar: 'Anrechenbarer Stickstoff  ',
+  nentzug: 'N-Entzug   ',
+  nbilanz: 'N-Bilanz   ',
+  pmengehd: 'P-Menge aus Handelsdüngern ',
+  pmengesr: 'P-Menge aus organischen Sekundärrohstoffen',
+  pmengewd: 'P-Menge aus Wirtschaftsdüngern ',
+  pduengung: 'P-Düngung   ',
+  pentzug: 'P-Entzug   ',
+  pbilanz: 'P-Bilanz   ',
+  kmengehd: 'K-Mengen aus Handelsdüngern ',
+  kmengesr: 'K-Menge aus organischen Sekundärrohstoffen',
+  kmengewd: 'K-Menge aus Wirtschaftsdüngern ',
+  kduengung: 'K-Düngung   ',
+  kentzug: 'K-Entzug   ',
+  kbilanz: 'K-Bilanz   ',
 };
 
 /** @type {Array<kulturbilanz>} */
@@ -63,7 +93,9 @@ function calculateBilanz() {
   const retVal = [];
   for (let c = 0; c < entry.value.cultures.length; c++) {
     const current = { ...emptyKulturbilanz };
+    retVal.push(current);
   }
+  console.log(retVal);
   return retVal;
 }
 
