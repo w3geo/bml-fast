@@ -25,6 +25,21 @@
         ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
       </v-col></v-row
     >
+    <v-row no-gutters
+      ><v-col>
+        <table v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`" class="bilanz">
+          <tr>
+            <th colspan="2">
+              {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
+            </th>
+          </tr>
+          <tr v-for="(value, key) in kultur" :key="`row_${index}_${key}`">
+            <td v-if="value > 0">{{ labels[key] }}</td>
+            <td v-if="value > 0">{{ value.toLocaleString('de-DE', { style: 'decimal' }) }}</td>
+          </tr>
+        </table>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 
@@ -33,15 +48,44 @@ import { useDataEntries } from '../composables/useDataEntries.js';
 import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
 import { ref, computed } from 'vue';
 
-const { dataWindow } = useDataEntries();
-const { updateBilanz } = useBalanceCalculator();
+const { dataWindow, entry } = useDataEntries();
+const { updateBilanz, labels } = useBalanceCalculator();
+import { useLookup } from '../composables/useLookUps.js';
 
 const winMaximize = ref(false);
 
 const bilanz = computed(() => updateBilanz());
+const { tableAttribut } = useLookup();
 </script>
 
 <style scoped>
+table.bilanz {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.bilanz tr {
+  padding: 0px;
+}
+table.bilanz th {
+  padding: 2px;
+  font-size: 11px;
+  background-color: #eee;
+  text-align: left;
+}
+table.bilanz td {
+  padding: 2px;
+  border: 1px solid #eee;
+  font-size: 11px;
+}
+table.bilanz tr td:nth-child(1) {
+  width: 85%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+table.bilanz tr td:nth-child(2) {
+  width: 15%;
+}
+
 .fertilizerData {
   position: absolute;
   left: 10px;

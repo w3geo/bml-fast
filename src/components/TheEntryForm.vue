@@ -774,7 +774,6 @@ function FloatTrunc(input) {
 }
 
 function saveData() {
-  console.log(entry.value);
   if (currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
   } else {

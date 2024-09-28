@@ -54,9 +54,9 @@ const emptyKulturbilanz = {
 };
 
 /**
- * @type object
+ * @type {Object<keyof kulturbilanz, string>}
  */
-const labels = {
+export const labels = {
   nmengehd: 'N-Menge aus Handelsdüngern ',
   nmengebw: 'N-Menge aus Bewässerung ',
   nmengesr: 'N-Menge aus organischen Sekundärrohstoffen',
@@ -93,9 +93,48 @@ function calculateBilanz() {
   const retVal = [];
   for (let c = 0; c < entry.value.cultures.length; c++) {
     const current = { ...emptyKulturbilanz };
+    for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
+      console.log(entry.value.cultures[c].duengung[d]);
+      // Düngungen iterieren
+      // 1. Anteile Handelsdünger
+      if (
+        entry.value.cultures[c].duengung[d].typ === 'handelsdünger' ||
+        entry.value.cultures[c].duengung[d].typ === 'eigene'
+      ) {
+        current.nmengehd +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
+        current.pmengehd +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
+        current.kmengehd +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
+      }
+      // 2. Anteile Sekundärrohstofe
+      if (entry.value.cultures[c].duengung[d].typ === 'sekundärrohstoffe') {
+        current.nmengesr +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
+        current.pmengesr +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
+        current.kmengesr +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
+      }
+      // 3. Anteile Wirtschaftsdünger
+      if (entry.value.cultures[c].duengung[d].typ === 'wirtschaftsdünger') {
+        current.nmengewd +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
+        current.pmengewd +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
+        current.kmengewd +=
+          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
+      }
+
+      // N-Bilanz und Düngungen
+      current.nanrechenbar = current.nmengehd + current.nmengesr + current.nmengewd;
+      current.pduengung = current.pmengehd + current.pmengesr + current.pmengewd;
+      current.kduengung = current.kmengehd + current.kmengesr + current.kmengewd;
+    }
     retVal.push(current);
   }
-  console.log(retVal);
+
   return retVal;
 }
 
@@ -165,5 +204,5 @@ export function updateBilanz() {
 }
 
 export function useBalanceCalculator() {
-  return { updateBilanz };
+  return { updateBilanz, labels };
 }
