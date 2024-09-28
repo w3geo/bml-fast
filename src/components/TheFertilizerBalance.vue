@@ -33,9 +33,15 @@
               {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
             </th>
           </tr>
-          <tr v-for="(value, key) in kultur" :key="`row_${index}_${key}`">
-            <td v-if="value > 0">{{ labels[key] }}</td>
-            <td v-if="value > 0">{{ value.toLocaleString('de-DE', { style: 'decimal' }) }}</td>
+          <tr
+            v-for="(pvalue, pkey) in kultur"
+            :key="`row_${index}_${pkey}`"
+            :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
+          >
+            <td :class="`border${outputConfig[pkey].border}`">{{ outputConfig[pkey].label }}</td>
+            <td :class="`border${outputConfig[pkey].border}`">
+              {{ pvalue.toLocaleString('de-DE', { style: 'decimal' }) }}
+            </td>
           </tr>
         </table>
       </v-col>
@@ -49,7 +55,7 @@ import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
 import { ref, computed } from 'vue';
 
 const { dataWindow, entry } = useDataEntries();
-const { updateBilanz, labels } = useBalanceCalculator();
+const { updateBilanz, outputConfig } = useBalanceCalculator();
 import { useLookup } from '../composables/useLookUps.js';
 
 const winMaximize = ref(false);
@@ -66,17 +72,31 @@ table.bilanz {
 table.bilanz tr {
   padding: 0px;
 }
+table.bilanz tr.hide {
+  display: none;
+}
+
 table.bilanz th {
   padding: 2px;
   font-size: 11px;
   background-color: #eee;
   text-align: left;
 }
+
+table.bilanz tr.bold td {
+  font-weight: bold;
+}
+
 table.bilanz td {
   padding: 2px;
   border: 1px solid #eee;
   font-size: 11px;
 }
+
+table.bilanz td.borderbottom {
+  border-bottom-width: 3px;
+}
+
 table.bilanz tr td:nth-child(1) {
   width: 85%;
   white-space: nowrap;

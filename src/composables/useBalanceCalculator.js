@@ -54,30 +54,45 @@ const emptyKulturbilanz = {
 };
 
 /**
- * @type {Object<keyof kulturbilanz, string>}
+ * @type {Object<keyof kulturbilanz, Object>}
  */
-export const labels = {
-  nmengehd: 'N-Menge aus Handelsdüngern ',
-  nmengebw: 'N-Menge aus Bewässerung ',
-  nmengesr: 'N-Menge aus organischen Sekundärrohstoffen',
-  nmengewd: 'N-Menge aus Wirtschaftsdüngern',
-  nvorfrucht: 'N-Vorfruchtwert   ',
-  nmin: 'Nmin-Wert   ',
-  nanrechenbar: 'Anrechenbarer Stickstoff  ',
-  nentzug: 'N-Entzug   ',
-  nbilanz: 'N-Bilanz   ',
-  pmengehd: 'P-Menge aus Handelsdüngern ',
-  pmengesr: 'P-Menge aus organischen Sekundärrohstoffen',
-  pmengewd: 'P-Menge aus Wirtschaftsdüngern ',
-  pduengung: 'P-Düngung   ',
-  pentzug: 'P-Entzug   ',
-  pbilanz: 'P-Bilanz   ',
-  kmengehd: 'K-Mengen aus Handelsdüngern ',
-  kmengesr: 'K-Menge aus organischen Sekundärrohstoffen',
-  kmengewd: 'K-Menge aus Wirtschaftsdüngern ',
-  kduengung: 'K-Düngung   ',
-  kentzug: 'K-Entzug   ',
-  kbilanz: 'K-Bilanz   ',
+export const outputConfig = {
+  nmengehd: { label: 'N-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
+  nmengebw: { label: 'N-Menge aus Bewässerung', print: false, bold: false, border: '' },
+  nmengesr: {
+    label: 'N-Menge aus organischen Sekundärrohstoffen',
+    print: false,
+    bold: false,
+    border: '',
+  },
+  nmengewd: { label: 'N-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
+  nvorfrucht: { label: 'N-Vorfruchtwert', print: true, bold: false, border: '' },
+  nmin: { label: 'Nmin-Wert', print: true, bold: false, border: '' },
+  nanrechenbar: { label: 'Anrechenbarer Stickstoff', print: true, bold: false, border: '' },
+  nentzug: { label: 'N-Entzug', print: false, bold: false, border: '' },
+  nbilanz: { label: 'N-Bilanz', print: true, bold: true, border: 'bottom' },
+  pmengehd: { label: 'P-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
+  pmengesr: {
+    label: 'P-Menge aus organischen Sekundärrohstoffen',
+    print: false,
+    bold: false,
+    border: '',
+  },
+  pmengewd: { label: 'P-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
+  pduengung: { label: 'P-Düngung', print: true, bold: false, border: '' },
+  pentzug: { label: 'P-Entzug', print: false, bold: false, border: '' },
+  pbilanz: { label: 'P-Bilanz', print: true, bold: true, border: 'bottom' },
+  kmengehd: { label: 'K-Mengen aus Handelsdüngern', print: false, bold: false, border: '' },
+  kmengesr: {
+    label: 'K-Menge aus organischen Sekundärrohstoffen',
+    print: false,
+    bold: false,
+    border: '',
+  },
+  kmengewd: { label: 'K-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
+  kduengung: { label: 'K-Düngung', print: true, bold: false, border: '' },
+  kentzug: { label: 'K-Entzug', print: false, bold: false, border: '' },
+  kbilanz: { label: 'K-Bilanz', print: true, bold: true, border: '' },
 };
 
 /** @type {Array<kulturbilanz>} */
@@ -204,5 +219,5 @@ export function updateBilanz() {
 }
 
 export function useBalanceCalculator() {
-  return { updateBilanz, labels };
+  return { updateBilanz, outputConfig };
 }
