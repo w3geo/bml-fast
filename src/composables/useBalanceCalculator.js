@@ -102,13 +102,16 @@ let errors = [];
 
 /**
  * @param {number} idx
- * @param {string} what
- * @returns {number}
+ * @returns {Array<number>}
  */
-function calculateEntzug(idx, what) {
+function calculateEntzug(idx) {
   console.log(tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Kultur'));
-  let retEntzug = 0;
-  const saldierung = tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Saldierungsart');
+  let nEntzug = 0;
+  let pEntzug = 0;
+  let kEntzug = 0;
+  const saldierung = Number(
+    tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Saldierungsart'),
+  );
   const erfassung = tableAttribut(
     'kulturen',
     entry.value.cultures[idx].kultur,
@@ -116,13 +119,16 @@ function calculateEntzug(idx, what) {
   );
   if (erfassung === 'keine Ertragserfassung' || erfassung === 'Düngeverbot') {
     // KEIN ENTZUG
-    return 0;
+    return [0, 0, 0];
   }
+
+  // 1. Ertragslage bestimmen
   let ertragslage = 'niedrig';
+  // entweder aus Auswahl
   if (erfassung === 'EL Auswahl') {
     ertragslage = entry.value.cultures[idx].ertragslageernte;
   } else {
-    // Berechnen aus Ernte
+    // oder berechnen aus Ernte
     for (let e = 0; e < lookup.value.ertragsLagen.length; e++) {
       if (
         entry.value.cultures[idx].ernte >=
@@ -137,16 +143,36 @@ function calculateEntzug(idx, what) {
     }
   }
 
-  if (what === 'n') {
-    // STICKSTOFF
-    switch (saldierung) {
-      case 1:
-        console.log(ertragslage);
-        break;
-    }
+  // 2. N-Entzug
+  switch (saldierung) {
+    case 1:
+    case 2:
+      nEntzug =
+        entry.value.cultures[idx].ernte *
+        tableAttribut(
+          'kulturen',
+          entry.value.cultures[idx].kultur,
+          `Entzugsfaktor EL ${ertragslage}`,
+        );
+      break;
+    case 3:
+      nEntzug = tableAttribut(
+        'kulturen',
+        entry.value.cultures[idx].kultur,
+        `Düngeobergrenze EL ${ertragslage}${entry.value.nitratrisikogebiet ? ' A5' : ''}`,
+      );
+      console.log(
+        `Düngeobergrenze EL ${ertragslage}${entry.value.nitratrisikogebiet ? ' A5' : ''}`,
+      );
+      break;
   }
 
-  return retEntzug;
+  // 3. P-Entzug
+
+  // 4. K-Entzug
+
+  console.log(ertragslage, saldierung, nEntzug, pEntzug, kEntzug);
+  return [nEntzug, pEntzug, kEntzug];
 }
 
 /**
@@ -157,9 +183,7 @@ function calculateBilanz() {
   const retVal = [];
   for (let c = 0; c < entry.value.cultures.length; c++) {
     const current = { ...emptyKulturbilanz };
-    current.nentzug = calculateEntzug(c, 'n');
-    current.pentzug = calculateEntzug(c, 'p');
-    current.kentzug = calculateEntzug(c, 'k');
+    [current.nentzug, current.pentzug, current.kentzug] = calculateEntzug(c);
     for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
       // Düngungen iterieren
       // 1. Anteile Handelsdünger
@@ -192,12 +216,16 @@ function calculateBilanz() {
         current.kmengewd +=
           entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
       }
-
-      // N-Bilanz und Düngungen
-      current.nanrechenbar = current.nmengehd + current.nmengesr + current.nmengewd;
-      current.pduengung = current.pmengehd + current.pmengesr + current.pmengewd;
-      current.kduengung = current.kmengehd + current.kmengesr + current.kmengewd;
     }
+    // Düngungen und Bilanz
+    current.nanrechenbar = current.nmengehd + current.nmengesr + current.nmengewd;
+    current.pduengung = current.pmengehd + current.pmengesr + current.pmengewd;
+    current.kduengung = current.kmengehd + current.kmengesr + current.kmengewd;
+
+    current.nbilanz = current.nanrechenbar - current.nentzug;
+    current.pbilanz = current.pduengung - current.pentzug;
+    current.kbilanz = current.kduengung - current.kentzug;
+
     retVal.push(current);
   }
 
