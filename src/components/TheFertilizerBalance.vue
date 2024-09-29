@@ -5,7 +5,7 @@
     v-if="dataWindow === 2"
     elevation="10"
   >
-    <v-row no-gutters class="boxHeader bg-grey-darken-3 mb-3">
+    <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
         Nährstoff-Bilanz
@@ -16,36 +16,42 @@
         </v-icon>
       </v-col>
     </v-row>
-    <v-row
-      v-for="(message, index) in bilanz.errors"
-      :key="`error${index}`"
-      no-gutters
-      class="ma-1 mx-2 error"
-      ><v-col cols="12" class="pa-1 pl-4"
-        ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
-      </v-col></v-row
-    >
-    <v-row no-gutters
-      ><v-col>
-        <table v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`" class="bilanz">
-          <tr>
-            <th colspan="2">
-              {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
-            </th>
-          </tr>
-          <tr
-            v-for="(pvalue, pkey) in kultur"
-            :key="`row_${index}_${pkey}`"
-            :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
+    <v-sheet height="calc(100% - 30px)" class="overflow-auto">
+      <v-row
+        v-for="(message, index) in bilanz.errors"
+        :key="`error${index}`"
+        no-gutters
+        class="ma-1 mx-2 error"
+        ><v-col cols="12" class="pa-1 pl-4"
+          ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
+        </v-col></v-row
+      >
+      <v-row no-gutters
+        ><v-col>
+          <table
+            v-for="(kultur, index) in bilanz.bilanz"
+            :key="`bilanztable${index}`"
+            class="bilanz"
           >
-            <td :class="`border${outputConfig[pkey].border}`">{{ outputConfig[pkey].label }}</td>
-            <td :class="`border${outputConfig[pkey].border}`">
-              {{ pvalue.toLocaleString('de-DE', { style: 'decimal' }) }}
-            </td>
-          </tr>
-        </table>
-      </v-col>
-    </v-row>
+            <tr>
+              <th colspan="2">
+                {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
+              </th>
+            </tr>
+            <tr
+              v-for="(pvalue, pkey) in kultur"
+              :key="`row_${index}_${pkey}`"
+              :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
+            >
+              <td :class="`border${outputConfig[pkey].border}`">{{ outputConfig[pkey].label }}</td>
+              <td :class="`border${outputConfig[pkey].border}`">
+                {{ pvalue.toLocaleString('de-DE', { style: 'decimal' }) }}
+              </td>
+            </tr>
+          </table>
+        </v-col>
+      </v-row>
+    </v-sheet>
   </v-card>
 </template>
 
@@ -73,7 +79,8 @@ table.bilanz tr {
   padding: 0px;
 }
 table.bilanz tr.hide {
-  display: none;
+  color: #aaa;
+  font-style: italic;
 }
 
 table.bilanz th {
@@ -83,14 +90,16 @@ table.bilanz th {
   text-align: left;
 }
 
-table.bilanz tr.bold td {
-  font-weight: bold;
-}
-
 table.bilanz td {
   padding: 2px;
   border: 1px solid #eee;
   font-size: 11px;
+  color: #777;
+}
+
+table.bilanz tr.bold td {
+  font-weight: bold;
+  color: #000;
 }
 
 table.bilanz td.borderbottom {

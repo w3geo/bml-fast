@@ -1,5 +1,5 @@
 import { entry } from './useDataEntries.js';
-import { tableAttribut } from './useLookUps.js';
+import { tableAttribut, lookup } from './useLookUps.js';
 
 /**
  * @typedef {Object} kulturbilanz
@@ -101,6 +101,55 @@ let bilanz = [];
 let errors = [];
 
 /**
+ * @param {number} idx
+ * @param {string} what
+ * @returns {number}
+ */
+function calculateEntzug(idx, what) {
+  console.log(tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Kultur'));
+  let retEntzug = 0;
+  const saldierung = tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Saldierungsart');
+  const erfassung = tableAttribut(
+    'kulturen',
+    entry.value.cultures[idx].kultur,
+    'Ertragserfassungsart',
+  );
+  if (erfassung === 'keine Ertragserfassung' || erfassung === 'Düngeverbot') {
+    // KEIN ENTZUG
+    return 0;
+  }
+  let ertragslage = 'niedrig';
+  if (erfassung === 'EL Auswahl') {
+    ertragslage = entry.value.cultures[idx].ertragslageernte;
+  } else {
+    // Berechnen aus Ernte
+    for (let e = 0; e < lookup.value.ertragsLagen.length; e++) {
+      if (
+        entry.value.cultures[idx].ernte >=
+        tableAttribut(
+          'kulturen',
+          entry.value.cultures[idx].kultur,
+          `EL ${lookup.value.ertragsLagen[e]} t / m3 ab`,
+        )
+      ) {
+        ertragslage = lookup.value.ertragsLagen[e];
+      }
+    }
+  }
+
+  if (what === 'n') {
+    // STICKSTOFF
+    switch (saldierung) {
+      case 1:
+        console.log(ertragslage);
+        break;
+    }
+  }
+
+  return retEntzug;
+}
+
+/**
  * @returns {Array<kulturbilanz>}
  */
 function calculateBilanz() {
@@ -108,8 +157,10 @@ function calculateBilanz() {
   const retVal = [];
   for (let c = 0; c < entry.value.cultures.length; c++) {
     const current = { ...emptyKulturbilanz };
+    current.nentzug = calculateEntzug(c, 'n');
+    current.pentzug = calculateEntzug(c, 'p');
+    current.kentzug = calculateEntzug(c, 'k');
     for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
-      console.log(entry.value.cultures[c].duengung[d]);
       // Düngungen iterieren
       // 1. Anteile Handelsdünger
       if (
