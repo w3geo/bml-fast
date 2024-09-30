@@ -190,7 +190,7 @@
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 mb-3">
-                    <v-select
+                    <v-autocomplete
                       v-model="entry.vorfrucht"
                       :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
@@ -257,7 +257,7 @@
                       >Aussaat {{ i > 1 ? '/ Erwartete Ertragslage' : '' }}</v-col
                     >
                     <v-col cols="12" class="px-4 obligatory mb-3">
-                      <v-select
+                      <v-autocomplete
                         v-model="entry.cultures[i - 1].kultur"
                         :items="
                           i > 1
@@ -383,7 +383,7 @@
                             entry.cultures[i - 1].duengung[f - 1].typ != 'eigene'
                           "
                         >
-                          <v-select
+                          <v-autocomplete
                             v-model="entry.cultures[i - 1].duengung[f - 1].id"
                             :items="lookup[entry.cultures[i - 1].duengung[f - 1].typ]"
                             :label="firstUppercase(entry.cultures[i - 1].duengung[f - 1].typ)"
