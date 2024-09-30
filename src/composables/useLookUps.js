@@ -18,6 +18,59 @@ const wrrl = [
   { value: 'F', title: 'F', code: 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3' },
 ];
 
+const kornfeuchteListe = [
+  { title: 12, value: 12 },
+  { title: 13, value: 13 },
+  { title: 14, value: 14 },
+  { title: 15, value: 15 },
+  { title: 16, value: 16 },
+];
+
+const proteinListe = {
+  4: [
+    { title: '11', value: 11 },
+    { title: '11,5', value: 11.5 },
+    { title: '12', value: 12 },
+    { title: '12,5', value: 12.5 },
+    { title: '13', value: 13 },
+    { title: '13,5', value: 13.5 },
+    { title: '14', value: 14 },
+    { title: '14,5', value: 14.5 },
+    { title: '15', value: 15 },
+    { title: '15,5', value: 15.5 },
+    { title: '16', value: 16 },
+    { title: '16,5', value: 16.5 },
+    { title: '17', value: 17 },
+    { title: '17,5', value: 17.5 },
+    { title: '18', value: 18 },
+    { title: '18,5', value: 18.5 },
+    { title: '19', value: 19 },
+    { title: '19,5', value: 19.5 },
+    { title: '20', value: 20 },
+    { title: '20,5', value: 20.5 },
+    { title: '21', value: 21 },
+    { title: '21,5', value: 21.5 },
+    { title: '22', value: 22 },
+  ],
+  5: [
+    { title: '9', value: 9 },
+    { title: '9,5', value: 9.5 },
+    { title: '10', value: 10 },
+    { title: '10,5', value: 10.5 },
+    { title: '11', value: 11 },
+    { title: '11,5', value: 11.5 },
+    { title: '12', value: 12 },
+    { title: '12,5', value: 12.5 },
+    { title: '13', value: 13 },
+    { title: '13,5', value: 13.5 },
+    { title: '14', value: 14 },
+    { title: '14,5', value: 14.5 },
+    { title: '15', value: 15 },
+    { title: '15,5', value: 15.5 },
+    { title: '16', value: 16 },
+  ],
+};
+
 const ertragsLagen = ['niedrig', 'mittel', 'hoch 1', 'hoch 2', 'hoch 3'];
 const limitAckerzahl = ['niedrig', 'mittel'];
 
@@ -40,6 +93,7 @@ const fertilizationTypes = [
   { title: 'Handelsdünger', value: 'handelsdünger' },
   { title: 'Sekundärrohstoffe', value: 'sekundärrohstoffe' },
   { title: 'Wirtschaftsdünger', value: 'wirtschaftsdünger' },
+  { title: 'Bewässerung', value: 'bewässerung' },
 ];
 
 const aussaatTypeFilter = {
@@ -83,6 +137,8 @@ export const lookup = shallowRef({
   ertragsLagen: ertragsLagen,
   limitAckerzahl: limitAckerzahl,
   kulturenItems: kulturenItems,
+  kornfeuchteListe: kornfeuchteListe,
+  proteinListe: proteinListe,
   fertilizationTypes: fertilizationTypes,
   aussaatTypeFilter: aussaatTypeFilter,
   feldstücknutzungsarten,

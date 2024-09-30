@@ -556,26 +556,28 @@
                     </v-col>
 
                     <v-col cols="3" class="pa-2">
-                      <v-text-field
+                      <v-select
                         v-if="
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
                         v-model="entry.cultures[i - 1].feuchte"
                         label="Kornfeuchte"
+                        :items="lookup.kornfeuchteListe"
                         variant="outlined"
                         density="compact"
                         hide-details
                       />
                     </v-col>
                     <v-col cols="3" class="pa-2">
-                      <v-text-field
+                      <v-select
                         v-if="
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
                         v-model="entry.cultures[i - 1].protein"
                         label="Proteingehalt"
+                        :items="lookup.proteinListe[ertragsTyp(entry.cultures[i - 1].kultur, '')]"
                         variant="outlined"
                         density="compact"
                         hide-details

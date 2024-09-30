@@ -56,8 +56,8 @@ export const emptyCulture = {
   ertragslage: '',
   ernte: 0,
   ertragslageernte: '',
-  feuchte: 0,
-  protein: 0,
+  feuchte: 14,
+  protein: 12,
   nmin: 0,
   duengung: [],
 };
