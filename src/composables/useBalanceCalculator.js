@@ -105,7 +105,6 @@ let errors = [];
  * @returns {Array<number>}
  */
 function calculateEntzug(idx) {
-  console.log(tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Kultur'));
   let nEntzug = 0;
   let pEntzug = 0;
   let kEntzug = 0;
@@ -143,7 +142,7 @@ function calculateEntzug(idx) {
     }
   }
 
-  // 2. N-Entzug
+  // 2. N-Entzug , unterschiedlich ermittelt nach Saldierungsart
   switch (saldierung) {
     case 1:
     case 2:
@@ -161,17 +160,62 @@ function calculateEntzug(idx) {
         entry.value.cultures[idx].kultur,
         `Düngeobergrenze EL ${ertragslage}${entry.value.nitratrisikogebiet ? ' A5' : ''}`,
       );
-      console.log(
-        `Düngeobergrenze EL ${ertragslage}${entry.value.nitratrisikogebiet ? ' A5' : ''}`,
-      );
+      break;
+    case 4:
+      nEntzug =
+        lookup.value.entzugstabelleWeizen[entry.value.cultures[idx].feuchte][
+          entry.value.cultures[idx].protein
+        ] * entry.value.cultures[idx].ernte;
+      break;
+    case 5:
+      nEntzug =
+        lookup.value.entzugstabelleBraugerste[entry.value.cultures[idx].feuchte][
+          entry.value.cultures[idx].protein
+        ] * entry.value.cultures[idx].ernte;
+      break;
+    case 6:
+      if (
+        entry.value.cultures[idx].ernte >
+        tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'EL hoch 3 t / m3 bis')
+      ) {
+        nEntzug =
+          entry.value.cultures[idx].ernte *
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            'Entzugswert höher EL hoch 3 für Körnermais / CCM',
+          );
+      } else {
+        nEntzug =
+          entry.value.cultures[idx].ernte *
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            `Entzugsfaktor EL ${ertragslage}`,
+          );
+      }
+      break;
+    case 7:
+      if (entry.value.nitratrisikogebiet) {
+        nEntzug = tableAttribut(
+          'kulturen',
+          entry.value.cultures[idx].kultur,
+          `Düngeobergrenze EL ${ertragslage} A5`,
+        );
+      } else {
+        nEntzug = tableAttribut(
+          'kulturen',
+          entry.value.cultures[idx].kultur,
+          `Düngeobergrenze EL ${ertragslage}`,
+        );
+      }
       break;
   }
 
-  // 3. P-Entzug
+  // 3. P-Entzug , unterschiedlich ermittelt nach Saldierungsart
 
-  // 4. K-Entzug
+  // 4. K-Entzug , unterschiedlich ermittelt nach Saldierungsart
 
-  console.log(ertragslage, saldierung, nEntzug, pEntzug, kEntzug);
   return [nEntzug, pEntzug, kEntzug];
 }
 
