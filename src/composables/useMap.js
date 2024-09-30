@@ -4,7 +4,7 @@ import { Control, defaults } from 'ol/control.js';
 import ScaleLine from 'ol/control/ScaleLine.js';
 import Link from 'ol/interaction/Link.js';
 import { useGeographic } from 'ol/proj.js';
-import { apply, getLayer, getSource, renderTransparent } from 'ol-mapbox-style';
+import { apply, getSource, renderTransparent } from 'ol-mapbox-style';
 import { getCenter } from 'ol/extent.js';
 import { shallowRef } from 'vue';
 import { AGRARATLAS_STYLE_URL, INITIAL_EXTENT } from '../constants.js';
@@ -107,7 +107,9 @@ export const mapReady = apply(map, AGRARATLAS_STYLE_URL, {
       /** @type {import('ol/Tile.js').Options} */ (source.tileOptions).transition = undefined;
     }
   });
-  getLayer(map, 'neigungsklassen').setSource(null);
+  //@ts-expect-error
+  /** @type {import("ol/source/VectorTile.js").default} */ (getSource(map, 'agrargis')).overlaps_ =
+    false;
 });
 
 /**
