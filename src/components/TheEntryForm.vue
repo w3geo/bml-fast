@@ -724,13 +724,7 @@ function ertragsTyp(kultur, what) {
   if (what == 'einheit') {
     return dataRow.Ertragserfassungsart ? dataRow.Ertragserfassungsart : 't';
   } else {
-    return dataRow[
-      'Saldierungsart 1=t/ha; 2=m3/ha;3=kg N/ha;4=Weichweizen; 5=Braugerste;6=Mais;7=EL Auswahl;8=keine Eingabe'
-    ]
-      ? dataRow[
-          'Saldierungsart 1=t/ha; 2=m3/ha;3=kg N/ha;4=Weichweizen; 5=Braugerste;6=Mais;7=EL Auswahl;8=keine Eingabe'
-        ]
-      : 0;
+    return dataRow['Saldierungsart'] ? dataRow['Saldierungsart'] : 0;
   }
 }
 

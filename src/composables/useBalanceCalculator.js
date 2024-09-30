@@ -264,6 +264,38 @@ export function updateBilanz() {
           errors.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
           anyErrors = true;
         }
+        if (
+          Number(tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Saldierungsart')) ===
+            4 ||
+          Number(tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Saldierungsart')) === 5
+        ) {
+          if (entry.value.cultures[c].feuchte < 12 || entry.value.cultures[c].feuchte > 16) {
+            errors.push(
+              `${c}. Hauptfrucht: Der Wert für die Kornfeuchte muss zwischen 12 und 16 liegen`,
+            );
+            anyErrors = true;
+          }
+          if (
+            Number(tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Saldierungsart')) ===
+              4 &&
+            (entry.value.cultures[c].protein < 11 || entry.value.cultures[c].protein > 22)
+          ) {
+            errors.push(
+              `${c}. Hauptfrucht: Der Wert für den Proteingehalt muss zwischen 11 und 22 liegen`,
+            );
+            anyErrors = true;
+          }
+          if (
+            Number(tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Saldierungsart')) ===
+              5 &&
+            (entry.value.cultures[c].protein < 9 || entry.value.cultures[c].protein > 16)
+          ) {
+            errors.push(
+              `${c}. Hauptfrucht: Der Wert für den Proteingehalt muss zwischen 9 und 16 liegen`,
+            );
+            anyErrors = true;
+          }
+        }
       }
       // Düngung
       if (entry.value.cultures[c].duengung.length > 0) {
