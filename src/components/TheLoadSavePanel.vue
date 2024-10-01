@@ -61,7 +61,7 @@ function downloadJson() {
 function readJson() {
   const reader = new FileReader();
   if (inputFile.value) {
-    reader.readAsText(inputFile.value);
+    reader.readAsText(inputFile.value, 'Windows-1252');
     reader.onload = () => {
       try {
         const imported = JSON.parse(reader.result.toString());
