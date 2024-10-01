@@ -359,7 +359,8 @@
                         <v-col
                           :cols="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
-                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene'
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'bewässerung'
                               ? 5
                               : 12
                           "
@@ -380,7 +381,8 @@
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
-                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene'
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'bewässerung'
                           "
                         >
                           <v-autocomplete
@@ -406,7 +408,7 @@
                         >
                           <v-text-field
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
-                            :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
                             min="0"
                             variant="outlined"
                             density="compact"
@@ -440,7 +442,11 @@
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
-                            label="N(%)"
+                            :label="
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
+                                ? 'N (mg/L)'
+                                : 'N(%)'
+                            "
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -459,7 +465,10 @@
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            :disabled="
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
+                            "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
                             label="P₂O₅(%)"
                             variant="outlined"
@@ -480,7 +489,10 @@
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            :disabled="
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
+                            "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
                             label="K₂O(%)"
                             variant="outlined"

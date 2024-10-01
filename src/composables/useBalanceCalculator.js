@@ -260,9 +260,17 @@ function calculateBilanz() {
         current.kmengewd +=
           entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
       }
+      console.log(entry.value.cultures[c].duengung[d].typ);
+      // 4. Anteile Bewässerung
+      if (entry.value.cultures[c].duengung[d].typ === 'bewässerung') {
+        current.nmengebw +=
+          (entry.value.cultures[c].duengung[d].menge / 100) *
+          (entry.value.cultures[c].duengung[d].n / 4.43);
+      }
     }
     // Düngungen und Bilanz
-    current.nanrechenbar = current.nmengehd + current.nmengesr + current.nmengewd;
+    current.nanrechenbar =
+      current.nmengehd + current.nmengebw + current.nmengesr + current.nmengewd;
     current.pduengung = current.pmengehd + current.pmengesr + current.pmengewd;
     current.kduengung = current.kmengehd + current.kmengesr + current.kmengewd;
 

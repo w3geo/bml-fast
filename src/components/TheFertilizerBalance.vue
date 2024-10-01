@@ -28,27 +28,29 @@
       >
       <v-row no-gutters
         ><v-col>
-          <table
-            v-for="(kultur, index) in bilanz.bilanz"
-            :key="`bilanztable${index}`"
-            class="bilanz"
-          >
-            <tr>
-              <th colspan="2">
-                {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
-              </th>
-            </tr>
-            <tr
-              v-for="(pvalue, pkey) in kultur"
-              :key="`row_${index}_${pkey}`"
-              :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
-            >
-              <td :class="`border${outputConfig[pkey].border}`">{{ outputConfig[pkey].label }}</td>
-              <td :class="`border${outputConfig[pkey].border}`">
-                {{ pvalue.toLocaleString('de-DE', { style: 'decimal' }) }}
-              </td>
-            </tr>
-          </table>
+          <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
+            <table class="bilanz" v-if="entry.cultures[index].kultur !== ''">
+              <tr>
+                <th colspan="2">
+                  {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
+                </th>
+              </tr>
+              <tr
+                v-for="(pvalue, pkey) in kultur"
+                :key="`row_${index}_${pkey}`"
+                :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
+              >
+                <td :class="`border${outputConfig[pkey].border}`">
+                  {{ outputConfig[pkey].label }}
+                </td>
+                <td :class="`border${outputConfig[pkey].border}`">
+                  {{
+                    pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 2 })
+                  }}
+                </td>
+              </tr>
+            </table>
+          </v-sheet>
         </v-col>
       </v-row>
     </v-sheet>
