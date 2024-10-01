@@ -212,9 +212,22 @@ function calculateEntzug(idx) {
       break;
   }
 
-  // 3. P-Entzug , unterschiedlich ermittelt nach Saldierungsart
+  // 3. P-Entzug , nur nach erreichter Ertragslage
+  const ppostfix =
+    entry.value.phosphor_gehaltsklasse === 'E' ? '' : ` ${ertragslage.split(' ')[0]}`;
+  pEntzug = tableAttribut(
+    'kulturen',
+    entry.value.cultures[idx].kultur,
+    `Phosphor ${entry.value.phosphor_gehaltsklasse}${ppostfix}`,
+  );
 
-  // 4. K-Entzug , unterschiedlich ermittelt nach Saldierungsart
+  // 4. K-Entzug , nur nach erreichter Ertragslage
+  const kpostfix = entry.value.kalium_gehaltsklasse === 'E' ? '' : ` ${ertragslage.split(' ')[0]}`;
+  kEntzug = tableAttribut(
+    'kulturen',
+    entry.value.cultures[idx].kultur,
+    `Phosphor ${entry.value.kalium_gehaltsklasse}${kpostfix}`,
+  );
 
   return [nEntzug, pEntzug, kEntzug];
 }
@@ -260,7 +273,6 @@ function calculateBilanz() {
         current.kmengewd +=
           entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
       }
-      console.log(entry.value.cultures[c].duengung[d].typ);
       // 4. Anteile Bewässerung
       if (entry.value.cultures[c].duengung[d].typ === 'bewässerung') {
         current.nmengebw +=
