@@ -14,6 +14,7 @@ import VectorLayer from 'ol/layer/Vector.js';
 
 /** @typedef {'nitrataktionsprogramm' | 'bdfl_l16_grundwasserschutz_acker' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_2' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_1' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel_10' | 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_niedrig' | 'schwere_boeden'} Topic */
 /** @typedef {(feature: import("ol/Feature.js").FeatureLike) => boolean} Filter */
+/** @typedef {{[Key in Topic]: number}} TopicHectars*/
 
 /** @type {{[Key in Topic]: Filter}} */
 const filtersByTopic = {
@@ -76,7 +77,7 @@ function createTopicLayer(topic) {
 const topicHectarsAllZero = /** @type {{[Key in Topic]: number}} */ (
   Object.freeze(topicKeys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {}))
 );
-/** @type {import("vue").Ref<{[Key in Topic]: number}>} */
+/** @type {import("vue").Ref<TopicHectars>} */
 const topicHectars = shallowRef(topicHectarsAllZero);
 
 function updateTopicHectars() {
@@ -165,7 +166,7 @@ mapReady.then(() => {
 });
 
 /**
- * @returns {{topicHectars: import("vue").Ref<{[Key in Topic]: number}>}}
+ * @returns {{topicHectars: import("vue").Ref<TopicHectars>}}
  */
 export function useTopicIntersections() {
   return { topicHectars };

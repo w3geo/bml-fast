@@ -18,41 +18,61 @@ const wrrl = [
   { value: 'F', title: 'F', code: 'bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3' },
 ];
 
+const kornfeuchteListe = [
+  { title: 12, value: 12 },
+  { title: 13, value: 13 },
+  { title: 14, value: 14 },
+  { title: 15, value: 15 },
+  { title: 16, value: 16 },
+];
+
+const proteinListe = {
+  4: [
+    { title: '11', value: 11 },
+    { title: '11,5', value: 11.5 },
+    { title: '12', value: 12 },
+    { title: '12,5', value: 12.5 },
+    { title: '13', value: 13 },
+    { title: '13,5', value: 13.5 },
+    { title: '14', value: 14 },
+    { title: '14,5', value: 14.5 },
+    { title: '15', value: 15 },
+    { title: '15,5', value: 15.5 },
+    { title: '16', value: 16 },
+    { title: '16,5', value: 16.5 },
+    { title: '17', value: 17 },
+    { title: '17,5', value: 17.5 },
+    { title: '18', value: 18 },
+    { title: '18,5', value: 18.5 },
+    { title: '19', value: 19 },
+    { title: '19,5', value: 19.5 },
+    { title: '20', value: 20 },
+    { title: '20,5', value: 20.5 },
+    { title: '21', value: 21 },
+    { title: '21,5', value: 21.5 },
+    { title: '22', value: 22 },
+  ],
+  5: [
+    { title: '9', value: 9 },
+    { title: '9,5', value: 9.5 },
+    { title: '10', value: 10 },
+    { title: '10,5', value: 10.5 },
+    { title: '11', value: 11 },
+    { title: '11,5', value: 11.5 },
+    { title: '12', value: 12 },
+    { title: '12,5', value: 12.5 },
+    { title: '13', value: 13 },
+    { title: '13,5', value: 13.5 },
+    { title: '14', value: 14 },
+    { title: '14,5', value: 14.5 },
+    { title: '15', value: 15 },
+    { title: '15,5', value: 15.5 },
+    { title: '16', value: 16 },
+  ],
+};
+
 const ertragsLagen = ['niedrig', 'mittel', 'hoch 1', 'hoch 2', 'hoch 3'];
 const limitAckerzahl = ['niedrig', 'mittel'];
-
-/*
-EL niedrig Bereich
-EL niedrig t / m3 ab
-Entzugsfaktor EL niedrig
-Düngeobergrenze EL mittel
-Düngeobergenze EL mittel A5
-EL mittel Bereich 
-EL mittel t / m3 je ab
-Entzugsfaktor EL mittel
-Düngeobergrenze EL hoch 1
-Düngeobergrenze EL hoch 1 A5
-EL hoch 1 Bereich
-EL hoch 1 t / m3 ab
-Entzugsfaktor EL hoch 1
-Düngeobergrenze EL hoch 2
-Düngeobergenze EL hoch 2 A5
-EL hoch 2 Bereich
-EL hoch 2 t / m3 ab
-Entzugsfaktor EL hoch 2
-Düngeobergrenze EL hoch 3
-Düngeobergenze EL hoch 3 A5
-EL hoch 3 t / m3 Bereich
-EL hoch 3 t / m3 ab
-EL hoch 3 t / m3 bis
-
-
-EL niedrig
-EL mittel
-EL hoch 1
-EL hoch 2
-EL hoch 3
-*/
 
 const yearItems = [];
 {
@@ -73,6 +93,7 @@ const fertilizationTypes = [
   { title: 'Handelsdünger', value: 'handelsdünger' },
   { title: 'Sekundärrohstoffe', value: 'sekundärrohstoffe' },
   { title: 'Wirtschaftsdünger', value: 'wirtschaftsdünger' },
+  { title: 'Bewässerung', value: 'bewässerung' },
 ];
 
 const aussaatTypeFilter = {
@@ -116,6 +137,8 @@ export const lookup = shallowRef({
   ertragsLagen: ertragsLagen,
   limitAckerzahl: limitAckerzahl,
   kulturenItems: kulturenItems,
+  kornfeuchteListe: kornfeuchteListe,
+  proteinListe: proteinListe,
   fertilizationTypes: fertilizationTypes,
   aussaatTypeFilter: aussaatTypeFilter,
   feldstücknutzungsarten,
@@ -129,9 +152,9 @@ export const lookup = shallowRef({
 });
 
 /**
- * @returns {any}
+ * @returns {*}
  */
-function tableAttribut(table, id, attrib) {
+export function tableAttribut(table, id, attrib) {
   let result = '';
   if (id && id != '') {
     const dataRow = lookup.value[table].find((k) => k.ID == id);

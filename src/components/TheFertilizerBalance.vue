@@ -5,7 +5,7 @@
     v-if="dataWindow === 2"
     elevation="10"
   >
-    <v-row no-gutters class="boxHeader bg-grey-darken-3 mb-3">
+    <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
         Nährstoff-Bilanz
@@ -16,103 +16,107 @@
         </v-icon>
       </v-col>
     </v-row>
-    <v-row
-      v-for="(message, index) in errors"
-      :key="`error${index}`"
-      no-gutters
-      class="ma-1 mx-2 error"
-      ><v-col cols="12" class="pa-1 pl-4"
-        ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
-      </v-col></v-row
-    >
+    <v-sheet height="calc(100% - 30px)" class="overflow-auto">
+      <v-row
+        v-for="(message, index) in bilanz.errors"
+        :key="`error${index}`"
+        no-gutters
+        class="ma-1 mx-2 error"
+        ><v-col cols="12" class="pa-1 pl-4"
+          ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
+        </v-col></v-row
+      >
+      <v-row no-gutters
+        ><v-col>
+          <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
+            <table class="bilanz" v-if="entry.cultures[index].kultur !== ''">
+              <tr>
+                <th colspan="2">
+                  {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
+                </th>
+              </tr>
+              <tr
+                v-for="(pvalue, pkey) in kultur"
+                :key="`row_${index}_${pkey}`"
+                :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
+              >
+                <td :class="`border${outputConfig[pkey].border}`">
+                  {{ outputConfig[pkey].label }}
+                </td>
+                <td :class="`border${outputConfig[pkey].border}`">
+                  {{
+                    pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 2 })
+                  }}
+                </td>
+              </tr>
+            </table>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-sheet>
   </v-card>
 </template>
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-import { useLookup } from '../composables/useLookUps.js';
-import { watch, ref } from 'vue';
+import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
+import { ref, computed } from 'vue';
 
 const { dataWindow, entry } = useDataEntries();
-const { tableAttribut } = useLookup();
+const { updateBilanz, outputConfig } = useBalanceCalculator();
+import { useLookup } from '../composables/useLookUps.js';
 
 const winMaximize = ref(false);
-const bilanz = ref([]);
-const errors = ref([]);
 
-watch(
-  entry,
-  () => {
-    calculateBilanz();
-  },
-  { deep: true },
-);
-
-function calculateBilanz() {
-  errors.value = [];
-
-  // Pflichtangaben
-  if (entry.value.flaeche <= 0) {
-    errors.value.push('Fehlende Flächenangabe für den Schlag');
-  }
-
-  // Kulturen
-  for (let c = 0; c < entry.value.cultures.length; c++) {
-    let anyErrors = false;
-    if (entry.value.cultures[c].kultur != '') {
-      if (
-        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Ertragserfassungsart') !==
-          'Düngeverbot' &&
-        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Ertragserfassungsart') !==
-          'keine Ertragserfassung'
-      ) {
-        if (entry.value.cultures[c].ertragslage === '') {
-          errors.value.push(`${c}. Hauptfrucht: Erwartete Ertragslage nicht angegeben`);
-          anyErrors = true;
-        }
-        if (
-          entry.value.cultures[c].ertragslageernte === '' &&
-          parseFloat(entry.value.cultures[c].ernte) === 0
-        ) {
-          errors.value.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
-          anyErrors = true;
-        }
-      }
-      // Düngung
-      if (entry.value.cultures[c].duengung.length > 0) {
-        for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
-          if (entry.value.cultures[c].duengung[d].typ === '') {
-            if (c > 0) {
-              errors.value.push(`${c}. Hauptfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
-            } else {
-              errors.value.push(`Zwischenfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
-            }
-            anyErrors = true;
-          } else if (entry.value.cultures[c].duengung[d].menge <= 0) {
-            if (c > 0) {
-              errors.value.push(`${c}. Hauptfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
-            } else {
-              errors.value.push(`Zwischenfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
-            }
-            anyErrors = true;
-          }
-        }
-      }
-
-      if (!anyErrors) {
-        // Balance goes here / WIP
-      }
-    } else {
-      if (c > 0) {
-        errors.value.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
-      }
-    }
-  }
-  bilanz.value = [];
-}
+const bilanz = computed(() => updateBilanz());
+const { tableAttribut } = useLookup();
 </script>
 
 <style scoped>
+table.bilanz {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.bilanz tr {
+  padding: 0px;
+}
+table.bilanz tr.hide {
+  color: #aaa;
+  font-style: italic;
+}
+
+table.bilanz th {
+  padding: 2px;
+  font-size: 11px;
+  background-color: #eee;
+  text-align: left;
+}
+
+table.bilanz td {
+  padding: 2px;
+  border: 1px solid #eee;
+  font-size: 11px;
+  color: #777;
+}
+
+table.bilanz tr.bold td {
+  font-weight: bold;
+  color: #000;
+}
+
+table.bilanz td.borderbottom {
+  border-bottom-width: 3px;
+}
+
+table.bilanz tr td:nth-child(1) {
+  width: 85%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+table.bilanz tr td:nth-child(2) {
+  width: 15%;
+}
+
 .fertilizerData {
   position: absolute;
   left: 10px;

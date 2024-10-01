@@ -56,7 +56,7 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
-                      v-model="entry.flaeche"
+                      v-model.number="entry.flaeche"
                       label="Fläche (ha)"
                       variant="outlined"
                       density="compact"
@@ -190,7 +190,7 @@
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 mb-3">
-                    <v-select
+                    <v-autocomplete
                       v-model="entry.vorfrucht"
                       :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
@@ -210,7 +210,7 @@
                   <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.vorfruchtnmin"
+                      v-model.number="entry.vorfruchtnmin"
                       label="NMin"
                       variant="outlined"
                       density="compact"
@@ -257,7 +257,7 @@
                       >Aussaat {{ i > 1 ? '/ Erwartete Ertragslage' : '' }}</v-col
                     >
                     <v-col cols="12" class="px-4 obligatory mb-3">
-                      <v-select
+                      <v-autocomplete
                         v-model="entry.cultures[i - 1].kultur"
                         :items="
                           i > 1
@@ -312,7 +312,7 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
-                        v-model="entry.cultures[i - 1].nmin"
+                        v-model.number="entry.cultures[i - 1].nmin"
                         label="NMin"
                         variant="outlined"
                         density="compact"
@@ -359,7 +359,8 @@
                         <v-col
                           :cols="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
-                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene'
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'bewässerung'
                               ? 5
                               : 12
                           "
@@ -380,10 +381,11 @@
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
-                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene'
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'eigene' &&
+                            entry.cultures[i - 1].duengung[f - 1].typ != 'bewässerung'
                           "
                         >
-                          <v-select
+                          <v-autocomplete
                             v-model="entry.cultures[i - 1].duengung[f - 1].id"
                             :items="lookup[entry.cultures[i - 1].duengung[f - 1].typ]"
                             :label="firstUppercase(entry.cultures[i - 1].duengung[f - 1].typ)"
@@ -405,8 +407,9 @@
                           "
                         >
                           <v-text-field
-                            v-model="entry.cultures[i - 1].duengung[f - 1].menge"
-                            :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
+                            :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            min="0"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -438,8 +441,12 @@
                         >
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i - 1].duengung[f - 1].n"
-                            label="N(%)"
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
+                            :label="
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
+                                ? 'N (mg/L)'
+                                : 'N(%)'
+                            "
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -458,8 +465,11 @@
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i - 1].duengung[f - 1].p"
+                            :disabled="
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
+                            "
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
                             label="P₂O₅(%)"
                             variant="outlined"
                             density="compact"
@@ -479,8 +489,11 @@
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
-                            v-model="entry.cultures[i - 1].duengung[f - 1].k"
+                            :disabled="
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
+                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
+                            "
+                            v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
                             label="K₂O(%)"
                             variant="outlined"
                             density="compact"
@@ -545,7 +558,7 @@
                         v-if="
                           ['t', 'm3'].includes(ertragsTyp(entry.cultures[i - 1].kultur, 'einheit'))
                         "
-                        v-model="entry.cultures[i - 1].ernte"
+                        v-model.number="entry.cultures[i - 1].ernte"
                         :label="`Ernte (in ${ertragsTyp(entry.cultures[i - 1].kultur, 'einheit')})`"
                         variant="outlined"
                         density="compact"
@@ -555,26 +568,28 @@
                     </v-col>
 
                     <v-col cols="3" class="pa-2">
-                      <v-text-field
+                      <v-select
                         v-if="
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
                         v-model="entry.cultures[i - 1].feuchte"
                         label="Kornfeuchte"
+                        :items="lookup.kornfeuchteListe"
                         variant="outlined"
                         density="compact"
                         hide-details
                       />
                     </v-col>
                     <v-col cols="3" class="pa-2">
-                      <v-text-field
+                      <v-select
                         v-if="
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
                         v-model="entry.cultures[i - 1].protein"
                         label="Proteingehalt"
+                        :items="lookup.proteinListe[ertragsTyp(entry.cultures[i - 1].kultur, '')]"
                         variant="outlined"
                         density="compact"
                         hide-details
@@ -612,11 +627,11 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col :cols="entry.flaeche === 0 && currentSaved === null ? 12 : 6" class="pa-2">
+      ><v-col :cols="dataWindow === 1 ? 12 : 6" class="pa-2">
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
-      ><v-col cols="6" class="pa-2">
+      ><v-col cols="6" class="pa-2" v-if="dataWindow === 2">
         <v-btn density="compact" color="green" prepend-icon="mdi-check" block @click.stop="saveData"
           >Speichern</v-btn
         >
@@ -723,13 +738,7 @@ function ertragsTyp(kultur, what) {
   if (what == 'einheit') {
     return dataRow.Ertragserfassungsart ? dataRow.Ertragserfassungsart : 't';
   } else {
-    return dataRow[
-      'Saldierungsart 1=t/ha; 2=m3/ha;3=kg N/ha;4=Weichweizen; 5=Braugerste;6=Mais;7=EL Auswahl;8=keine Eingabe'
-    ]
-      ? dataRow[
-          'Saldierungsart 1=t/ha; 2=m3/ha;3=kg N/ha;4=Weichweizen; 5=Braugerste;6=Mais;7=EL Auswahl;8=keine Eingabe'
-        ]
-      : 0;
+    return dataRow['Saldierungsart'] ? dataRow['Saldierungsart'] : 0;
   }
 }
 
