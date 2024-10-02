@@ -43,7 +43,6 @@
 </template>
 
 <script setup>
-import download from 'downloadjs';
 import { dataWindow, useDataEntries } from '../composables/useDataEntries.js';
 import { ref } from 'vue';
 
@@ -51,20 +50,24 @@ const { savedData } = useDataEntries();
 const inputFile = ref(null);
 const showAlert = ref({ color: 'green', text: '', show: false });
 
+const link = document.createElement('a');
+
 function downloadJson() {
   const data = JSON.stringify(savedData.value);
   const today = new Date();
   const filename = `fast-export-${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.txt`;
-  download(data, filename, 'text/plain');
+  link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(data);
+  link.download = filename;
+  link.click();
 }
 
 function readJson() {
   const reader = new FileReader();
   if (inputFile.value) {
-    reader.readAsText(inputFile.value, 'Windows-1252');
+    reader.readAsText(inputFile.value, 'utf-8');
     reader.onload = () => {
       try {
-        const imported = JSON.parse(reader.result.toString());
+        const imported = JSON.parse(/** @type {string} */ (reader.result));
         savedData.value = imported;
         localStorage.setItem('fasttool', JSON.stringify(savedData.value));
         showAlert.value.text = 'Import erfolgreich. Die Daten wurden eingelesen.';
