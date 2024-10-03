@@ -3,6 +3,11 @@ import { tableAttribut, lookup } from './useLookUps.js';
 
 /**
  * @typedef {Object} kulturbilanz
+ * @property {number} nsaldo N-Saldo
+ * @property {number} vfwert Vorfruchtwert Vorfrucht
+ * @property {number} vfwertzf Vorfruchtwert Zwischenfrucht
+ * @property {number} nminman N-Min manuell
+ * @property {number} redfaktor Reduktionsfaktor
  * @property {number} nmengehd N-Menge aus Handelsdüngern
  * @property {number} nmengebw N-Menge aus Bewässerung
  * @property {number} nmengesr N-Menge aus organischen Sekundärrohstoffen
@@ -30,6 +35,11 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @type kulturbilanz
  */
 const emptyKulturbilanz = {
+  nsaldo: 0,
+  vfwert: 0,
+  vfwertzf: 0,
+  nminman: 0,
+  redfaktor: 0,
   nmengehd: 0,
   nmengebw: 0,
   nmengesr: 0,
@@ -57,6 +67,11 @@ const emptyKulturbilanz = {
  * @type {Object<keyof kulturbilanz, Object>}
  */
 export const outputConfig = {
+  nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
+  vfwert: { label: 'Vorfruchtwert Vorfrucht', print: false, bold: false, border: '' },
+  vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
+  nminman: { label: 'N-Min manuell', print: false, bold: false, border: '' },
+  redfaktor: { label: 'Reduktionsfaktor', print: false, bold: false, border: '' },
   nmengehd: { label: 'N-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
   nmengebw: { label: 'N-Menge aus Bewässerung', print: false, bold: false, border: '' },
   nmengesr: {
@@ -238,8 +253,17 @@ function calculateEntzug(idx) {
 function calculateBilanz() {
   bilanz = [];
   const retVal = [];
+
+  const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
+    // Genutzte Zwischenfrucht?
+    entry.value.cultures[0].kultur,
+  );
+
   for (let c = 0; c < entry.value.cultures.length; c++) {
     const current = { ...emptyKulturbilanz };
+
+    // A ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
+
     [current.nentzug, current.pentzug, current.kentzug] = calculateEntzug(c);
     for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
       // Düngungen iterieren
@@ -290,6 +314,30 @@ function calculateBilanz() {
     current.pbilanz = current.pduengung - current.pentzug;
     current.kbilanz = current.kduengung - current.kentzug;
 
+    // B ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT -------------------------------------------------
+
+    // Nur relevant, wenn Vorfrucht + Hauptfrucht 1
+    if (entry.value.vorfrucht !== '' && c === 1 && entry.value.cultures[c].kultur !== '') {
+      const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
+      const hfgemüse =
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
+
+      console.log(vfgemüse, hfgemüse, zfgenutzt);
+
+      // Nitratrisikogebiet.
+      if (entry.value.nitratrisikogebiet) {
+        if (entry.value.teilnahme_grundwasserschutz_acker) {
+          console.log('ja');
+        } else {
+          console.log('nein');
+        }
+        // Kein Nitratrisikogebiet.
+      } else {
+        console.log('kein n');
+      }
+    }
+
+    // RÜCKGABEWERT
     retVal.push(current);
   }
 
