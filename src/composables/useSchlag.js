@@ -49,7 +49,7 @@ async function getSchlagParts(feature) {
   const extent = feature.getGeometry().getExtent();
   const source = /** @type {import("ol/source.js").VectorTile} */ (getSource(map, 'agrargis'));
   const tilePromises = [];
-  source.getTileGrid().forEachTileCoord(extent, 12, (tileCoord) => {
+  source.getTileGrid().forEachTileCoord(extent, 15, (tileCoord) => {
     tilePromises.push(
       new Promise((resolve, reject) => {
         const [z, x, y] = tileCoord;
