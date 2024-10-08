@@ -202,23 +202,6 @@
                     />
                   </v-col>
                 </v-row>
-
-                <v-row
-                  no-gutters
-                  v-if="tableAttribut('kulturen', entry.vorfrucht, 'Gemüsekultur') === 'x'"
-                >
-                  <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
-                  <v-col cols="6" class="px-4 mb-3">
-                    <v-text-field
-                      v-model.number="entry.vorfruchtnmin"
-                      label="NMin"
-                      variant="outlined"
-                      density="compact"
-                      type="number"
-                      hide-details
-                    />
-                  </v-col>
-                </v-row>
               </v-expansion-panel-text>
             </v-expansion-panel>
 
@@ -711,20 +694,12 @@ function fertilizationChanged(what, cindex, findex) {
 }
 
 function cultureChanged(index) {
-  if (index === -1) {
-    entry.value.vorfruchtnmin = tableAttribut(
-      'kulturen',
-      entry.value.vorfrucht,
-      'VFW | Nmin Folgejahr',
-    );
-  } else {
-    entry.value.cultures[index].ertragslage = '';
-    entry.value.cultures[index].nmin = tableAttribut(
-      'kulturen',
-      entry.value.cultures[index].kultur,
-      'VFW | Nmin selbes Jahr',
-    );
-  }
+  entry.value.cultures[index].ertragslage = '';
+  entry.value.cultures[index].nmin = tableAttribut(
+    'kulturen',
+    entry.value.cultures[index].kultur,
+    'VFW | Nmin selbes Jahr',
+  );
 }
 
 function allCulturesReset() {
