@@ -198,24 +198,6 @@
                       density="compact"
                       hide-details
                       clearable
-                      @update:model-value="cultureChanged(-1)"
-                    />
-                  </v-col>
-                </v-row>
-
-                <v-row
-                  no-gutters
-                  v-if="tableAttribut('kulturen', entry.vorfrucht, 'Gemüsekultur') === 'x'"
-                >
-                  <v-col cols="6" class="px-4 obligatory mb-3"></v-col>
-                  <v-col cols="6" class="px-4 mb-3">
-                    <v-text-field
-                      v-model.number="entry.vorfruchtnmin"
-                      label="NMin"
-                      variant="outlined"
-                      density="compact"
-                      type="number"
-                      hide-details
                     />
                   </v-col>
                 </v-row>
@@ -275,7 +257,7 @@
                       :cols="
                         tableAttribut('kulturen', entry.cultures[i - 1].kultur, 'Gemüsekultur') ===
                         'x'
-                          ? 9
+                          ? 6
                           : 12
                       "
                       class="px-4 obligatory mb-2"
@@ -313,10 +295,28 @@
                     >
                       <v-text-field
                         v-model.number="entry.cultures[i - 1].nmin"
-                        label="NMin"
+                        label="NMin / manuell"
                         variant="outlined"
                         density="compact"
                         type="number"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col
+                      v-if="
+                        tableAttribut('kulturen', entry.cultures[i - 1].kultur, 'Gemüsekultur') ===
+                        'x'
+                      "
+                      cols="3"
+                      class="px-4 mb-3"
+                    >
+                      <v-text-field
+                        v-model.number="entry.cultures[i - 1].nminvorgabe"
+                        label="Vorgabe"
+                        variant="outlined"
+                        density="compact"
+                        type="number"
+                        disabled
                         hide-details
                       />
                     </v-col>
@@ -396,7 +396,7 @@
                           />
                         </v-col>
                         <v-col
-                          cols="3"
+                          cols="4"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -408,7 +408,7 @@
                         >
                           <v-text-field
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
-                            :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            :label="`Menge (${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm = l/m²' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
                             min="0"
                             variant="outlined"
                             density="compact"
@@ -444,7 +444,7 @@
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
                             :label="
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
-                                ? 'N (mg/L)'
+                                ? 'NO₃(mg/L)'
                                 : 'N(%)'
                             "
                             variant="outlined"
@@ -711,20 +711,13 @@ function fertilizationChanged(what, cindex, findex) {
 }
 
 function cultureChanged(index) {
-  if (index === -1) {
-    entry.value.vorfruchtnmin = tableAttribut(
-      'kulturen',
-      entry.value.vorfrucht,
-      'VFW | Nmin Folgejahr',
-    );
-  } else {
-    entry.value.cultures[index].ertragslage = '';
-    entry.value.cultures[index].nmin = tableAttribut(
-      'kulturen',
-      entry.value.cultures[index].kultur,
-      'VFW | Nmin selbes Jahr',
-    );
-  }
+  entry.value.cultures[index].ertragslage = '';
+  entry.value.cultures[index].nmin = tableAttribut(
+    'kulturen',
+    entry.value.cultures[index].kultur,
+    'VFW | Nmin selbes Jahr',
+  );
+  entry.value.cultures[index].nminvorgabe = entry.value.cultures[index].nmin;
 }
 
 function allCulturesReset() {

@@ -19,6 +19,7 @@ import { ref } from 'vue';
  * @property {number} feuchte
  * @property {number} protein
  * @property {number} nmin
+ * @property {number} nminvorgabe
  * @property {Array<Fertilization>} duengung
  */
 
@@ -42,7 +43,6 @@ import { ref } from 'vue';
  * @property {string} kalium_gehaltsklasse
  * @property {string} bodenart
  * @property {string} vorfrucht
- * @property {number} vorfruchtnmin
  * @property {number} nsaldo
  * @property {Array<number>} extent
  * @property {Array<number>} parts
@@ -59,6 +59,7 @@ export const emptyCulture = {
   feuchte: 14,
   protein: 12,
   nmin: 0,
+  nminvorgabe: 0,
   duengung: [],
 };
 
@@ -82,7 +83,6 @@ export const emptyEntry = {
   kalium_gehaltsklasse: 'C',
   bodenart: 'lS - lehmiger Sand',
   vorfrucht: '',
-  vorfruchtnmin: 0,
   nsaldo: 0,
   extent: [],
   parts: [],

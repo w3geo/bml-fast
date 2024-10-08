@@ -3,12 +3,15 @@ import { tableAttribut, lookup } from './useLookUps.js';
 
 /**
  * @typedef {Object} kulturbilanz
+ * @property {number} nsaldo N-Saldo
+ * @property {number} vfwert Vorfruchtwert Vorfrucht
+ * @property {number} vfwertzf Vorfruchtwert Zwischenfrucht
+ * @property {number} redfaktor Reduktionsfaktor
  * @property {number} nmengehd N-Menge aus Handelsdüngern
  * @property {number} nmengebw N-Menge aus Bewässerung
  * @property {number} nmengesr N-Menge aus organischen Sekundärrohstoffen
  * @property {number} nmengewd N-Menge aus Wirtschaftsdüngern
- * @property {number} nvorfrucht N-Vorfruchtwert
- * @property {number} nmin Nmin-Wert
+ * @property {number} nabzug N-Abzug von Düngeobergrenze
  * @property {number} nanrechenbar Anrechenbarer Stickstoff
  * @property {number} nentzug N-Entzug
  * @property {number} nbilanz N-Bilanz
@@ -30,12 +33,15 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @type kulturbilanz
  */
 const emptyKulturbilanz = {
+  nsaldo: 0,
+  vfwert: 0,
+  vfwertzf: 0,
+  redfaktor: 0,
   nmengehd: 0,
   nmengebw: 0,
   nmengesr: 0,
   nmengewd: 0,
-  nvorfrucht: 0,
-  nmin: 0,
+  nabzug: 0,
   nanrechenbar: 0,
   nentzug: 0,
   nbilanz: 0,
@@ -57,6 +63,10 @@ const emptyKulturbilanz = {
  * @type {Object<keyof kulturbilanz, Object>}
  */
 export const outputConfig = {
+  nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
+  vfwert: { label: 'Vorfruchtwert Vorfrucht', print: false, bold: false, border: '' },
+  vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
+  redfaktor: { label: 'Reduktionsfaktor', print: false, bold: false, border: '' },
   nmengehd: { label: 'N-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
   nmengebw: { label: 'N-Menge aus Bewässerung', print: false, bold: false, border: '' },
   nmengesr: {
@@ -66,8 +76,7 @@ export const outputConfig = {
     border: '',
   },
   nmengewd: { label: 'N-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
-  nvorfrucht: { label: 'N-Vorfruchtwert', print: true, bold: false, border: '' },
-  nmin: { label: 'Nmin-Wert', print: true, bold: false, border: '' },
+  nabzug: { label: 'N-Abzug von Düngeobergrenze', print: true, bold: false, border: '' },
   nanrechenbar: { label: 'Anrechenbarer Stickstoff', print: true, bold: false, border: '' },
   nentzug: { label: 'N-Entzug', print: false, bold: false, border: '' },
   nbilanz: { label: 'N-Bilanz', print: true, bold: true, border: 'bottom' },
@@ -99,6 +108,9 @@ export const outputConfig = {
 let bilanz = [];
 /** @type {Array<string>} */
 let errors = [];
+
+/** @type {Object} */
+const reduktionsfaktor = { Trockengebiet: 0.8, Feuchtgebiet: 0.6 };
 
 /**
  * @param {number} idx
@@ -238,8 +250,20 @@ function calculateEntzug(idx) {
 function calculateBilanz() {
   bilanz = [];
   const retVal = [];
+
+  const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
+    entry.value.cultures[0].kultur,
+  );
+  const zfungenutzt = lookup.value.aussaatTypeFilter.zwischenU.includes(
+    entry.value.cultures[0].kultur,
+  );
+  const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
+
   for (let c = 0; c < entry.value.cultures.length; c++) {
     const current = { ...emptyKulturbilanz };
+
+    // A ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
+
     [current.nentzug, current.pentzug, current.kentzug] = calculateEntzug(c);
     for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
       // Düngungen iterieren
@@ -290,6 +314,83 @@ function calculateBilanz() {
     current.pbilanz = current.pduengung - current.pentzug;
     current.kbilanz = current.kduengung - current.kentzug;
 
+    // B ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT -------------------------------------------------
+
+    // Nur relevant, wenn Vorfrucht + Hauptfrucht 1
+    if (entry.value.vorfrucht !== '' && c === 1 && entry.value.cultures[c].kultur !== '') {
+      const hfgemüse =
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
+
+      // 1. N-Saldo
+      if (
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker &&
+        entry.value.nsaldo > 0
+      ) {
+        if (!zfgenutzt && !zfungenutzt) {
+          current.nsaldo = entry.value.nsaldo;
+        }
+        if (zfungenutzt) {
+          current.nsaldo =
+            entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
+        }
+      }
+
+      // 2. Vorfruchtwert
+      const hfmanuell = entry.value.cultures[c].nmin;
+      const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
+      const hftable = Number(
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
+      );
+      const vfnmin = Number(
+        tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'),
+      );
+      const zfnmin =
+        entry.value.cultures[0].kultur !== ''
+          ? Number(
+              tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin Folgejahr'),
+            )
+          : 0;
+
+      if (
+        vfgemüse &&
+        hfgemüse &&
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker
+      ) {
+        current.nabzug = zfungenutzt ? entry.value.nsaldo * redfaktor + zfnmin : entry.value.nsaldo;
+      }
+
+      if (
+        !vfgemüse &&
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker &&
+        !zfgenutzt
+      ) {
+        if (hfgemüse && hfmanuell != hftable && entry.value.nsaldo > hfmanuell) {
+          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
+        }
+        if (!hfgemüse && entry.value.nsaldo > 0) {
+          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
+        }
+      }
+
+      if (
+        !vfgemüse &&
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker &&
+        zfgenutzt
+      ) {
+        if (hfgemüse && hfmanuell != hftable && entry.value.nsaldo > hfmanuell) {
+          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
+        }
+        if (!hfgemüse && entry.value.nsaldo > 0) {
+          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
+        }
+      }
+    }
+
+    // RÜCKGABEWERT
     retVal.push(current);
   }
 
