@@ -19,6 +19,7 @@ import { ref } from 'vue';
  * @property {number} feuchte
  * @property {number} protein
  * @property {number} nmin
+ * @property {number} nminvorgabe
  * @property {Array<Fertilization>} duengung
  */
 
@@ -58,6 +59,7 @@ export const emptyCulture = {
   feuchte: 14,
   protein: 12,
   nmin: 0,
+  nminvorgabe: 0,
   duengung: [],
 };
 

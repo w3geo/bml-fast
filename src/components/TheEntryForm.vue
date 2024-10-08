@@ -198,7 +198,6 @@
                       density="compact"
                       hide-details
                       clearable
-                      @update:model-value="cultureChanged(-1)"
                     />
                   </v-col>
                 </v-row>
@@ -258,7 +257,7 @@
                       :cols="
                         tableAttribut('kulturen', entry.cultures[i - 1].kultur, 'Gemüsekultur') ===
                         'x'
-                          ? 9
+                          ? 6
                           : 12
                       "
                       class="px-4 obligatory mb-2"
@@ -296,10 +295,28 @@
                     >
                       <v-text-field
                         v-model.number="entry.cultures[i - 1].nmin"
-                        label="NMin"
+                        label="NMin / manuell"
                         variant="outlined"
                         density="compact"
                         type="number"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col
+                      v-if="
+                        tableAttribut('kulturen', entry.cultures[i - 1].kultur, 'Gemüsekultur') ===
+                        'x'
+                      "
+                      cols="3"
+                      class="px-4 mb-3"
+                    >
+                      <v-text-field
+                        v-model.number="entry.cultures[i - 1].nminvorgabe"
+                        label="Vorgabe"
+                        variant="outlined"
+                        density="compact"
+                        type="number"
+                        disabled
                         hide-details
                       />
                     </v-col>
@@ -700,6 +717,7 @@ function cultureChanged(index) {
     entry.value.cultures[index].kultur,
     'VFW | Nmin selbes Jahr',
   );
+  entry.value.cultures[index].nminvorgabe = entry.value.cultures[index].nmin;
 }
 
 function allCulturesReset() {
