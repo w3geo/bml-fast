@@ -396,7 +396,7 @@
                           />
                         </v-col>
                         <v-col
-                          cols="3"
+                          cols="4"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -408,7 +408,7 @@
                         >
                           <v-text-field
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
-                            :label="`Menge (in ${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            :label="`Menge (${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm = l/m²' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
                             min="0"
                             variant="outlined"
                             density="compact"
@@ -444,7 +444,7 @@
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
                             :label="
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
-                                ? 'N (mg/L)'
+                                ? 'NO₃(mg/L)'
                                 : 'N(%)'
                             "
                             variant="outlined"
