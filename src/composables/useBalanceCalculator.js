@@ -6,6 +6,7 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @property {number} nsaldo N-Saldo
  * @property {number} vfwert Vorfruchtwert Vorfrucht
  * @property {number} vfwertzf Vorfruchtwert Zwischenfrucht
+ * @property {number} nminman Manueller N-Min
  * @property {number} redfaktor Reduktionsfaktor
  * @property {number} nmengehd N-Menge aus Handelsdüngern
  * @property {number} nmengebw N-Menge aus Bewässerung
@@ -36,6 +37,7 @@ const emptyKulturbilanz = {
   nsaldo: 0,
   vfwert: 0,
   vfwertzf: 0,
+  nminman: 0,
   redfaktor: 0,
   nmengehd: 0,
   nmengebw: 0,
@@ -66,6 +68,7 @@ export const outputConfig = {
   nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
   vfwert: { label: 'Vorfruchtwert Vorfrucht', print: false, bold: false, border: '' },
   vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
+  nminman: { label: 'Manueller N-Min', print: false, bold: false, border: '' },
   redfaktor: { label: 'Reduktionsfaktor', print: false, bold: false, border: '' },
   nmengehd: { label: 'N-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
   nmengebw: { label: 'N-Menge aus Bewässerung', print: false, bold: false, border: '' },
