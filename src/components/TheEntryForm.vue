@@ -25,17 +25,27 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.schlagnummer"
-                      label="Schlagnummer"
+                      v-model="entry.feldstuecksname"
+                      label="Feldstück/Name"
                       variant="outlined"
-                      hide-details
                       density="compact"
+                      :rules="rules.threechars"
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 mb-3">
+                  <v-col cols="3" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.feldstuecksname"
-                      label="Feldstücksname"
+                      v-model.number="entry.feldstuecksnummer"
+                      label="Feldstück/Nr"
+                      variant="outlined"
+                      type="number"
+                      density="compact"
+                      :rules="rules.notzero"
+                    />
+                  </v-col>
+                  <v-col cols="3" class="px-4 mb-3">
+                    <v-text-field
+                      v-model="entry.schlagnummer"
+                      label="Schlagnummer"
                       variant="outlined"
                       hide-details
                       density="compact"
@@ -665,6 +675,19 @@ const itemsJaNein = [
 ];
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
+const entryform = ref();
+
+const rules = {
+  threechars: [
+    (value) => {
+      if (value.length < 3) {
+        return 'Mindestens 3 Zeichen eingeben';
+      }
+      return true;
+    },
+  ],
+  notzero: [(value) => value > 0 || 'Dieser Wert muss größer Null sein'],
+};
 
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
@@ -774,7 +797,12 @@ function FloatTrunc(input) {
   return result;
 }
 
-function saveData() {
+async function saveData() {
+  const validated = await entryform.value.validate();
+  if (!validated.valid) {
+    return;
+  }
+
   if (currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
   } else {
@@ -903,7 +931,7 @@ div.obligatory div.v-input--disabled {
 }
 .entryForm {
   position: absolute;
-  left: 370px;
+  left: 420px;
   top: 60px;
   width: 650px;
   height: calc(100vh - 70px);
@@ -915,7 +943,7 @@ div.obligatory div.v-input--disabled {
   position: absolute;
   left: 10px;
   top: 60px;
-  width: 350px;
+  width: 400px;
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;

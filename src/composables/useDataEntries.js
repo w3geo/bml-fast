@@ -26,6 +26,7 @@ import { ref } from 'vue';
 /**
  * @typedef DataEntry
  * @property {number} jahr
+ * @property {number} feldstuecksnummer
  * @property {string} schlagnummer
  * @property {string} feldstuecksname
  * @property {string} flaechennutzungsart
@@ -66,6 +67,7 @@ export const emptyCulture = {
 /** @tpye {DataEntry} */
 export const emptyEntry = {
   jahr: 0,
+  feldstuecksnummer: 0,
   schlagnummer: '',
   feldstuecksname: '',
   flaechennutzungsart: '',

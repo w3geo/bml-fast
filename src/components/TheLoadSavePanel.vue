@@ -96,7 +96,7 @@ function readJson() {
   position: absolute;
   left: 10px;
   bottom: calc(50vh - 210px);
-  width: 350px;
+  width: 400px;
   height: 180px;
   overflow: auto;
 }

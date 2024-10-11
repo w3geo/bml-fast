@@ -121,7 +121,7 @@ table.bilanz tr td:nth-child(2) {
   position: absolute;
   left: 10px;
   bottom: 10px;
-  width: 350px;
+  width: 400px;
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;
@@ -129,7 +129,7 @@ table.bilanz tr td:nth-child(2) {
 
 .fertilizerData.maximized {
   height: calc(100% - 70px);
-  width: 1010px;
+  width: 1060px;
 }
 
 .error {

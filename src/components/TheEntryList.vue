@@ -12,14 +12,28 @@
         <div class="noEntry" v-if="savedData.length === 0">Keine gespeicherten Einträge.</div>
         <div v-for="i in savedData.length" :key="i" class="pa-0 ma-0">
           <div
-            class="bg-grey pa-1"
+            class="bg-grey px-1"
             v-if="i == 1 || (i > 1 && savedData[i - 1].jahr > savedData[i - 2].jahr)"
           >
             {{ savedData[i - 1].jahr }}
           </div>
-          <v-row no-gutters class="bg-grey-lighten-3 my-1 pa-1 text-subtitle-2">
+          <v-row
+            no-gutters
+            class="rowFormat header"
+            v-if="i == 1 || (i > 1 && savedData[i - 1].jahr > savedData[i - 2].jahr)"
+          >
+            <v-col cols="9">
+              <div>Feldstück: Name</div>
+              <div>Nr</div>
+              <div>Schlag</div></v-col
+            >
+            <v-col cols="3"></v-col>
+          </v-row>
+          <v-row no-gutters class="rowFormat">
             <v-col cols="9"
-              >{{ savedData[i - 1].schlagnummer }} / {{ savedData[i - 1].feldstuecksname }}</v-col
+              ><div>{{ savedData[i - 1].feldstuecksname }}</div>
+              <div>{{ savedData[i - 1].feldstuecksnummer }}</div>
+              <div>{{ savedData[i - 1].schlagnummer }}</div></v-col
             >
             <v-col cols="3" class="text-right">
               <v-icon
@@ -99,6 +113,32 @@ function deleteEntry(nr) {
 </script>
 
 <style scoped>
+.rowFormat {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  max-height: 30px;
+}
+.rowFormat div {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 30px;
+  padding-left: 5px;
+}
+.rowFormat.header {
+  background-color: #ddd;
+}
+.rowFormat div:nth-child(1) {
+  width: 70%;
+}
+.rowFormat div:nth-child(2) {
+  width: 15%;
+}
+.rowFormat div:nth-child(3) {
+  width: 15%;
+}
+
 .greyOut {
   position: absolute;
   left: 0px;
@@ -124,7 +164,7 @@ function deleteEntry(nr) {
   position: absolute;
   left: 10px;
   top: 60px;
-  width: 350px;
+  width: 400px;
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;
