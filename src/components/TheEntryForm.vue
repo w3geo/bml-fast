@@ -409,7 +409,7 @@
                           />
                         </v-col>
                         <v-col
-                          cols="4"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -429,20 +429,9 @@
                             hide-details
                           />
                         </v-col>
-                        <v-col
-                          cols="2"
-                          class="pa-2 text-right"
-                          v-if="
-                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
-                            !(
-                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i - 1].duengung[f - 1].id == ''
-                            )
-                          "
-                        ></v-col>
 
                         <v-col
-                          cols="2"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -455,11 +444,7 @@
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
-                            :label="
-                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
-                                ? 'NO₃(mg/L)'
-                                : 'N(%)'
-                            "
+                            :label="npkLabel('n', entry.cultures[i - 1].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -467,7 +452,7 @@
                           />
                         </v-col>
                         <v-col
-                          cols="2"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -483,7 +468,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
-                            label="P₂O₅(%)"
+                            :label="npkLabel('p', entry.cultures[i - 1].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -491,7 +476,7 @@
                           />
                         </v-col>
                         <v-col
-                          cols="2"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -507,7 +492,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
-                            label="K₂O(%)"
+                            :label="npkLabel('k', entry.cultures[i - 1].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -700,6 +685,49 @@ mapReady.then(() => {
 function firstUppercase(input) {
   const strinput = input.toString();
   return strinput.charAt(0).toUpperCase() + strinput.slice(1);
+}
+
+function npkLabel(what, type) {
+  let label = '';
+  switch (what) {
+    case 'n':
+      label = 'N(%)';
+      if (type === 'bewässerung') {
+        label = 'NO₃(mg/L)';
+      }
+      if (type === 'wirtschaftsdünger') {
+        label = 'N(kg/m³)';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 'N(kg/t)';
+      }
+      break;
+    case 'p':
+      label = 'P₂O₅(%)';
+      if (type === 'bewässerung') {
+        label = 'P₂O₅(mg/L)';
+      }
+      if (type === 'wirtschaftsdünger') {
+        label = 'P₂O₅(kg/m³)';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 'P₂O₅(kg/t)';
+      }
+      break;
+    case 'k':
+      label = 'K₂O(%)';
+      if (type === 'bewässerung') {
+        label = 'K₂O(mg/L)';
+      }
+      if (type === 'wirtschaftsdünger') {
+        label = 'K₂O(kg/m³)';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 'K₂O(kg/t)';
+      }
+      break;
+  }
+  return label;
 }
 
 function addFertilization(cindex) {
