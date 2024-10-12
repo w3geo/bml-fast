@@ -202,6 +202,7 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-autocomplete
                       v-model="entry.vorfrucht"
+                      item-value="xxx"
                       :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
                       variant="outlined"
@@ -260,6 +261,7 @@
                         variant="outlined"
                         density="compact"
                         hide-details
+                        clearable
                         @update:model-value="cultureChanged(i - 1)"
                       />
                     </v-col>
@@ -403,6 +405,7 @@
                             density="compact"
                             hide-details
                             @update:model-value="fertilizationChanged('id', i - 1, f - 1)"
+                            clearable
                           />
                         </v-col>
                         <v-col
@@ -735,6 +738,13 @@ function fertilizationChanged(what, cindex, findex) {
 
 function cultureChanged(index) {
   entry.value.cultures[index].ertragslage = '';
+  if (!entry.value.cultures[index].kultur) {
+    entry.value.cultures[index].kultur = '';
+    entry.value.cultures[index].nminvorgabe = 0;
+    entry.value.cultures[index].nmin = 0;
+    return;
+  }
+
   entry.value.cultures[index].nmin = tableAttribut(
     'kulturen',
     entry.value.cultures[index].kultur,
