@@ -45,7 +45,7 @@
                 </td>
                 <td :class="`border${outputConfig[pkey].border}`">
                   {{
-                    pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 2 })
+                    pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 4 })
                   }}
                 </td>
               </tr>

@@ -421,7 +421,13 @@
                         >
                           <v-text-field
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
-                            :label="`Menge (${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm = l/m²' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            :label="
+                              npkLabel(
+                                'menge',
+                                entry.cultures[i - 1].duengung[f - 1].typ,
+                                entry.cultures[i - 1].duengung[f - 1].id,
+                              )
+                            "
                             min="0"
                             variant="outlined"
                             density="compact"
@@ -444,7 +450,7 @@
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
-                            :label="npkLabel('n', entry.cultures[i - 1].duengung[f - 1].typ)"
+                            :label="npkLabel('n', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -468,7 +474,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
-                            :label="npkLabel('p', entry.cultures[i - 1].duengung[f - 1].typ)"
+                            :label="npkLabel('p', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -492,7 +498,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
-                            :label="npkLabel('k', entry.cultures[i - 1].duengung[f - 1].typ)"
+                            :label="npkLabel('k', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -687,7 +693,7 @@ function firstUppercase(input) {
   return strinput.charAt(0).toUpperCase() + strinput.slice(1);
 }
 
-function npkLabel(what, type) {
+function npkLabel(what, type, fid) {
   let label = '';
   switch (what) {
     case 'n':
@@ -726,6 +732,20 @@ function npkLabel(what, type) {
         label = 'K₂O(kg/t)';
       }
       break;
+    case 'menge':
+      label = tableAttribut('handelsdünger', fid, 'Einheit');
+      if (type === 'bewässerung') {
+        label = 'mm = l/m²';
+      }
+      if (type === 'wirtschaftsdünger' || type === 'eigene') {
+        label = 'm³';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 't';
+      }
+      break;
+
+    //      :label="`Menge (${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm = l/m²' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
   }
   return label;
 }

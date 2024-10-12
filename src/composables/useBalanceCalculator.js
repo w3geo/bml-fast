@@ -285,20 +285,20 @@ function calculateBilanz() {
       // 2. Anteile Sekundärrohstofe
       if (entry.value.cultures[c].duengung[d].typ === 'sekundärrohstoffe') {
         current.nmengesr +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].n;
         current.pmengesr +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].p;
         current.kmengesr +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].k;
       }
       // 3. Anteile Wirtschaftsdünger
       if (entry.value.cultures[c].duengung[d].typ === 'wirtschaftsdünger') {
         current.nmengewd +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].n;
         current.pmengewd +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].p;
         current.kmengewd +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].k;
       }
       // 4. Anteile Bewässerung
       if (entry.value.cultures[c].duengung[d].typ === 'bewässerung') {
