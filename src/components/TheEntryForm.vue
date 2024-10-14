@@ -202,13 +202,13 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-autocomplete
                       v-model="entry.vorfrucht"
-                      item-value="xxx"
                       :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
                       variant="outlined"
                       density="compact"
                       hide-details
                       clearable
+                      @update:model-value="cultureChanged(-1)"
                     />
                   </v-col>
                 </v-row>
@@ -705,7 +705,7 @@ function npkLabel(what, type, fid) {
         label = 'N(kg/m³)';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 'N(kg/t)';
+        label = 'N(kg/t|m³)';
       }
       break;
     case 'p':
@@ -717,7 +717,7 @@ function npkLabel(what, type, fid) {
         label = 'P₂O₅(kg/m³)';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 'P₂O₅(kg/t)';
+        label = 'P₂O₅(kg/t|m³)';
       }
       break;
     case 'k':
@@ -729,7 +729,7 @@ function npkLabel(what, type, fid) {
         label = 'K₂O(kg/m³)';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 'K₂O(kg/t)';
+        label = 'K₂O(kg/t|m³)';
       }
       break;
     case 'menge':
@@ -741,7 +741,7 @@ function npkLabel(what, type, fid) {
         label = 'm³';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 't';
+        label = 't|m³';
       }
       break;
 
@@ -785,6 +785,13 @@ function fertilizationChanged(what, cindex, findex) {
 }
 
 function cultureChanged(index) {
+  if (index === -1) {
+    if (!entry.value.vorfrucht) {
+      entry.value.vorfrucht = '';
+    }
+    return;
+  }
+
   entry.value.cultures[index].ertragslage = '';
   if (!entry.value.cultures[index].kultur) {
     entry.value.cultures[index].kultur = '';
