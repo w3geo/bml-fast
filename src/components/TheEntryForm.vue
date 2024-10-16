@@ -202,12 +202,14 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-autocomplete
                       v-model="entry.vorfrucht"
+                      v-model:search="search.vorfrucht"
                       :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
                       variant="outlined"
                       density="compact"
                       hide-details
                       clearable
+                      @click="clearSearch('vorfrucht')"
                       @update:model-value="cultureChanged(-1)"
                     />
                   </v-col>
@@ -252,6 +254,7 @@
                     <v-col cols="12" class="px-4 obligatory mb-3">
                       <v-autocomplete
                         v-model="entry.cultures[i - 1].kultur"
+                        v-model:search="search.kultur"
                         :items="
                           i > 1
                             ? lookup.kulturenItems[entry.flaechennutzungsart]
@@ -262,6 +265,7 @@
                         density="compact"
                         hide-details
                         clearable
+                        @click="clearSearch('kultur')"
                         @update:model-value="cultureChanged(i - 1)"
                       />
                     </v-col>
@@ -399,11 +403,13 @@
                         >
                           <v-autocomplete
                             v-model="entry.cultures[i - 1].duengung[f - 1].id"
+                            v-model:search="search.duengung"
                             :items="lookup[entry.cultures[i - 1].duengung[f - 1].typ]"
                             :label="firstUppercase(entry.cultures[i - 1].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             hide-details
+                            @click="clearSearch('duengung')"
                             @update:model-value="fertilizationChanged('id', i - 1, f - 1)"
                             clearable
                           />
@@ -683,10 +689,16 @@ const rules = {
   notzero: [(value) => value > 0 || 'Dieser Wert muss größer Null sein'],
 };
 
+const search = ref({ vorfrucht: null, kultur: null, duengung: null });
+
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
+
+function clearSearch(what) {
+  search.value[what] = null;
+}
 
 function firstUppercase(input) {
   const strinput = input.toString();

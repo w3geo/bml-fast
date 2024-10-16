@@ -317,10 +317,15 @@ function calculateBilanz() {
     current.pbilanz = current.pduengung - current.pentzug;
     current.kbilanz = current.kduengung - current.kentzug;
 
-    // B ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT -------------------------------------------------
+    // B ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT 1 -------------------------------------------------
 
-    // Nur relevant, wenn Vorfrucht + Hauptfrucht 1
-    if (entry.value.vorfrucht !== '' && c === 1 && entry.value.cultures[c].kultur !== '') {
+    // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
+    if (
+      c === 1 &&
+      entry.value.vorfrucht !== '' &&
+      !zfgenutzt &&
+      entry.value.cultures[c].kultur !== ''
+    ) {
       const hfgemüse =
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
 
@@ -330,9 +335,7 @@ function calculateBilanz() {
         entry.value.teilnahme_grundwasserschutz_acker &&
         entry.value.nsaldo > 0
       ) {
-        if (!zfgenutzt && !zfungenutzt) {
-          current.nsaldo = entry.value.nsaldo;
-        }
+        current.nsaldo = entry.value.nsaldo;
         if (zfungenutzt) {
           current.nsaldo =
             entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
