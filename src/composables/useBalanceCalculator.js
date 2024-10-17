@@ -3,6 +3,8 @@ import { tableAttribut, lookup } from './useLookUps.js';
 
 /**
  * @typedef {Object} kulturbilanz
+ * @property {number} duengeobergrenze Dünge-Obergrenze
+ * @property {number} duengeobergrenzered Dünge-Obergrenze
  * @property {number} nsaldo N-Saldo
  * @property {number} vfwert Vorfruchtwert Vorfrucht
  * @property {number} vfwertzf Vorfruchtwert Zwischenfrucht
@@ -34,6 +36,8 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @type kulturbilanz
  */
 const emptyKulturbilanz = {
+  duengeobergrenze: 0,
+  duengeobergrenzered: 0,
   nsaldo: 0,
   vfwert: 0,
   vfwertzf: 0,
@@ -65,6 +69,13 @@ const emptyKulturbilanz = {
  * @type {Object<keyof kulturbilanz, Object>}
  */
 export const outputConfig = {
+  duengeobergrenze: { label: 'Düngeobergrenze', print: false, bold: false, border: '' },
+  duengeobergrenzered: {
+    label: 'Düngeobergrenze reduziert',
+    print: false,
+    bold: false,
+    border: '',
+  },
   nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
   vfwert: { label: 'Vorfruchtwert Vorfrucht', print: false, bold: false, border: '' },
   vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
@@ -265,7 +276,17 @@ function calculateBilanz() {
   for (let c = 0; c < entry.value.cultures.length; c++) {
     const current = { ...emptyKulturbilanz };
 
-    // A ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
+    // A ---------- DÜNGEOBERGRENZE --------------------------------------------------------------------
+    if (c > 0) {
+      let elkey = 'Düngeobergrenze EL ' + entry.value.cultures[c].ertragslage;
+      if (entry.value.nitratrisikogebiet) {
+        elkey += ' A5';
+      }
+      current.duengeobergrenze = tableAttribut('kulturen', entry.value.cultures[c].kultur, elkey);
+      current.duengeobergrenzered = current.duengeobergrenze;
+    }
+
+    // B ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
 
     [current.nentzug, current.pentzug, current.kentzug] = calculateEntzug(c);
     for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
@@ -317,7 +338,7 @@ function calculateBilanz() {
     current.pbilanz = current.pduengung - current.pentzug;
     current.kbilanz = current.kduengung - current.kentzug;
 
-    // B ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT 1 -------------------------------------------------
+    // C ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT 1 -------------------------------------------------
 
     // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
     if (

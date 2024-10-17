@@ -10,13 +10,8 @@
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
         Nährstoff-Bilanz
       </v-col>
-      <v-col cols="2" class="text-right">
-        <v-icon class="mr-2" @click.stop="winMaximize = !winMaximize"
-          >{{ winMaximize ? 'mdi-window-restore' : 'mdi-window-maximize' }}
-        </v-icon>
-      </v-col>
     </v-row>
-    <v-sheet height="calc(100% - 30px)" class="overflow-auto">
+    <v-sheet height="calc(100% - 70px)" class="overflow-auto">
       <v-row
         v-for="(message, index) in bilanz.errors"
         :key="`error${index}`"
@@ -26,34 +21,61 @@
           ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
         </v-col></v-row
       >
-      <v-row no-gutters
-        ><v-col>
-          <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
-            <table class="bilanz" v-if="entry.cultures[index].kultur !== ''">
-              <tr>
-                <th colspan="2">
-                  {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
-                </th>
-              </tr>
-              <tr
-                v-for="(pvalue, pkey) in kultur"
-                :key="`row_${index}_${pkey}`"
-                :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
-              >
-                <td :class="`border${outputConfig[pkey].border}`">
-                  {{ outputConfig[pkey].label }}
-                </td>
-                <td :class="`border${outputConfig[pkey].border}`">
-                  {{
-                    pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 4 })
-                  }}
-                </td>
-              </tr>
-            </table>
-          </v-sheet>
-        </v-col>
-      </v-row>
+      <v-card
+        class="ma-2 cardBorder"
+        :class="index == 0 ? 'zwischenfrucht' : 'hauptfrucht'"
+        elevation="0"
+        v-for="(kultur, index) in bilanz.bilanz"
+        :key="`bilanztable${index}`"
+      >
+        <v-row no-gutters class="bg-brown-lighten-2">
+          <v-col cols="12" class="pa-1 cultureHeader">
+            {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}</v-col
+          ></v-row
+        >
+        <v-row no-gutters
+          ><v-col>
+            <v-sheet>
+              <table class="bilanz" v-if="entry.cultures[index].kultur !== ''">
+                <tr>
+                  <th colspan="2">Bilanz / Abzüge</th>
+                </tr>
+                <tr
+                  v-for="(pvalue, pkey) in kultur"
+                  :key="`row_${index}_${pkey}`"
+                  :class="{
+                    hidezero: pvalue == 0 && !outputConfig[pkey].print,
+                    hide: !outputConfig[pkey].print,
+                    bold: outputConfig[pkey].bold,
+                  }"
+                >
+                  <td :class="`border${outputConfig[pkey].border}`">
+                    {{ outputConfig[pkey].label }}
+                  </td>
+                  <td :class="`border${outputConfig[pkey].border}`">
+                    {{
+                      pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 4 })
+                    }}
+                  </td>
+                </tr>
+              </table>
+            </v-sheet>
+          </v-col>
+        </v-row>
+      </v-card>
     </v-sheet>
+    <v-row no-gutters class="bg-grey-darken-2"
+      ><v-col class="pa-2">
+        <v-btn
+          density="compact"
+          :prepend-icon="winMaximize ? 'mdi-magnify-minus' : 'mdi-magnify-plus'"
+          color="grey-lighten-3"
+          block
+          @click.stop="winMaximize = !winMaximize"
+          >{{ winMaximize ? 'Verkleinern (Übersicht)' : 'Vergrößern (Detailansicht)' }}
+        </v-btn>
+      </v-col></v-row
+    >
   </v-card>
 </template>
 
@@ -81,8 +103,14 @@ table.bilanz tr {
   padding: 0px;
 }
 table.bilanz tr.hide {
-  color: #aaa;
   font-style: italic;
+}
+table.bilanz tr.hide td {
+  color: lightpink;
+}
+
+table.bilanz tr.hidezero {
+  display: none;
 }
 
 table.bilanz th {
@@ -137,6 +165,23 @@ table.bilanz tr td:nth-child(2) {
   border: 1px solid red;
   font-size: 12px;
   color: red;
+}
+
+.cardBorder {
+  border: 2px solid;
+  border-bottom: 5px solid;
+}
+
+.cardBorder.zwischenfrucht {
+  border-color: #bcaaa4;
+}
+
+.cardBorder.hauptfrucht {
+  border-color: #a1887f;
+}
+.cultureHeader {
+  font-size: 12px;
+  text-transform: uppercase;
 }
 </style>
 
