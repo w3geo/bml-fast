@@ -8,18 +8,21 @@
     <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
-        Nährstoff-Bilanz
+        Düngeobergrenzen / Bilanz
       </v-col>
     </v-row>
     <v-sheet height="calc(100% - 70px)" class="overflow-auto">
-      <v-row
+      <v-card
+        class="ma-1"
+        elevation="0"
+        color="red-lighten-1"
         v-for="(message, index) in bilanz.errors"
         :key="`error${index}`"
-        no-gutters
-        class="ma-1 mx-2 error"
-        ><v-col cols="12" class="pa-1 pl-4"
-          ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
-        </v-col></v-row
+      >
+        <v-row no-gutters class="error"
+          ><v-col cols="1" class="pa-1"><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+          ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
+        ></v-card
       >
       <v-card
         class="ma-2 cardBorder"
@@ -162,9 +165,7 @@ table.bilanz tr td:nth-child(2) {
 
 .error {
   position: relative;
-  border: 1px solid red;
   font-size: 12px;
-  color: red;
 }
 
 .cardBorder {
@@ -182,13 +183,5 @@ table.bilanz tr td:nth-child(2) {
 .cultureHeader {
   font-size: 12px;
   text-transform: uppercase;
-}
-</style>
-
-<style>
-.error .v-icon {
-  position: absolute;
-  left: -2px;
-  top: -2px;
 }
 </style>

@@ -3,6 +3,7 @@ import { tableAttribut, lookup } from './useLookUps.js';
 
 /**
  * @typedef {Object} kulturbilanz
+ * @property {Array<string>} errors Fehlermeldungen
  * @property {number} duengeobergrenze Dünge-Obergrenze
  * @property {number} duengeobergrenzered Dünge-Obergrenze
  * @property {number} nsaldo N-Saldo
@@ -36,6 +37,7 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @type kulturbilanz
  */
 const emptyKulturbilanz = {
+  errors: [],
   duengeobergrenze: 0,
   duengeobergrenzered: 0,
   nsaldo: 0,
@@ -69,6 +71,7 @@ const emptyKulturbilanz = {
  * @type {Object<keyof kulturbilanz, Object>}
  */
 export const outputConfig = {
+  errors: { label: 'Fehler', print: false, bold: false, border: '' },
   duengeobergrenze: { label: 'Düngeobergrenze', print: false, bold: false, border: '' },
   duengeobergrenzered: {
     label: 'Düngeobergrenze reduziert',
@@ -261,10 +264,7 @@ function calculateEntzug(idx) {
 /**
  * @returns {Array<kulturbilanz>}
  */
-function calculateBilanz() {
-  bilanz = [];
-  const retVal = [];
-
+function calculateBilanz(retVal) {
   const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
     entry.value.cultures[0].kultur,
   );
@@ -429,15 +429,24 @@ function calculateBilanz() {
  */
 export function updateBilanz() {
   errors = [];
-  let anyErrors = false;
+  bilanz = [];
+  let stopperErrors = false;
 
   // Pflichtangaben
   if (entry.value.flaeche <= 0) {
     errors.push('Fehlende Flächenangabe für den Schlag');
   }
+  console.log(entry.value.cultures);
+  if (entry.value.cultures.length < 2) {
+    errors.push(
+      'Keine Kulturen spezifiziert. Es werden keine Düngeobergrenzen oder Bilanzen berechnet.',
+    );
+    stopperErrors = true;
+  }
 
   // Kulturen
   for (let c = 0; c < entry.value.cultures.length; c++) {
+    bilanz.push({ ...emptyKulturbilanz });
     if (entry.value.cultures[c].kultur != '') {
       if (
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Ertragserfassungsart') !==
@@ -447,14 +456,14 @@ export function updateBilanz() {
       ) {
         if (entry.value.cultures[c].ertragslage === '') {
           errors.push(`${c}. Hauptfrucht: Erwartete Ertragslage nicht angegeben`);
-          anyErrors = true;
+          stopperErrors = true;
         }
         if (
           entry.value.cultures[c].ertragslageernte === '' &&
           !(entry.value.cultures[c].ernte > 0)
         ) {
           errors.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
-          anyErrors = true;
+          stopperErrors = true;
         }
       }
       // Düngung
@@ -466,26 +475,26 @@ export function updateBilanz() {
             } else {
               errors.push(`Zwischenfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
             }
-            anyErrors = true;
+            stopperErrors = true;
           } else if (entry.value.cultures[c].duengung[d].menge <= 0) {
             if (c > 0) {
               errors.push(`${c}. Hauptfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
             } else {
               errors.push(`Zwischenfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
             }
-            anyErrors = true;
+            stopperErrors = true;
           }
         }
       }
     } else {
       if (c > 0) {
         errors.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
-        anyErrors = true;
+        stopperErrors = true;
       }
     }
   }
 
-  bilanz = anyErrors ? [] : calculateBilanz();
+  bilanz = stopperErrors ? [] : calculateBilanz(bilanz);
   return { bilanz, errors };
 }
 
