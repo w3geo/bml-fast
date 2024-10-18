@@ -24,30 +24,72 @@
           ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
         ></v-card
       >
-      <v-card
-        class="ma-2 cardBorder"
-        :class="index == 0 ? 'zwischenfrucht' : 'hauptfrucht'"
-        elevation="0"
-        v-for="(kultur, index) in bilanz.bilanz"
-        :key="`bilanztable${index}`"
-      >
-        <v-row no-gutters class="bg-brown-lighten-2">
-          <v-col cols="12" class="pa-1 cultureHeader">
-            {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}</v-col
-          ></v-row
+      <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
+        <v-card
+          v-if="entry.cultures[index].kultur !== ''"
+          class="ma-2 cardBorder"
+          :class="index == 0 ? 'zwischenfrucht' : 'hauptfrucht'"
+          elevation="0"
         >
-        <v-row no-gutters
-          ><v-col>
-            <v-sheet>
-              <table class="bilanz" v-if="entry.cultures[index].kultur !== ''">
-                <tr>
-                  <th colspan="2">Bilanz / Abzüge</th>
-                </tr>
+          <v-row no-gutters class="bg-brown-lighten-2">
+            <v-col cols="12" class="pa-1 cultureHeader">
+              {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}</v-col
+            ></v-row
+          >
+
+          <v-card class="ma-1" elevation="0" v-if="kultur.duengeobergrenze > 0">
+            <v-row no-gutters class="error bg-grey"
+              ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze (ohne Abzüge)</v-col
+              ><v-col vols="2" class="pa-2 text-right tableHeader"
+                >{{
+                  kultur.duengeobergrenze.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 4,
+                  })
+                }}
+              </v-col></v-row
+            ></v-card
+          >
+
+          <v-card
+            class="ma-1"
+            elevation="0"
+            color="red-lighten-1"
+            v-for="(message, index) in kultur.errorsOG"
+            :key="`error${index}`"
+          >
+            <v-row no-gutters class="error"
+              ><v-col cols="1" class="pa-1"><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+              ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
+            ></v-card
+          >
+
+          <v-card color="grey" class="ma-1 pa-1" elevation="0" v-if="kultur.duengeobergrenze > 0">
+            <v-sheet class="bg-grey tableHeader">Bilanz</v-sheet>
+
+            <v-sheet v-if="kultur.errorsOG.length === 0" class="py-1">
+              <v-card
+                class="ma-1"
+                elevation="0"
+                color="red-lighten-1"
+                v-for="(message, index) in kultur.errorsBI"
+                :key="`error${index}`"
+              >
+                <v-row no-gutters class="error"
+                  ><v-col cols="1" class="pa-1"><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+                  ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
+                ></v-card
+              >
+
+              <table class="bilanz" v-if="kultur.errorsBI.length === 0">
                 <tr
                   v-for="(pvalue, pkey) in kultur"
                   :key="`row_${index}_${pkey}`"
                   :class="{
-                    hidezero: pvalue == 0 && !outputConfig[pkey].print,
+                    hidezero:
+                      pkey === 'errorsBI' ||
+                      pkey === 'errorsOG' ||
+                      (pvalue === 0 && !outputConfig[pkey].print),
                     hide: !outputConfig[pkey].print,
                     bold: outputConfig[pkey].bold,
                   }"
@@ -57,15 +99,18 @@
                   </td>
                   <td :class="`border${outputConfig[pkey].border}`">
                     {{
-                      pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 4 })
+                      pvalue.toLocaleString('de-DE', {
+                        style: 'decimal',
+                        maximumFractionDigits: 4,
+                      })
                     }}
                   </td>
                 </tr>
               </table>
             </v-sheet>
-          </v-col>
-        </v-row>
-      </v-card>
+          </v-card>
+        </v-card>
+      </v-sheet>
     </v-sheet>
     <v-row no-gutters class="bg-grey-darken-2"
       ><v-col class="pa-2">
@@ -116,11 +161,13 @@ table.bilanz tr.hidezero {
   display: none;
 }
 
-table.bilanz th {
+.tableHeader {
   padding: 2px;
   font-size: 11px;
-  background-color: #eee;
-  text-align: left;
+  font-weight: bold;
+  letter-spacing: 0.0892857143em !important;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase !important;
 }
 
 table.bilanz td {
@@ -128,6 +175,10 @@ table.bilanz td {
   border: 1px solid #eee;
   font-size: 11px;
   color: #777;
+  font-weight: 500;
+  letter-spacing: 0.0892857143em !important;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase !important;
 }
 
 table.bilanz tr.bold td {
@@ -146,6 +197,7 @@ table.bilanz tr td:nth-child(1) {
 }
 table.bilanz tr td:nth-child(2) {
   width: 15%;
+  text-align: right;
 }
 
 .fertilizerData {
