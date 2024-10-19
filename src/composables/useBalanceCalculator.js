@@ -75,9 +75,9 @@ const emptyKulturbilanz = {
 export const outputConfig = {
   errorsOG: { label: 'Fehler OG', print: false, bold: false, border: '' },
   errorsBI: { label: 'Fehler BI', print: false, bold: false, border: '' },
-  duengeobergrenze: { label: 'Düngeobergrenze', print: false, bold: false, border: '' },
+  duengeobergrenze: { label: 'Düngeobergrenze (brutto)', print: true, bold: true, border: '' },
   duengeobergrenzered: {
-    label: 'Düngeobergrenze reduziert',
+    label: 'Düngeobergrenze (netto))',
     print: false,
     bold: false,
     border: '',
@@ -259,7 +259,13 @@ function calculateEntzug(idx) {
   return [nEntzug, pEntzug, kEntzug];
 }
 
+/**
+ * @param {Array<kulturbilanz>} retVal
+ * @returns {number}
+ */
+
 function calculateBilanz(retVal) {
+  let dogSumme = 0;
   const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
     entry.value.cultures[0].kultur,
   );
@@ -279,6 +285,7 @@ function calculateBilanz(retVal) {
         tableAttribut('kulturen', entry.value.cultures[c].kultur, elkey),
       );
       retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;
+      dogSumme += retVal[c].duengeobergrenze;
     }
 
     // B ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
@@ -414,15 +421,17 @@ function calculateBilanz(retVal) {
       }
     }
   }
+  return dogSumme;
 }
 
 /**
- * @returns {{bilanz: Array<kulturbilanz>, errors: Array<string>}}}
+ * @returns {{duengeobergrenze: number, bilanz: Array<kulturbilanz>, errors: Array<string>}}}
  */
 export function updateBilanz() {
   const errors = [];
   let bilanz = [];
   let stopperErrors = false;
+  let duengeobergrenze = 0;
 
   // Pflichtangaben
   if (entry.value.flaeche <= 0) {
@@ -444,6 +453,11 @@ export function updateBilanz() {
       ) {
         if (entry.value.cultures[c].ertragslage === '') {
           bilanz[bct].errorsOG.push(`Erwartete Ertragslage nicht angegeben`);
+          if (errors.length === 0) {
+            errors.push(
+              'Unvollständige Angaben bei mind. einer Kultur - es kann keine Gesamt-Düngeobergrenze berechnet werden.',
+            );
+          }
         }
         if (
           entry.value.cultures[c].ertragslageernte === '' &&
@@ -482,9 +496,9 @@ export function updateBilanz() {
   if (stopperErrors) {
     bilanz = [];
   } else {
-    calculateBilanz(bilanz);
+    duengeobergrenze = calculateBilanz(bilanz);
   }
-  return { bilanz, errors };
+  return { duengeobergrenze, bilanz, errors };
 }
 
 export function useBalanceCalculator() {

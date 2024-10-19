@@ -24,6 +24,21 @@
           ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
         ></v-card
       >
+
+      <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
+        <v-row no-gutters class="error bg-grey-darken-2"
+          ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (brutto)</v-col
+          ><v-col vols="2" class="pa-2 text-right tableHeader"
+            >{{
+              bilanz.duengeobergrenze.toLocaleString('de-DE', {
+                style: 'decimal',
+                maximumFractionDigits: 4,
+              })
+            }}
+          </v-col></v-row
+        ></v-card
+      >
+
       <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
         <v-card
           v-if="entry.cultures[index].kultur !== ''"
@@ -35,20 +50,6 @@
             <v-col cols="12" class="pa-1 cultureHeader">
               {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}</v-col
             ></v-row
-          >
-
-          <v-card class="ma-1" elevation="0" v-if="kultur.duengeobergrenze > 0">
-            <v-row no-gutters class="error bg-grey"
-              ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze (ohne Abzüge)</v-col
-              ><v-col vols="2" class="pa-2 text-right tableHeader"
-                >{{
-                  kultur.duengeobergrenze.toLocaleString('de-DE', {
-                    style: 'decimal',
-                    maximumFractionDigits: 4,
-                  })
-                }}
-              </v-col></v-row
-            ></v-card
           >
 
           <v-card
