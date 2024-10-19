@@ -817,7 +817,7 @@ function cultureChanged(index) {
     entry.value.cultures[index].kultur,
     'VFW | Nmin selbes Jahr',
   );
-  entry.value.cultures[index].nminvorgabe = entry.value.cultures[index].nmin;
+  entry.value.cultures[index].nminvorgabe = Number(entry.value.cultures[index].nmin);
 }
 
 function allCulturesReset() {

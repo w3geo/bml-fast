@@ -83,7 +83,7 @@ export const outputConfig = {
     border: '',
   },
   nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
-  vfwert: { label: 'Vorfruchtwert Vorfrucht', print: false, bold: false, border: '' },
+  vfwert: { label: 'Vorfruchtwert Vorfrucht', print: true, bold: false, border: '' },
   vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
   nminman: { label: 'Manueller N-Min', print: false, bold: false, border: '' },
   redfaktor: { label: 'Reduktionsfaktor', print: false, bold: false, border: '' },
@@ -96,7 +96,7 @@ export const outputConfig = {
     border: '',
   },
   nmengewd: { label: 'N-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
-  nabzug: { label: 'N-Abzug von Düngeobergrenze', print: true, bold: false, border: '' },
+  nabzug: { label: 'N-Abzug von Düngeobergrenze', print: false, bold: false, border: '' },
   nanrechenbar: { label: 'Anrechenbarer Stickstoff', print: true, bold: false, border: '' },
   nentzug: { label: 'N-Entzug', print: false, bold: false, border: '' },
   nbilanz: { label: 'N-Bilanz', print: true, bold: true, border: 'bottom' },
@@ -238,7 +238,6 @@ function calculateEntzug(idx) {
       }
       break;
   }
-
   // 3. P-Entzug , nur nach erreichter Ertragslage
   const ppostfix =
     entry.value.phosphor_gehaltsklasse === 'E' ? '' : ` ${ertragslage.split(' ')[0]}`;
@@ -255,8 +254,7 @@ function calculateEntzug(idx) {
     entry.value.cultures[idx].kultur,
     `Phosphor ${entry.value.kalium_gehaltsklasse}${kpostfix}`,
   );
-
-  return [nEntzug, pEntzug, kEntzug];
+  return [Number(nEntzug), Number(pEntzug), Number(kEntzug)];
 }
 
 /**
@@ -340,7 +338,7 @@ function calculateBilanz(retVal) {
     retVal[c].pbilanz = retVal[c].pduengung - retVal[c].pentzug;
     retVal[c].kbilanz = retVal[c].kduengung - retVal[c].kentzug;
 
-    // C ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT 1 -------------------------------------------------
+    // C ---------- ABZÜGE HAUPTFRUCHT 1 VON VORFRUCHT UND ZWISCHENFRUCHT --------------------------------------
 
     // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
     if (
@@ -351,22 +349,8 @@ function calculateBilanz(retVal) {
     ) {
       const hfgemüse =
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
-
-      // 1. N-Saldo
-      if (
-        entry.value.flaeche_grundwasserschutz > 0 &&
-        entry.value.teilnahme_grundwasserschutz_acker &&
-        entry.value.nsaldo > 0
-      ) {
-        retVal[c].nsaldo = entry.value.nsaldo;
-        if (zfungenutzt) {
-          retVal[c].nsaldo =
-            entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
-        }
-      }
-
-      // 2. Vorfruchtwert
-      const hfmanuell = entry.value.cultures[c].nmin;
+      const hfmanuell =
+        Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
       const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
       const hftable = Number(
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
@@ -381,43 +365,27 @@ function calculateBilanz(retVal) {
             )
           : 0;
 
+      // 1. N-Saldo
       if (
-        vfgemüse &&
-        hfgemüse &&
-        entry.value.flaeche_grundwasserschutz > 0 &&
-        entry.value.teilnahme_grundwasserschutz_acker
-      ) {
-        retVal[c].nabzug = zfungenutzt
-          ? entry.value.nsaldo * redfaktor + zfnmin
-          : entry.value.nsaldo;
-      }
-
-      if (
-        !vfgemüse &&
         entry.value.flaeche_grundwasserschutz > 0 &&
         entry.value.teilnahme_grundwasserschutz_acker &&
-        !zfgenutzt
+        entry.value.nsaldo > 0
       ) {
-        if (hfgemüse && hfmanuell != hftable && entry.value.nsaldo > hfmanuell) {
-          retVal[c].nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
-        }
-        if (!hfgemüse && entry.value.nsaldo > 0) {
-          retVal[c].nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
+        retVal[c].nsaldo = entry.value.nsaldo;
+        if (zfungenutzt) {
+          retVal[c].nsaldo =
+            entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
         }
       }
 
+      // 2. Vorfruchtwert der Vorfrucht
+      retVal[c].vfwert = vfnmin;
       if (
-        !vfgemüse &&
-        entry.value.flaeche_grundwasserschutz > 0 &&
-        entry.value.teilnahme_grundwasserschutz_acker &&
-        zfgenutzt
+        (vfgemüse && hfgemüse && hfmanuell) ||
+        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
+        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin)
       ) {
-        if (hfgemüse && hfmanuell != hftable && entry.value.nsaldo > hfmanuell) {
-          retVal[c].nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
-        }
-        if (!hfgemüse && entry.value.nsaldo > 0) {
-          retVal[c].nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
-        }
+        retVal[c].vfwert = 0;
       }
     }
   }
