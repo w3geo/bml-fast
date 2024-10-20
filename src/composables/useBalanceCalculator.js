@@ -274,15 +274,18 @@ function calculateBilanz(retVal) {
 
   for (let c = 0; c < entry.value.cultures.length; c++) {
     // A ---------- DÜNGEOBERGRENZE --------------------------------------------------------------------
-    if (c > 0) {
-      let elkey = 'Düngeobergrenze EL ' + entry.value.cultures[c].ertragslage;
+    if (entry.value.cultures[c].kultur !== '') {
+      let elkey =
+        'Düngeobergrenze EL ' + (c === 0 ? 'mittel' : entry.value.cultures[c].ertragslage);
       if (entry.value.nitratrisikogebiet) {
         elkey += ' A5';
       }
+      console.log(elkey);
       retVal[c].duengeobergrenze = Number(
         tableAttribut('kulturen', entry.value.cultures[c].kultur, elkey),
       );
       retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;
+      console.log(retVal[c].duengeobergrenze);
       dogSumme += retVal[c].duengeobergrenze;
     }
 
@@ -338,7 +341,18 @@ function calculateBilanz(retVal) {
     retVal[c].pbilanz = retVal[c].pduengung - retVal[c].pentzug;
     retVal[c].kbilanz = retVal[c].kduengung - retVal[c].kentzug;
 
-    // C ---------- ABZÜGE HAUPTFRUCHT 1 VON VORFRUCHT UND ZWISCHENFRUCHT --------------------------------------
+    // C ---------- ABZÜGE ZWISCHENFRUCHT GENUTZT VON VORFRUCHT ------------------------------------------------
+    // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
+    if (
+      c === 0 &&
+      entry.value.vorfrucht !== '' &&
+      zfgenutzt &&
+      entry.value.cultures[c].kultur !== ''
+    ) {
+      // code goes here
+    }
+
+    // D ---------- ABZÜGE HAUPTFRUCHT 1 VON VORFRUCHT UND ZWISCHENFRUCHT --------------------------------------
 
     // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
     if (
@@ -353,9 +367,6 @@ function calculateBilanz(retVal) {
         Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
       const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
       const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
-      const hftable = Number(
-        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
-      );
       const vfnmin = Number(
         tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'),
       );
