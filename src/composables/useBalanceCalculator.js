@@ -78,12 +78,12 @@ export const outputConfig = {
   duengeobergrenze: { label: 'Düngeobergrenze (brutto)', print: true, bold: true, border: '' },
   duengeobergrenzered: {
     label: 'Düngeobergrenze (netto))',
-    print: false,
+    print: true,
     bold: false,
     border: '',
   },
   nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
-  vfwert: { label: 'Vorfruchtwert Vorfrucht', print: true, bold: false, border: '' },
+  vfwert: { label: 'Vorfruchtwert Vorfrucht', print: false, bold: false, border: '' },
   vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
   nminman: { label: 'Manueller N-Min', print: false, bold: false, border: '' },
   redfaktor: { label: 'Reduktionsfaktor', print: false, bold: false, border: '' },
@@ -351,6 +351,7 @@ function calculateBilanz(retVal) {
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
       const hfmanuell =
         Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
+      const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
       const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
       const hftable = Number(
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
@@ -361,7 +362,7 @@ function calculateBilanz(retVal) {
       const zfnmin =
         entry.value.cultures[0].kultur !== ''
           ? Number(
-              tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin Folgejahr'),
+              tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin selbes Jahr'),
             )
           : 0;
 
@@ -376,17 +377,39 @@ function calculateBilanz(retVal) {
           retVal[c].nsaldo =
             entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
         }
+        if (hfmanuell && entry.value.nsaldo < hfmanuellnmin) {
+          retVal[c].nsaldo = 0;
+        }
       }
 
       // 2. Vorfruchtwert der Vorfrucht
       retVal[c].vfwert = vfnmin;
       if (
         (vfgemüse && hfgemüse && hfmanuell) ||
-        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
-        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin)
+        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo >= vfnmin) ||
+        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor >= vfnmin)
       ) {
         retVal[c].vfwert = 0;
       }
+
+      // 3. Vorfruchtwert der Zwischenfrucht
+      if (zfungenutzt) {
+        retVal[c].vfwertzf = zfnmin;
+      }
+
+      // 4. manueller NMin Wert
+      if (hfmanuell) {
+        retVal[c].nminman = hfmanuellnmin;
+        if (
+          (zfungenutzt && entry.value.nsaldo * redfaktor >= hfmanuellnmin) ||
+          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo >= hfmanuellnmin)
+        ) {
+          retVal[c].nminman = 0;
+        }
+      }
+
+      retVal[c].duengeobergrenzered =
+        retVal[c].duengeobergrenze - retVal[c].nsaldo - retVal[c].vfwert - retVal[c].vfwertzf;
     }
   }
   return dogSumme;

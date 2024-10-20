@@ -65,7 +65,12 @@
             ></v-card
           >
 
-          <v-card color="grey" class="ma-1 pa-1" elevation="0" v-if="kultur.duengeobergrenze > 0">
+          <v-card
+            color="grey"
+            class="ma-1 pa-1"
+            elevation="0"
+            v-if="index === 0 || kultur.duengeobergrenze > 0"
+          >
             <v-sheet class="bg-grey tableHeader">Bilanz</v-sheet>
 
             <v-sheet v-if="kultur.errorsOG.length === 0" class="py-1">
