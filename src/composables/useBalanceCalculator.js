@@ -271,6 +271,12 @@ function calculateBilanz(retVal) {
     entry.value.cultures[0].kultur,
   );
   const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
+  const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
+  const vfnmin = Number(tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'));
+  const zfnmin =
+    entry.value.cultures[0].kultur !== ''
+      ? Number(tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin selbes Jahr'))
+      : 0;
 
   for (let c = 0; c < entry.value.cultures.length; c++) {
     // A ---------- DÜNGEOBERGRENZE --------------------------------------------------------------------
@@ -343,13 +349,18 @@ function calculateBilanz(retVal) {
 
     // C ---------- ABZÜGE ZWISCHENFRUCHT GENUTZT VON VORFRUCHT ------------------------------------------------
     // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
-    if (
-      c === 0 &&
-      entry.value.vorfrucht !== '' &&
-      zfgenutzt &&
-      entry.value.cultures[c].kultur !== ''
-    ) {
-      // code goes here
+    if (c === 0 && zfgenutzt && entry.value.cultures[c].kultur !== '') {
+      if (entry.value.vorfrucht !== '') {
+        retVal[c].vfwert = vfnmin;
+      }
+      if (entry.value.nsaldo > 0) {
+        retVal[c].nsaldo = entry.value.nsaldo;
+      }
+
+      // Auswirkungen auf HF1
+      if (entry.value.cultures[1].kultur !== '') {
+        retVal[1].vfwertzf = zfnmin;
+      }
     }
 
     // D ---------- ABZÜGE HAUPTFRUCHT 1 VON VORFRUCHT UND ZWISCHENFRUCHT --------------------------------------
@@ -366,16 +377,6 @@ function calculateBilanz(retVal) {
       const hfmanuell =
         Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
       const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
-      const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
-      const vfnmin = Number(
-        tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'),
-      );
-      const zfnmin =
-        entry.value.cultures[0].kultur !== ''
-          ? Number(
-              tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin selbes Jahr'),
-            )
-          : 0;
 
       // 1. N-Saldo
       if (
@@ -418,10 +419,9 @@ function calculateBilanz(retVal) {
           retVal[c].nminman = 0;
         }
       }
-
-      retVal[c].duengeobergrenzered =
-        retVal[c].duengeobergrenze - retVal[c].nsaldo - retVal[c].vfwert - retVal[c].vfwertzf;
     }
+    retVal[c].duengeobergrenzered =
+      retVal[c].duengeobergrenze - retVal[c].nsaldo - retVal[c].vfwert - retVal[c].vfwertzf;
   }
   return dogSumme;
 }
