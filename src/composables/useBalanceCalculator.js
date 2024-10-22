@@ -75,11 +75,11 @@ const emptyKulturbilanz = {
 export const outputConfig = {
   errorsOG: { label: 'Fehler OG', print: false, bold: false, border: '' },
   errorsBI: { label: 'Fehler BI', print: false, bold: false, border: '' },
-  duengeobergrenze: { label: 'Düngeobergrenze (brutto)', print: true, bold: true, border: '' },
+  duengeobergrenze: { label: 'Düngeobergrenze (brutto)', print: true, bold: false, border: '' },
   duengeobergrenzered: {
     label: 'Düngeobergrenze (netto))',
     print: true,
-    bold: false,
+    bold: true,
     border: '',
   },
   nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
@@ -144,6 +144,19 @@ function calculateEntzug(idx) {
     'Ertragserfassungsart',
   );
   if (erfassung === 'keine Ertragserfassung' || erfassung === 'Düngeverbot') {
+    if (lookup.value.aussaatTypeFilter.zwischenG.includes(entry.value.cultures[idx].kultur)) {
+      return [
+        Number(
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            `Düngeobergrenze EL mittel${entry.value.nitratrisikogebiet ? ' A5' : ''}`,
+          ),
+        ),
+        0,
+        0,
+      ];
+    }
     // KEIN ENTZUG
     return [0, 0, 0];
   }
@@ -286,12 +299,10 @@ function calculateBilanz(retVal) {
       if (entry.value.nitratrisikogebiet) {
         elkey += ' A5';
       }
-      console.log(elkey);
       retVal[c].duengeobergrenze = Number(
         tableAttribut('kulturen', entry.value.cultures[c].kultur, elkey),
       );
       retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;
-      console.log(retVal[c].duengeobergrenze);
       dogSumme += retVal[c].duengeobergrenze;
     }
 
@@ -337,17 +348,8 @@ function calculateBilanz(retVal) {
           (entry.value.cultures[c].duengung[d].n / 4.43);
       }
     }
-    // Düngungen und Bilanz
-    retVal[c].nanrechenbar =
-      retVal[c].nmengehd + retVal[c].nmengebw + retVal[c].nmengesr + retVal[c].nmengewd;
-    retVal[c].pduengung = retVal[c].pmengehd + retVal[c].pmengesr + retVal[c].pmengewd;
-    retVal[c].kduengung = retVal[c].kmengehd + retVal[c].kmengesr + retVal[c].kmengewd;
 
-    retVal[c].nbilanz = retVal[c].nanrechenbar - retVal[c].nentzug;
-    retVal[c].pbilanz = retVal[c].pduengung - retVal[c].pentzug;
-    retVal[c].kbilanz = retVal[c].kduengung - retVal[c].kentzug;
-
-    // C ---------- ABZÜGE ZWISCHENFRUCHT GENUTZT VON VORFRUCHT ------------------------------------------------
+    // C ---------- ANRECHNUNG ZWISCHENFRUCHT GENUTZT VON VORFRUCHT ------------------------------------------------
     // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
     if (c === 0 && zfgenutzt && entry.value.cultures[c].kultur !== '') {
       if (entry.value.vorfrucht !== '') {
@@ -356,14 +358,18 @@ function calculateBilanz(retVal) {
       if (entry.value.nsaldo > 0) {
         retVal[c].nsaldo = entry.value.nsaldo;
       }
+    }
 
-      // Auswirkungen auf HF1
-      if (entry.value.cultures[1].kultur !== '') {
-        retVal[1].vfwertzf = zfnmin;
+    // D ---------- ANRECHNUNG ZWISCHENFRUCHT GENUTZT AUF HAUPTFRUCHT 1 --------------------------------------------
+    // Nur relevant, wenn genutzte ZF + Hauptfrucht 1
+    if (c === 1 && zfgenutzt && entry.value.cultures[c].kultur !== '') {
+      retVal[c].vfwertzf = zfnmin;
+      if (retVal[0].nbilanz > 20) {
+        retVal[c].nsaldo = retVal[0].nbilanz * redfaktor;
       }
     }
 
-    // D ---------- ABZÜGE HAUPTFRUCHT 1 VON VORFRUCHT UND ZWISCHENFRUCHT --------------------------------------
+    // E ---------- ANRECHNUNG HAUPTFRUCHT 1 VON VORFRUCHT UND ZWISCHENFRUCHT --------------------------------------
 
     // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
     if (
@@ -420,8 +426,32 @@ function calculateBilanz(retVal) {
         }
       }
     }
+
+    // Düngungen und Bilanz
+    retVal[c].nanrechenbar =
+      Number(retVal[c].nmengehd) +
+      Number(retVal[c].nmengebw) +
+      Number(retVal[c].nmengesr) +
+      Number(retVal[c].nmengewd) +
+      Number(retVal[c].nsaldo) +
+      Number(retVal[c].vfwert) +
+      Number(retVal[c].vfwertzf) +
+      Number(retVal[c].nminman);
+    retVal[c].pduengung =
+      Number(retVal[c].pmengehd) + Number(retVal[c].pmengesr) + Number(retVal[c].pmengewd);
+    retVal[c].kduengung =
+      Number(retVal[c].kmengehd) + Number(retVal[c].kmengesr) + Number(retVal[c].kmengewd);
+
+    retVal[c].nbilanz = retVal[c].nanrechenbar - Number(retVal[c].nentzug);
+    retVal[c].pbilanz = retVal[c].pduengung - Number(retVal[c].pentzug);
+    retVal[c].kbilanz = retVal[c].kduengung - Number(retVal[c].kentzug);
+
     retVal[c].duengeobergrenzered =
-      retVal[c].duengeobergrenze - retVal[c].nsaldo - retVal[c].vfwert - retVal[c].vfwertzf;
+      retVal[c].duengeobergrenze -
+      retVal[c].nsaldo -
+      retVal[c].vfwert -
+      retVal[c].vfwertzf -
+      retVal[c].nminman;
   }
   return dogSumme;
 }
