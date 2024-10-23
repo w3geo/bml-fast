@@ -80,10 +80,9 @@
 
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
-                    <v-select
+                    <v-text-field
                       v-model="imGrundwasserschutz"
                       label="Fläche im Grundwasserschutz"
-                      :items="itemsJaNein"
                       variant="outlined"
                       density="compact"
                       hide-details
@@ -93,7 +92,7 @@
 
                   <v-col cols="6" class="px-4 mb-3" v-if="entry.flaechennutzungsart === 'A'">
                     <v-select
-                      v-if="imGrundwasserschutz"
+                      v-if="entry.flaeche_grundwasserschutz > 0"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
@@ -655,7 +654,7 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-import { watch, ref } from 'vue';
+import { watch, ref, computed } from 'vue';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
@@ -680,7 +679,9 @@ const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
 const entryform = ref();
 
-const imGrundwasserschutz = ref(entry.value.flaeche_grundwasserschutz > 0);
+const imGrundwasserschutz = computed(() => {
+  return entry.value.flaeche_grundwasserschutz > 0 ? 'Ja' : 'Nein';
+});
 
 const rules = {
   threechars: [
@@ -947,7 +948,6 @@ watch(topicHectars, (value) => {
 
     entry.value.flaeche_nitratrisikogebiet = value.nitrataktionsprogramm;
     entry.value.flaeche_grundwasserschutz = value.bdfl_l16_grundwasserschutz_acker;
-    imGrundwasserschutz.value = entry.value.flaeche_grundwasserschutz > 0;
 
     if (entry.value.flaeche) {
       entry.value.nitratrisikogebiet =
