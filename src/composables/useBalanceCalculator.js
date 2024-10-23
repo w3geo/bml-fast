@@ -395,7 +395,7 @@ function calculateBilanz(retVal) {
           retVal[c].nsaldo =
             entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
         }
-        if (hfmanuell && entry.value.nsaldo < hfmanuellnmin) {
+        if (hfmanuell && entry.value.nsaldo <= hfmanuellnmin) {
           retVal[c].nsaldo = 0;
         }
       }
@@ -404,8 +404,8 @@ function calculateBilanz(retVal) {
       retVal[c].vfwert = vfnmin;
       if (
         (vfgemüse && hfgemüse && hfmanuell) ||
-        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo >= vfnmin) ||
-        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor >= vfnmin)
+        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
+        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin)
       ) {
         retVal[c].vfwert = 0;
       }
@@ -419,11 +419,88 @@ function calculateBilanz(retVal) {
       if (hfmanuell) {
         retVal[c].nminman = hfmanuellnmin;
         if (
-          (zfungenutzt && entry.value.nsaldo * redfaktor >= hfmanuellnmin) ||
-          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo >= hfmanuellnmin)
+          (zfungenutzt && entry.value.nsaldo * redfaktor > hfmanuellnmin) ||
+          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > hfmanuellnmin)
         ) {
           retVal[c].nminman = 0;
         }
+      }
+    }
+
+    // F ---------- ANRECHNUNG HAUPTFRUCH N AUF HAUPTFRUCHT N+1 --------------------------------------------
+    if (
+      c > 1 &&
+      entry.value.cultures[c].kultur !== '' &&
+      entry.value.cultures[c - 1].kultur !== ''
+    ) {
+      const hf1gemüse =
+        tableAttribut('kulturen', entry.value.cultures[c - 1].kultur, 'Gemüsekultur') === 'x';
+      const hf2gemüse =
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
+      const hf1nmin =
+        entry.value.cultures[c - 1].kultur !== ''
+          ? Number(
+              tableAttribut(
+                'kulturen',
+                entry.value.cultures[c - 1].kultur,
+                'VFW | Nmin selbes Jahr',
+              ),
+            )
+          : 0;
+      const hf2nmin =
+        entry.value.cultures[c].kultur !== ''
+          ? Number(
+              tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
+            )
+          : 0;
+
+      const hf2manuell =
+        Number(entry.value.cultures[c - 1].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
+      const hf2manuellnmin = Number(entry.value.cultures[c].nmin);
+
+      // N-Saldo
+      if (
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker
+      ) {
+        if (hf1gemüse && hf2gemüse) {
+          if (
+            (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
+            (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2nmin)
+          ) {
+            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+          }
+        } else {
+          if (retVal[c - 1].nbilanz > 20) {
+            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+          }
+        }
+      }
+
+      // NMIN Manuell
+      if (hf2manuell) {
+        retVal[c].nminman = hf2manuellnmin;
+        if (hf1gemüse && hf2gemüse && retVal[c - 1].nbilanz * redfaktor <= hf2manuellnmin) {
+          retVal[c].nminman = 0;
+        }
+      }
+
+      // VFW aus HF1
+      retVal[c].vfwert = hf1nmin;
+      if (
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker &&
+        hf1gemüse &&
+        hf2gemüse &&
+        (retVal[c].nsaldo > 0 || retVal[c].nminman > 0)
+      ) {
+        retVal[c].vfwert = 0;
+      }
+      if (entry.value.flaeche_grundwasserschutz === 0 && !hf2gemüse) {
+        retVal[c].vfwert = 0;
+      }
+      if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell) {
+        retVal[c].vfwert = 0;
       }
     }
 

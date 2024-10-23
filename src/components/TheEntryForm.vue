@@ -81,8 +81,8 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
-                      v-model="entry.nitratrisikogebiet"
-                      label="Nitratrisikogebiet"
+                      v-model="imGrundwasserschutz"
+                      label="Fläche im Grundwasserschutz"
                       :items="itemsJaNein"
                       variant="outlined"
                       density="compact"
@@ -90,20 +90,10 @@
                       disabled
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory mb-3" v-if="entry.wrrl">
-                    <v-select
-                      v-model="entry.wrrl_duengeklasse"
-                      :items="lookup.wrrl"
-                      label="Düngeklasse Grundwasserschutz"
-                      variant="outlined"
-                      density="compact"
-                      hide-details
-                    />
-                  </v-col>
 
                   <v-col cols="6" class="px-4 mb-3" v-if="entry.flaechennutzungsart === 'A'">
                     <v-select
-                      v-if="entry.nitratrisikogebiet"
+                      v-if="imGrundwasserschutz"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
@@ -129,6 +119,19 @@
                       v-model="entry.gw_acker_gebietszuteilung"
                       :items="itemsGWAcker"
                       label="GW-Acker Gebietszuteilung"
+                      variant="outlined"
+                      density="compact"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+
+                <v-row no-gutters v-if="entry.wrrl">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
+                    <v-select
+                      v-model="entry.wrrl_duengeklasse"
+                      :items="lookup.wrrl"
+                      label="Düngeklasse WRRL"
                       variant="outlined"
                       density="compact"
                       hide-details
@@ -677,6 +680,8 @@ const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
 const entryform = ref();
 
+const imGrundwasserschutz = ref(entry.value.flaeche_grundwasserschutz > 0);
+
 const rules = {
   threechars: [
     (value) => {
@@ -942,6 +947,7 @@ watch(topicHectars, (value) => {
 
     entry.value.flaeche_nitratrisikogebiet = value.nitrataktionsprogramm;
     entry.value.flaeche_grundwasserschutz = value.bdfl_l16_grundwasserschutz_acker;
+    imGrundwasserschutz.value = entry.value.flaeche_grundwasserschutz > 0;
 
     if (entry.value.flaeche) {
       entry.value.nitratrisikogebiet =
