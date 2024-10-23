@@ -121,7 +121,7 @@ async function setSchlagInfo(feature) {
     )
   );
   schlagInfo.value = {
-    ...feature.getProperties(),
+    ...features[0].getProperties(),
     loading: false,
     id: feature.getId(),
     extent: transformExtent(extent, 'EPSG:3857', 'EPSG:4326'),
