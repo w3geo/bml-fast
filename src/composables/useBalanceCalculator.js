@@ -272,11 +272,13 @@ function calculateEntzug(idx) {
 
 /**
  * @param {Array<kulturbilanz>} retVal
- * @returns {number}
+ * @returns {Array<number>}
  */
 
 function calculateBilanz(retVal) {
   let dogSumme = 0;
+  let dogRedSumme = 0;
+
   const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
     entry.value.cultures[0].kultur,
   );
@@ -543,18 +545,21 @@ function calculateBilanz(retVal) {
       retVal[c].vfwert -
       retVal[c].vfwertzf -
       retVal[c].nminman;
+
+    dogRedSumme += retVal[c].duengeobergrenzered;
   }
-  return dogSumme;
+  return [dogSumme, dogRedSumme];
 }
 
 /**
- * @returns {{duengeobergrenze: number, bilanz: Array<kulturbilanz>, errors: Array<string>}}}
+ * @returns {{duengeobergrenze: number, duengeobergrenzered: number, bilanz: Array<kulturbilanz>, errors: Array<string>}}}
  */
 export function updateBilanz() {
   const errors = [];
   let bilanz = [];
   let stopperErrors = false;
   let duengeobergrenze = 0;
+  let duengeobergrenzered = 0;
 
   // Pflichtangaben
   if (entry.value.flaeche <= 0) {
@@ -619,9 +624,9 @@ export function updateBilanz() {
   if (stopperErrors) {
     bilanz = [];
   } else {
-    duengeobergrenze = calculateBilanz(bilanz);
+    [duengeobergrenze, duengeobergrenzered] = calculateBilanz(bilanz);
   }
-  return { duengeobergrenze, bilanz, errors };
+  return { duengeobergrenze, duengeobergrenzered, bilanz, errors };
 }
 
 export function useBalanceCalculator() {
