@@ -8,52 +8,128 @@
     <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
-        Nährstoff-Bilanz
-      </v-col>
-      <v-col cols="2" class="text-right">
-        <v-icon class="mr-2" @click.stop="winMaximize = !winMaximize"
-          >{{ winMaximize ? 'mdi-window-restore' : 'mdi-window-maximize' }}
-        </v-icon>
+        Düngeobergrenzen / Bilanz
       </v-col>
     </v-row>
-    <v-sheet height="calc(100% - 30px)" class="overflow-auto">
-      <v-row
+    <v-sheet height="calc(100% - 70px)" class="overflow-auto">
+      <v-card
+        class="ma-1"
+        elevation="0"
+        color="red-lighten-1"
         v-for="(message, index) in bilanz.errors"
         :key="`error${index}`"
-        no-gutters
-        class="ma-1 mx-2 error"
-        ><v-col cols="12" class="pa-1 pl-4"
-          ><v-icon size="small">mdi-alert-box</v-icon>{{ message }}
-        </v-col></v-row
       >
-      <v-row no-gutters
-        ><v-col>
-          <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
-            <table class="bilanz" v-if="entry.cultures[index].kultur !== ''">
-              <tr>
-                <th colspan="2">
-                  {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}
-                </th>
-              </tr>
-              <tr
-                v-for="(pvalue, pkey) in kultur"
-                :key="`row_${index}_${pkey}`"
-                :class="{ hide: !outputConfig[pkey].print, bold: outputConfig[pkey].bold }"
+        <v-row no-gutters class="error"
+          ><v-col cols="1" class="pa-1"><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+          ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
+        ></v-card
+      >
+
+      <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
+        <v-row no-gutters class="error bg-grey-darken-2"
+          ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (brutto)</v-col
+          ><v-col vols="2" class="pa-2 text-right tableHeader"
+            >{{
+              bilanz.duengeobergrenze.toLocaleString('de-DE', {
+                style: 'decimal',
+                maximumFractionDigits: 4,
+              })
+            }}
+          </v-col></v-row
+        ></v-card
+      >
+
+      <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
+        <v-card
+          v-if="entry.cultures[index].kultur !== ''"
+          class="ma-2 cardBorder"
+          :class="index == 0 ? 'zwischenfrucht' : 'hauptfrucht'"
+          elevation="0"
+        >
+          <v-row no-gutters class="bg-brown-lighten-2">
+            <v-col cols="12" class="pa-1 cultureHeader">
+              {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}</v-col
+            ></v-row
+          >
+
+          <v-card
+            class="ma-1"
+            elevation="0"
+            color="red-lighten-1"
+            v-for="(message, index) in kultur.errorsOG"
+            :key="`error${index}`"
+          >
+            <v-row no-gutters class="error"
+              ><v-col cols="1" class="pa-1"><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+              ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
+            ></v-card
+          >
+
+          <v-card
+            color="grey"
+            class="ma-1 pa-1"
+            elevation="0"
+            v-if="index === 0 || kultur.duengeobergrenze > 0"
+          >
+            <v-sheet class="bg-grey tableHeader">Bilanz</v-sheet>
+
+            <v-sheet v-if="kultur.errorsOG.length === 0" class="py-1">
+              <v-card
+                class="ma-1"
+                elevation="0"
+                color="red-lighten-1"
+                v-for="(message, index) in kultur.errorsBI"
+                :key="`error${index}`"
               >
-                <td :class="`border${outputConfig[pkey].border}`">
-                  {{ outputConfig[pkey].label }}
-                </td>
-                <td :class="`border${outputConfig[pkey].border}`">
-                  {{
-                    pvalue.toLocaleString('de-DE', { style: 'decimal', maximumFractionDigits: 2 })
-                  }}
-                </td>
-              </tr>
-            </table>
-          </v-sheet>
-        </v-col>
-      </v-row>
+                <v-row no-gutters class="error"
+                  ><v-col cols="1" class="pa-1"><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+                  ><v-col vols="11" class="pa-2">{{ message }} </v-col></v-row
+                ></v-card
+              >
+
+              <table class="bilanz" v-if="kultur.errorsBI.length === 0">
+                <tr
+                  v-for="(pvalue, pkey) in kultur"
+                  :key="`row_${index}_${pkey}`"
+                  :class="{
+                    hidezero:
+                      pkey === 'errorsBI' ||
+                      pkey === 'errorsOG' ||
+                      (pvalue === 0 && !outputConfig[pkey].print),
+                    hide: !outputConfig[pkey].print,
+                    bold: outputConfig[pkey].bold,
+                  }"
+                >
+                  <td :class="`border${outputConfig[pkey].border}`">
+                    {{ outputConfig[pkey].label }}
+                  </td>
+                  <td :class="`border${outputConfig[pkey].border}`">
+                    {{
+                      pvalue.toLocaleString('de-DE', {
+                        style: 'decimal',
+                        maximumFractionDigits: 4,
+                      })
+                    }}
+                  </td>
+                </tr>
+              </table>
+            </v-sheet>
+          </v-card>
+        </v-card>
+      </v-sheet>
     </v-sheet>
+    <v-row no-gutters class="bg-grey-darken-2"
+      ><v-col class="pa-2">
+        <v-btn
+          density="compact"
+          :prepend-icon="winMaximize ? 'mdi-magnify-minus' : 'mdi-magnify-plus'"
+          color="grey-lighten-3"
+          block
+          @click.stop="winMaximize = !winMaximize"
+          >{{ winMaximize ? 'Verkleinern (Übersicht)' : 'Vergrößern (Detailansicht)' }}
+        </v-btn>
+      </v-col></v-row
+    >
   </v-card>
 </template>
 
@@ -81,15 +157,23 @@ table.bilanz tr {
   padding: 0px;
 }
 table.bilanz tr.hide {
-  color: #aaa;
   font-style: italic;
 }
+table.bilanz tr.hide td {
+  color: lightpink;
+}
 
-table.bilanz th {
+table.bilanz tr.hidezero {
+  display: none;
+}
+
+.tableHeader {
   padding: 2px;
   font-size: 11px;
-  background-color: #eee;
-  text-align: left;
+  font-weight: bold;
+  letter-spacing: 0.0892857143em !important;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase !important;
 }
 
 table.bilanz td {
@@ -97,6 +181,10 @@ table.bilanz td {
   border: 1px solid #eee;
   font-size: 11px;
   color: #777;
+  font-weight: 500;
+  letter-spacing: 0.0892857143em !important;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase !important;
 }
 
 table.bilanz tr.bold td {
@@ -115,13 +203,14 @@ table.bilanz tr td:nth-child(1) {
 }
 table.bilanz tr td:nth-child(2) {
   width: 15%;
+  text-align: right;
 }
 
 .fertilizerData {
   position: absolute;
   left: 10px;
   bottom: 10px;
-  width: 350px;
+  width: 400px;
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;
@@ -129,21 +218,28 @@ table.bilanz tr td:nth-child(2) {
 
 .fertilizerData.maximized {
   height: calc(100% - 70px);
-  width: 1010px;
+  width: 1060px;
 }
 
 .error {
   position: relative;
-  border: 1px solid red;
   font-size: 12px;
-  color: red;
 }
-</style>
 
-<style>
-.error .v-icon {
-  position: absolute;
-  left: -2px;
-  top: -2px;
+.cardBorder {
+  border: 2px solid;
+  border-bottom: 5px solid;
+}
+
+.cardBorder.zwischenfrucht {
+  border-color: #bcaaa4;
+}
+
+.cardBorder.hauptfrucht {
+  border-color: #a1887f;
+}
+.cultureHeader {
+  font-size: 12px;
+  text-transform: uppercase;
 }
 </style>

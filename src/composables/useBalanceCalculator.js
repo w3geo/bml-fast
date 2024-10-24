@@ -3,9 +3,14 @@ import { tableAttribut, lookup } from './useLookUps.js';
 
 /**
  * @typedef {Object} kulturbilanz
+ * @property {Array<string>} errorsOG Fehlermeldungen Obergrenze
+ * @property {Array<string>} errorsBI Fehlermeldungen Bilanz
+ * @property {number} duengeobergrenze Dünge-Obergrenze
+ * @property {number} duengeobergrenzered Dünge-Obergrenze
  * @property {number} nsaldo N-Saldo
  * @property {number} vfwert Vorfruchtwert Vorfrucht
  * @property {number} vfwertzf Vorfruchtwert Zwischenfrucht
+ * @property {number} nminman Manueller N-Min
  * @property {number} redfaktor Reduktionsfaktor
  * @property {number} nmengehd N-Menge aus Handelsdüngern
  * @property {number} nmengebw N-Menge aus Bewässerung
@@ -33,9 +38,14 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @type kulturbilanz
  */
 const emptyKulturbilanz = {
+  errorsOG: [],
+  errorsBI: [],
+  duengeobergrenze: 0,
+  duengeobergrenzered: 0,
   nsaldo: 0,
   vfwert: 0,
   vfwertzf: 0,
+  nminman: 0,
   redfaktor: 0,
   nmengehd: 0,
   nmengebw: 0,
@@ -63,9 +73,19 @@ const emptyKulturbilanz = {
  * @type {Object<keyof kulturbilanz, Object>}
  */
 export const outputConfig = {
+  errorsOG: { label: 'Fehler OG', print: false, bold: false, border: '' },
+  errorsBI: { label: 'Fehler BI', print: false, bold: false, border: '' },
+  duengeobergrenze: { label: 'Düngeobergrenze (brutto)', print: true, bold: false, border: '' },
+  duengeobergrenzered: {
+    label: 'Düngeobergrenze (netto))',
+    print: true,
+    bold: true,
+    border: '',
+  },
   nsaldo: { label: 'N-Saldo', print: false, bold: false, border: '' },
   vfwert: { label: 'Vorfruchtwert Vorfrucht', print: false, bold: false, border: '' },
   vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
+  nminman: { label: 'Manueller N-Min', print: false, bold: false, border: '' },
   redfaktor: { label: 'Reduktionsfaktor', print: false, bold: false, border: '' },
   nmengehd: { label: 'N-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
   nmengebw: { label: 'N-Menge aus Bewässerung', print: false, bold: false, border: '' },
@@ -76,7 +96,7 @@ export const outputConfig = {
     border: '',
   },
   nmengewd: { label: 'N-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
-  nabzug: { label: 'N-Abzug von Düngeobergrenze', print: true, bold: false, border: '' },
+  nabzug: { label: 'N-Abzug von Düngeobergrenze', print: false, bold: false, border: '' },
   nanrechenbar: { label: 'Anrechenbarer Stickstoff', print: true, bold: false, border: '' },
   nentzug: { label: 'N-Entzug', print: false, bold: false, border: '' },
   nbilanz: { label: 'N-Bilanz', print: true, bold: true, border: 'bottom' },
@@ -104,11 +124,6 @@ export const outputConfig = {
   kbilanz: { label: 'K-Bilanz', print: true, bold: true, border: '' },
 };
 
-/** @type {Array<kulturbilanz>} */
-let bilanz = [];
-/** @type {Array<string>} */
-let errors = [];
-
 /** @type {Object} */
 const reduktionsfaktor = { Trockengebiet: 0.8, Feuchtgebiet: 0.6 };
 
@@ -129,6 +144,19 @@ function calculateEntzug(idx) {
     'Ertragserfassungsart',
   );
   if (erfassung === 'keine Ertragserfassung' || erfassung === 'Düngeverbot') {
+    if (lookup.value.aussaatTypeFilter.zwischenG.includes(entry.value.cultures[idx].kultur)) {
+      return [
+        Number(
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            `Düngeobergrenze EL mittel${entry.value.nitratrisikogebiet ? ' A5' : ''}`,
+          ),
+        ),
+        0,
+        0,
+      ];
+    }
     // KEIN ENTZUG
     return [0, 0, 0];
   }
@@ -223,7 +251,6 @@ function calculateEntzug(idx) {
       }
       break;
   }
-
   // 3. P-Entzug , nur nach erreichter Ertragslage
   const ppostfix =
     entry.value.phosphor_gehaltsklasse === 'E' ? '' : ` ${ertragslage.split(' ')[0]}`;
@@ -240,17 +267,16 @@ function calculateEntzug(idx) {
     entry.value.cultures[idx].kultur,
     `Phosphor ${entry.value.kalium_gehaltsklasse}${kpostfix}`,
   );
-
-  return [nEntzug, pEntzug, kEntzug];
+  return [Number(nEntzug), Number(pEntzug), Number(kEntzug)];
 }
 
 /**
- * @returns {Array<kulturbilanz>}
+ * @param {Array<kulturbilanz>} retVal
+ * @returns {number}
  */
-function calculateBilanz() {
-  bilanz = [];
-  const retVal = [];
 
+function calculateBilanz(retVal) {
+  let dogSumme = 0;
   const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
     entry.value.cultures[0].kultur,
   );
@@ -258,13 +284,31 @@ function calculateBilanz() {
     entry.value.cultures[0].kultur,
   );
   const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
+  const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
+  const vfnmin = Number(tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'));
+  const zfnmin =
+    entry.value.cultures[0].kultur !== ''
+      ? Number(tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin selbes Jahr'))
+      : 0;
 
   for (let c = 0; c < entry.value.cultures.length; c++) {
-    const current = { ...emptyKulturbilanz };
+    // A ---------- DÜNGEOBERGRENZE --------------------------------------------------------------------
+    if (entry.value.cultures[c].kultur !== '') {
+      let elkey =
+        'Düngeobergrenze EL ' + (c === 0 ? 'mittel' : entry.value.cultures[c].ertragslage);
+      if (entry.value.nitratrisikogebiet) {
+        elkey += ' A5';
+      }
+      retVal[c].duengeobergrenze = Number(
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, elkey),
+      );
+      retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;
+      dogSumme += retVal[c].duengeobergrenze;
+    }
 
-    // A ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
+    // B ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
 
-    [current.nentzug, current.pentzug, current.kentzug] = calculateEntzug(c);
+    [retVal[c].nentzug, retVal[c].pentzug, retVal[c].kentzug] = calculateEntzug(c);
     for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
       // Düngungen iterieren
       // 1. Anteile Handelsdünger
@@ -272,54 +316,73 @@ function calculateBilanz() {
         entry.value.cultures[c].duengung[d].typ === 'handelsdünger' ||
         entry.value.cultures[c].duengung[d].typ === 'eigene'
       ) {
-        current.nmengehd +=
+        retVal[c].nmengehd +=
           entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
-        current.pmengehd +=
+        retVal[c].pmengehd +=
           entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
-        current.kmengehd +=
+        retVal[c].kmengehd +=
           entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
       }
       // 2. Anteile Sekundärrohstofe
       if (entry.value.cultures[c].duengung[d].typ === 'sekundärrohstoffe') {
-        current.nmengesr +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
-        current.pmengesr +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
-        current.kmengesr +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
+        retVal[c].nmengesr +=
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].n;
+        retVal[c].pmengesr +=
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].p;
+        retVal[c].kmengesr +=
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].k;
       }
       // 3. Anteile Wirtschaftsdünger
       if (entry.value.cultures[c].duengung[d].typ === 'wirtschaftsdünger') {
-        current.nmengewd +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].n / 100);
-        current.pmengewd +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].p / 100);
-        current.kmengewd +=
-          entry.value.cultures[c].duengung[d].menge * (entry.value.cultures[c].duengung[d].k / 100);
+        retVal[c].nmengewd +=
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].n;
+        retVal[c].pmengewd +=
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].p;
+        retVal[c].kmengewd +=
+          entry.value.cultures[c].duengung[d].menge * entry.value.cultures[c].duengung[d].k;
       }
       // 4. Anteile Bewässerung
       if (entry.value.cultures[c].duengung[d].typ === 'bewässerung') {
-        current.nmengebw +=
+        retVal[c].nmengebw +=
           (entry.value.cultures[c].duengung[d].menge / 100) *
           (entry.value.cultures[c].duengung[d].n / 4.43);
       }
     }
-    // Düngungen und Bilanz
-    current.nanrechenbar =
-      current.nmengehd + current.nmengebw + current.nmengesr + current.nmengewd;
-    current.pduengung = current.pmengehd + current.pmengesr + current.pmengewd;
-    current.kduengung = current.kmengehd + current.kmengesr + current.kmengewd;
 
-    current.nbilanz = current.nanrechenbar - current.nentzug;
-    current.pbilanz = current.pduengung - current.pentzug;
-    current.kbilanz = current.kduengung - current.kentzug;
+    // C ---------- ANRECHNUNG ZWISCHENFRUCHT GENUTZT VON VORFRUCHT ------------------------------------------------
+    // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
+    if (c === 0 && zfgenutzt && entry.value.cultures[c].kultur !== '') {
+      if (entry.value.vorfrucht !== '') {
+        retVal[c].vfwert = vfnmin;
+      }
+      if (entry.value.nsaldo > 0) {
+        retVal[c].nsaldo = entry.value.nsaldo;
+      }
+    }
 
-    // B ---------- ABZÜGE VORFRUCHT AUF HAUPTFRUCHT -------------------------------------------------
+    // D ---------- ANRECHNUNG ZWISCHENFRUCHT GENUTZT AUF HAUPTFRUCHT 1 --------------------------------------------
+    // Nur relevant, wenn genutzte ZF + Hauptfrucht 1
+    if (c === 1 && zfgenutzt && entry.value.cultures[c].kultur !== '') {
+      retVal[c].vfwertzf = zfnmin;
+      if (retVal[0].nbilanz > 20) {
+        retVal[c].nsaldo = retVal[0].nbilanz * redfaktor;
+      }
+    }
 
-    // Nur relevant, wenn Vorfrucht + Hauptfrucht 1
-    if (entry.value.vorfrucht !== '' && c === 1 && entry.value.cultures[c].kultur !== '') {
+    // E ---------- ANRECHNUNG HAUPTFRUCHT 1 VON VORFRUCHT UND ZWISCHENFRUCHT --------------------------------------
+
+    // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
+    if (
+      c === 1 &&
+      entry.value.vorfrucht !== '' &&
+      !zfgenutzt &&
+      entry.value.cultures[c].kultur !== ''
+    ) {
       const hfgemüse =
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
+      const hfmanuell =
+        Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
+      const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
 
       // 1. N-Saldo
       if (
@@ -327,91 +390,184 @@ function calculateBilanz() {
         entry.value.teilnahme_grundwasserschutz_acker &&
         entry.value.nsaldo > 0
       ) {
-        if (!zfgenutzt && !zfungenutzt) {
-          current.nsaldo = entry.value.nsaldo;
-        }
+        retVal[c].nsaldo = entry.value.nsaldo;
         if (zfungenutzt) {
-          current.nsaldo =
+          retVal[c].nsaldo =
             entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
         }
-      }
-
-      // 2. Vorfruchtwert
-      const hfmanuell = entry.value.cultures[c].nmin;
-      const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
-      const hftable = Number(
-        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
-      );
-      const vfnmin = Number(
-        tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'),
-      );
-      const zfnmin =
-        entry.value.cultures[0].kultur !== ''
-          ? Number(
-              tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin Folgejahr'),
-            )
-          : 0;
-
-      if (
-        vfgemüse &&
-        hfgemüse &&
-        entry.value.flaeche_grundwasserschutz > 0 &&
-        entry.value.teilnahme_grundwasserschutz_acker
-      ) {
-        current.nabzug = zfungenutzt ? entry.value.nsaldo * redfaktor + zfnmin : entry.value.nsaldo;
-      }
-
-      if (
-        !vfgemüse &&
-        entry.value.flaeche_grundwasserschutz > 0 &&
-        entry.value.teilnahme_grundwasserschutz_acker &&
-        !zfgenutzt
-      ) {
-        if (hfgemüse && hfmanuell != hftable && entry.value.nsaldo > hfmanuell) {
-          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
-        }
-        if (!hfgemüse && entry.value.nsaldo > 0) {
-          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
+        if (hfmanuell && entry.value.nsaldo <= hfmanuellnmin) {
+          retVal[c].nsaldo = 0;
         }
       }
 
+      // 2. Vorfruchtwert der Vorfrucht
+      retVal[c].vfwert = vfnmin;
       if (
-        !vfgemüse &&
-        entry.value.flaeche_grundwasserschutz > 0 &&
-        entry.value.teilnahme_grundwasserschutz_acker &&
-        zfgenutzt
+        (vfgemüse && hfgemüse && hfmanuell) ||
+        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
+        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin)
       ) {
-        if (hfgemüse && hfmanuell != hftable && entry.value.nsaldo > hfmanuell) {
-          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
-        }
-        if (!hfgemüse && entry.value.nsaldo > 0) {
-          current.nabzug = entry.value.nsaldo * redfaktor + vfnmin + zfnmin;
+        retVal[c].vfwert = 0;
+      }
+
+      // 3. Vorfruchtwert der Zwischenfrucht
+      if (zfungenutzt) {
+        retVal[c].vfwertzf = zfnmin;
+      }
+
+      // 4. manueller NMin Wert
+      if (hfmanuell) {
+        retVal[c].nminman = hfmanuellnmin;
+        if (
+          (zfungenutzt && entry.value.nsaldo * redfaktor > hfmanuellnmin) ||
+          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > hfmanuellnmin)
+        ) {
+          retVal[c].nminman = 0;
         }
       }
     }
 
-    // RÜCKGABEWERT
-    retVal.push(current);
-  }
+    // F ---------- ANRECHNUNG HAUPTFRUCH N AUF HAUPTFRUCHT N+1 --------------------------------------------
+    if (
+      c > 1 &&
+      entry.value.cultures[c].kultur !== '' &&
+      entry.value.cultures[c - 1].kultur !== ''
+    ) {
+      const hf1gemüse =
+        tableAttribut('kulturen', entry.value.cultures[c - 1].kultur, 'Gemüsekultur') === 'x';
+      const hf2gemüse =
+        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
+      const hf1nmin =
+        entry.value.cultures[c - 1].kultur !== ''
+          ? Number(
+              tableAttribut(
+                'kulturen',
+                entry.value.cultures[c - 1].kultur,
+                'VFW | Nmin selbes Jahr',
+              ),
+            )
+          : 0;
+      const hf2nmin =
+        entry.value.cultures[c].kultur !== ''
+          ? Number(
+              tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
+            )
+          : 0;
 
-  return retVal;
+      const hf2manuell =
+        Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
+      const hf2manuellnmin = Number(entry.value.cultures[c].nmin);
+
+      // N-Saldo
+      if (
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker
+      ) {
+        if (hf1gemüse && hf2gemüse) {
+          if (
+            (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
+            (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2nmin)
+          ) {
+            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+          }
+        } else {
+          if (retVal[c - 1].nbilanz > 20) {
+            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+          }
+        }
+      }
+
+      // NMIN Manuell
+      if (hf2manuell) {
+        retVal[c].nminman = hf2manuellnmin;
+        if (
+          entry.value.flaeche_grundwasserschutz > 0 &&
+          entry.value.teilnahme_grundwasserschutz_acker &&
+          hf1gemüse &&
+          hf2gemüse &&
+          retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin
+        ) {
+          retVal[c].nminman = 0;
+        }
+      }
+
+      // VFW aus HF1
+      retVal[c].vfwert = hf1nmin;
+      if (
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        entry.value.teilnahme_grundwasserschutz_acker &&
+        hf1gemüse &&
+        hf2gemüse &&
+        (retVal[c].nsaldo > 0 || retVal[c].nminman > 0 || retVal[c - 1].nbilanz <= 20)
+      ) {
+        retVal[c].vfwert = 0;
+      }
+      if (
+        entry.value.flaeche_grundwasserschutz > 0 &&
+        !entry.value.teilnahme_grundwasserschutz_acker &&
+        hf2manuell
+      ) {
+        retVal[c].vfwert = 0;
+      }
+
+      if (entry.value.flaeche_grundwasserschutz === 0 && !hf2gemüse) {
+        retVal[c].vfwert = 0;
+      }
+      if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell) {
+        retVal[c].vfwert = 0;
+      }
+    }
+
+    // Düngungen und Bilanz
+    retVal[c].nanrechenbar =
+      Number(retVal[c].nmengehd) +
+      Number(retVal[c].nmengebw) +
+      Number(retVal[c].nmengesr) +
+      Number(retVal[c].nmengewd) +
+      Number(retVal[c].nsaldo) +
+      Number(retVal[c].vfwert) +
+      Number(retVal[c].vfwertzf) +
+      Number(retVal[c].nminman);
+    retVal[c].pduengung =
+      Number(retVal[c].pmengehd) + Number(retVal[c].pmengesr) + Number(retVal[c].pmengewd);
+    retVal[c].kduengung =
+      Number(retVal[c].kmengehd) + Number(retVal[c].kmengesr) + Number(retVal[c].kmengewd);
+
+    retVal[c].nbilanz = retVal[c].nanrechenbar - Number(retVal[c].nentzug);
+    retVal[c].pbilanz = retVal[c].pduengung - Number(retVal[c].pentzug);
+    retVal[c].kbilanz = retVal[c].kduengung - Number(retVal[c].kentzug);
+
+    retVal[c].duengeobergrenzered =
+      retVal[c].duengeobergrenze -
+      retVal[c].nsaldo -
+      retVal[c].vfwert -
+      retVal[c].vfwertzf -
+      retVal[c].nminman;
+  }
+  return dogSumme;
 }
 
 /**
- * @returns {{bilanz: Array<kulturbilanz>, errors: Array<string>}}}
+ * @returns {{duengeobergrenze: number, bilanz: Array<kulturbilanz>, errors: Array<string>}}}
  */
 export function updateBilanz() {
-  errors = [];
-  let anyErrors = false;
+  const errors = [];
+  let bilanz = [];
+  let stopperErrors = false;
+  let duengeobergrenze = 0;
 
   // Pflichtangaben
   if (entry.value.flaeche <= 0) {
     errors.push('Fehlende Flächenangabe für den Schlag');
   }
-
   // Kulturen
+  let ccounter = 0;
   for (let c = 0; c < entry.value.cultures.length; c++) {
+    bilanz.push(JSON.parse(JSON.stringify(emptyKulturbilanz)));
+    const bct = bilanz.length - 1;
+
     if (entry.value.cultures[c].kultur != '') {
+      ccounter++;
       if (
         tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Ertragserfassungsart') !==
           'Düngeverbot' &&
@@ -419,15 +575,18 @@ export function updateBilanz() {
           'keine Ertragserfassung'
       ) {
         if (entry.value.cultures[c].ertragslage === '') {
-          errors.push(`${c}. Hauptfrucht: Erwartete Ertragslage nicht angegeben`);
-          anyErrors = true;
+          bilanz[bct].errorsOG.push(`Erwartete Ertragslage nicht angegeben`);
+          if (errors.length === 0) {
+            errors.push(
+              'Unvollständige Angaben bei mind. einer Kultur - es kann keine Gesamt-Düngeobergrenze berechnet werden.',
+            );
+          }
         }
         if (
           entry.value.cultures[c].ertragslageernte === '' &&
           !(entry.value.cultures[c].ernte > 0)
         ) {
-          errors.push(`${c}. Hauptfrucht: Keine Angaben zur Ernte`);
-          anyErrors = true;
+          bilanz[c].errorsBI.push(`Keine Angaben zur Ernte`);
         }
       }
       // Düngung
@@ -435,31 +594,34 @@ export function updateBilanz() {
         for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
           if (entry.value.cultures[c].duengung[d].typ === '') {
             if (c > 0) {
-              errors.push(`${c}. Hauptfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
+              bilanz[c].errorsBI.push(`${d + 1}. Düngung: Keine Angaben zum Typ`);
             } else {
-              errors.push(`Zwischenfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
+              bilanz[c].errorsBI.push(`Zwischenfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
             }
-            anyErrors = true;
           } else if (entry.value.cultures[c].duengung[d].menge <= 0) {
             if (c > 0) {
-              errors.push(`${c}. Hauptfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
+              bilanz[c].errorsBI.push(`${d + 1}. Düngung: Fehlende Mengenangabe`);
             } else {
-              errors.push(`Zwischenfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
+              bilanz[c].errorsBI.push(`Zwischenfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
             }
-            anyErrors = true;
           }
         }
-      }
-    } else {
-      if (c > 0) {
-        errors.push(`${c}. Hauptfrucht: Keine Kultur definiert`);
-        anyErrors = true;
       }
     }
   }
 
-  bilanz = anyErrors ? [] : calculateBilanz();
-  return { bilanz, errors };
+  if (ccounter == 0) {
+    errors.push(
+      'Keine Kulturen spezifiziert. Es werden keine Düngeobergrenzen oder Bilanzen berechnet.',
+    );
+  }
+
+  if (stopperErrors) {
+    bilanz = [];
+  } else {
+    duengeobergrenze = calculateBilanz(bilanz);
+  }
+  return { duengeobergrenze, bilanz, errors };
 }
 
 export function useBalanceCalculator() {

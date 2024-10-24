@@ -25,17 +25,27 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.schlagnummer"
-                      label="Schlagnummer"
+                      v-model="entry.feldstuecksname"
+                      label="Feldstück/Name"
                       variant="outlined"
-                      hide-details
                       density="compact"
+                      :rules="rules.threechars"
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 mb-3">
+                  <v-col cols="3" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.feldstuecksname"
-                      label="Feldstücksname"
+                      v-model.number="entry.feldstuecksnummer"
+                      label="Feldstück/Nr"
+                      variant="outlined"
+                      type="number"
+                      density="compact"
+                      :rules="rules.notzero"
+                    />
+                  </v-col>
+                  <v-col cols="3" class="px-4 mb-3">
+                    <v-text-field
+                      v-model="entry.schlagnummer"
+                      label="Schlagnummer"
                       variant="outlined"
                       hide-details
                       density="compact"
@@ -70,30 +80,19 @@
 
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
-                    <v-select
-                      v-model="entry.nitratrisikogebiet"
-                      label="Nitratrisikogebiet"
-                      :items="itemsJaNein"
+                    <v-text-field
+                      v-model="imGrundwasserschutz"
+                      label="Fläche im Grundwasserschutz"
                       variant="outlined"
                       density="compact"
                       hide-details
                       disabled
                     />
                   </v-col>
-                  <v-col cols="6" class="px-4 obligatory mb-3" v-if="entry.wrrl">
-                    <v-select
-                      v-model="entry.wrrl_duengeklasse"
-                      :items="lookup.wrrl"
-                      label="Düngeklasse Grundwasserschutz"
-                      variant="outlined"
-                      density="compact"
-                      hide-details
-                    />
-                  </v-col>
 
                   <v-col cols="6" class="px-4 mb-3" v-if="entry.flaechennutzungsart === 'A'">
                     <v-select
-                      v-if="entry.nitratrisikogebiet"
+                      v-if="entry.flaeche_grundwasserschutz > 0"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
                       label="Teilnahme am vorbeugenden Grundwasserschutz"
@@ -119,6 +118,19 @@
                       v-model="entry.gw_acker_gebietszuteilung"
                       :items="itemsGWAcker"
                       label="GW-Acker Gebietszuteilung"
+                      variant="outlined"
+                      density="compact"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+
+                <v-row no-gutters v-if="entry.wrrl">
+                  <v-col cols="6" class="px-4 obligatory mb-3">
+                    <v-select
+                      v-model="entry.wrrl_duengeklasse"
+                      :items="lookup.wrrl"
+                      label="Düngeklasse WRRL"
                       variant="outlined"
                       density="compact"
                       hide-details
@@ -192,12 +204,15 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-autocomplete
                       v-model="entry.vorfrucht"
+                      v-model:search="search.vorfrucht"
                       :items="lookup.kulturenItems.alle"
                       label="Vorfrucht"
                       variant="outlined"
                       density="compact"
                       hide-details
                       clearable
+                      @click="clearSearch('vorfrucht')"
+                      @update:model-value="cultureChanged(-1)"
                     />
                   </v-col>
                 </v-row>
@@ -241,6 +256,7 @@
                     <v-col cols="12" class="px-4 obligatory mb-3">
                       <v-autocomplete
                         v-model="entry.cultures[i - 1].kultur"
+                        v-model:search="search.kultur"
                         :items="
                           i > 1
                             ? lookup.kulturenItems[entry.flaechennutzungsart]
@@ -250,6 +266,8 @@
                         variant="outlined"
                         density="compact"
                         hide-details
+                        clearable
+                        @click="clearSearch('kultur')"
                         @update:model-value="cultureChanged(i - 1)"
                       />
                     </v-col>
@@ -387,16 +405,19 @@
                         >
                           <v-autocomplete
                             v-model="entry.cultures[i - 1].duengung[f - 1].id"
+                            v-model:search="search.duengung"
                             :items="lookup[entry.cultures[i - 1].duengung[f - 1].typ]"
                             :label="firstUppercase(entry.cultures[i - 1].duengung[f - 1].typ)"
                             variant="outlined"
                             density="compact"
                             hide-details
+                            @click="clearSearch('duengung')"
                             @update:model-value="fertilizationChanged('id', i - 1, f - 1)"
+                            clearable
                           />
                         </v-col>
                         <v-col
-                          cols="4"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -408,7 +429,13 @@
                         >
                           <v-text-field
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
-                            :label="`Menge (${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm = l/m²' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+                            :label="
+                              npkLabel(
+                                'menge',
+                                entry.cultures[i - 1].duengung[f - 1].typ,
+                                entry.cultures[i - 1].duengung[f - 1].id,
+                              )
+                            "
                             min="0"
                             variant="outlined"
                             density="compact"
@@ -416,20 +443,9 @@
                             hide-details
                           />
                         </v-col>
-                        <v-col
-                          cols="2"
-                          class="pa-2 text-right"
-                          v-if="
-                            entry.cultures[i - 1].duengung[f - 1].typ != '' &&
-                            !(
-                              entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' &&
-                              entry.cultures[i - 1].duengung[f - 1].id == ''
-                            )
-                          "
-                        ></v-col>
 
                         <v-col
-                          cols="2"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -442,11 +458,7 @@
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
-                            :label="
-                              entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
-                                ? 'NO₃(mg/L)'
-                                : 'N(%)'
-                            "
+                            :label="npkLabel('n', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -454,7 +466,7 @@
                           />
                         </v-col>
                         <v-col
-                          cols="2"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -470,7 +482,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
-                            label="P₂O₅(%)"
+                            :label="npkLabel('p', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -478,7 +490,7 @@
                           />
                         </v-col>
                         <v-col
-                          cols="2"
+                          cols="3"
                           class="pa-2"
                           v-if="
                             entry.cultures[i - 1].duengung[f - 1].typ != '' &&
@@ -494,7 +506,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
-                            label="K₂O(%)"
+                            :label="npkLabel('k', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
                             density="compact"
                             type="number"
@@ -642,7 +654,7 @@
 
 <script setup>
 import { useDataEntries } from '../composables/useDataEntries.js';
-import { watch, ref } from 'vue';
+import { watch, ref, computed } from 'vue';
 import { useSchlag } from '../composables/useSchlag.js';
 import { mapReady, useMap } from '../composables/useMap.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
@@ -665,15 +677,95 @@ const itemsJaNein = [
 ];
 const itemsABCDE = ['A', 'B', 'C', 'D', 'E'];
 const itemsGWAcker = ['Trockengebiet', 'Feuchtgebiet'];
+const entryform = ref();
+
+const imGrundwasserschutz = computed(() => {
+  return entry.value.flaeche_grundwasserschutz > 0 ? 'Ja' : 'Nein';
+});
+
+const rules = {
+  threechars: [
+    (value) => {
+      if (value.length < 3) {
+        return 'Mindestens 3 Zeichen eingeben';
+      }
+      return true;
+    },
+  ],
+  notzero: [(value) => value > 0 || 'Dieser Wert muss größer Null sein'],
+};
+
+const search = ref({ vorfrucht: null, kultur: null, duengung: null });
 
 mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
 
+function clearSearch(what) {
+  search.value[what] = null;
+}
+
 function firstUppercase(input) {
   const strinput = input.toString();
   return strinput.charAt(0).toUpperCase() + strinput.slice(1);
+}
+
+function npkLabel(what, type, fid) {
+  let label = '';
+  switch (what) {
+    case 'n':
+      label = 'N(%)';
+      if (type === 'bewässerung') {
+        label = 'NO₃(mg/L)';
+      }
+      if (type === 'wirtschaftsdünger') {
+        label = 'N(kg/m³)';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 'N(kg/t|m³)';
+      }
+      break;
+    case 'p':
+      label = 'P₂O₅(%)';
+      if (type === 'bewässerung') {
+        label = 'P₂O₅(mg/L)';
+      }
+      if (type === 'wirtschaftsdünger') {
+        label = 'P₂O₅(kg/m³)';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 'P₂O₅(kg/t|m³)';
+      }
+      break;
+    case 'k':
+      label = 'K₂O(%)';
+      if (type === 'bewässerung') {
+        label = 'K₂O(mg/L)';
+      }
+      if (type === 'wirtschaftsdünger') {
+        label = 'K₂O(kg/m³)';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 'K₂O(kg/t|m³)';
+      }
+      break;
+    case 'menge':
+      label = tableAttribut('handelsdünger', fid, 'Einheit');
+      if (type === 'bewässerung') {
+        label = 'mm = l/m²';
+      }
+      if (type === 'wirtschaftsdünger' || type === 'eigene') {
+        label = 'm³';
+      }
+      if (type === 'sekundärrohstoffe') {
+        label = 't|m³';
+      }
+      break;
+
+    //      :label="`Menge (${entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung' ? 'mm = l/m²' : entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ? tableAttribut('handelsdünger', entry.cultures[i - 1].duengung[f - 1].id, 'Einheit') : 'm³'})`"
+  }
+  return label;
 }
 
 function addFertilization(cindex) {
@@ -711,13 +803,27 @@ function fertilizationChanged(what, cindex, findex) {
 }
 
 function cultureChanged(index) {
+  if (index === -1) {
+    if (!entry.value.vorfrucht) {
+      entry.value.vorfrucht = '';
+    }
+    return;
+  }
+
   entry.value.cultures[index].ertragslage = '';
+  if (!entry.value.cultures[index].kultur) {
+    entry.value.cultures[index].kultur = '';
+    entry.value.cultures[index].nminvorgabe = 0;
+    entry.value.cultures[index].nmin = 0;
+    return;
+  }
+
   entry.value.cultures[index].nmin = tableAttribut(
     'kulturen',
     entry.value.cultures[index].kultur,
     'VFW | Nmin selbes Jahr',
   );
-  entry.value.cultures[index].nminvorgabe = entry.value.cultures[index].nmin;
+  entry.value.cultures[index].nminvorgabe = Number(entry.value.cultures[index].nmin);
 }
 
 function allCulturesReset() {
@@ -774,7 +880,12 @@ function FloatTrunc(input) {
   return result;
 }
 
-function saveData() {
+async function saveData() {
+  const validated = await entryform.value.validate();
+  if (!validated.valid) {
+    return;
+  }
+
   if (currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
   } else {
@@ -903,7 +1014,7 @@ div.obligatory div.v-input--disabled {
 }
 .entryForm {
   position: absolute;
-  left: 370px;
+  left: 420px;
   top: 60px;
   width: 650px;
   height: calc(100vh - 70px);
@@ -915,7 +1026,7 @@ div.obligatory div.v-input--disabled {
   position: absolute;
   left: 10px;
   top: 60px;
-  width: 350px;
+  width: 400px;
   height: calc(50vh - 40px);
   min-height: calc(50vh - 40px);
   overflow: auto;
