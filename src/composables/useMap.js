@@ -8,6 +8,7 @@ import { apply, getSource, renderTransparent } from 'ol-mapbox-style';
 import { getCenter } from 'ol/extent.js';
 import { shallowRef } from 'vue';
 import { AGRARATLAS_STYLE_URL, INITIAL_EXTENT } from '../constants.js';
+import { register as registerPMTiles } from 'pmtiles-protocol';
 
 /**
  * @typedef {Object} MapView
@@ -21,8 +22,8 @@ import { AGRARATLAS_STYLE_URL, INITIAL_EXTENT } from '../constants.js';
  */
 export const mapView = shallowRef({});
 
+registerPMTiles();
 renderTransparent(true);
-
 useGeographic();
 
 export const map = new Map({
