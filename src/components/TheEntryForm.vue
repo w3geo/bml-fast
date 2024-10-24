@@ -125,8 +125,18 @@
                   </v-col>
                 </v-row>
 
-                <v-row no-gutters v-if="entry.wrrl">
+                <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
+                    <v-text-field
+                      v-model="imNitratrisikogebiet"
+                      label="Fläche im Nitratrisikogebiet"
+                      variant="outlined"
+                      density="compact"
+                      hide-details
+                      disabled
+                    />
+                  </v-col>
+                  <v-col cols="6" class="px-4 obligatory mb-3" v-if="entry.wrrl">
                     <v-select
                       v-model="entry.wrrl_duengeklasse"
                       :items="lookup.wrrl"
@@ -681,6 +691,9 @@ const entryform = ref();
 
 const imGrundwasserschutz = computed(() => {
   return entry.value.flaeche_grundwasserschutz > 0 ? 'Ja' : 'Nein';
+});
+const imNitratrisikogebiet = computed(() => {
+  return entry.value.nitratrisikogebiet ? 'Ja' : 'Nein';
 });
 
 const rules = {

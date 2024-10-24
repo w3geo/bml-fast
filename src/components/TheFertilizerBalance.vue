@@ -26,11 +26,24 @@
       >
 
       <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
-        <v-row no-gutters class="error bg-grey-darken-2"
+        <v-row no-gutters class="error bg-orange-darken-4"
           ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (brutto)</v-col
           ><v-col vols="2" class="pa-2 text-right tableHeader"
             >{{
               bilanz.duengeobergrenze.toLocaleString('de-DE', {
+                style: 'decimal',
+                maximumFractionDigits: 4,
+              })
+            }}
+          </v-col></v-row
+        ></v-card
+      >
+      <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
+        <v-row no-gutters class="error bg-green-darken-4"
+          ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (netto)</v-col
+          ><v-col vols="2" class="pa-2 text-right tableHeader"
+            >{{
+              bilanz.duengeobergrenzered.toLocaleString('de-DE', {
                 style: 'decimal',
                 maximumFractionDigits: 4,
               })
