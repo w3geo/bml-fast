@@ -552,12 +552,12 @@ function calculateBilanz(retVal) {
 }
 
 /**
- * @returns {{duengeobergrenze: number, duengeobergrenzered: number, bilanz: Array<kulturbilanz>, errors: Array<string>}}}
+ * @returns {{duengeobergrenze: number, duengeobergrenzered: number, bilanz: Array<kulturbilanz>, errors: Array<string>, redmarked: Array<string>}}
  */
 export function updateBilanz() {
   const errors = [];
+  const redmarked = [];
   let bilanz = [];
-  let stopperErrors = false;
   let duengeobergrenze = 0;
   let duengeobergrenzered = 0;
 
@@ -600,14 +600,18 @@ export function updateBilanz() {
           if (entry.value.cultures[c].duengung[d].typ === '') {
             if (c > 0) {
               bilanz[c].errorsBI.push(`${d + 1}. Düngung: Keine Angaben zum Typ`);
+              redmarked.push('nanrechenbar', 'nbilanz', 'pbilanz', 'kbilanz');
             } else {
               bilanz[c].errorsBI.push(`Zwischenfrucht, ${d + 1}. Düngung: Keine Angaben zum Typ`);
+              redmarked.push('nanrechenbar', 'nbilanz', 'pbilanz', 'kbilanz');
             }
           } else if (entry.value.cultures[c].duengung[d].menge <= 0) {
             if (c > 0) {
               bilanz[c].errorsBI.push(`${d + 1}. Düngung: Fehlende Mengenangabe`);
+              redmarked.push('nanrechenbar', 'nbilanz', 'pbilanz', 'kbilanz');
             } else {
               bilanz[c].errorsBI.push(`Zwischenfrucht, ${d + 1}. Düngung: Fehlende Mengenangabe`);
+              redmarked.push('nanrechenbar', 'nbilanz', 'pbilanz', 'kbilanz');
             }
           }
         }
@@ -621,12 +625,8 @@ export function updateBilanz() {
     );
   }
 
-  if (stopperErrors) {
-    bilanz = [];
-  } else {
-    [duengeobergrenze, duengeobergrenzered] = calculateBilanz(bilanz);
-  }
-  return { duengeobergrenze, duengeobergrenzered, bilanz, errors };
+  [duengeobergrenze, duengeobergrenzered] = calculateBilanz(bilanz);
+  return { duengeobergrenze, duengeobergrenzered, bilanz, errors, redmarked };
 }
 
 export function useBalanceCalculator() {

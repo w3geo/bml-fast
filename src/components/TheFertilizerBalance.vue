@@ -100,13 +100,17 @@
                 ></v-card
               >
 
-              <table class="bilanz" v-if="kultur.errorsBI.length === 0">
+              <table class="bilanz">
                 <tr
                   v-for="(pvalue, pkey) in kultur"
                   :key="`row_${index}_${pkey}`"
                   :class="{
+                    // @ts-ignore
+                    markred: bilanz.redmarked.includes(pkey),
                     hidezero:
+                      // @ts-ignore
                       pkey === 'errorsBI' ||
+                      // @ts-ignore
                       pkey === 'errorsOG' ||
                       (pvalue === 0 && !outputConfig[pkey].print),
                     hide: !outputConfig[pkey].print,
@@ -178,6 +182,10 @@ table.bilanz tr.hide td {
 
 table.bilanz tr.hidezero {
   display: none;
+}
+
+table.bilanz tr.markred td {
+  color: #ef5350 !important;
 }
 
 .tableHeader {
