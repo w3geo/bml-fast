@@ -769,10 +769,10 @@ function npkLabel(what, type, fid) {
         label = 'mm = l/m²';
       }
       if (type === 'wirtschaftsdünger' || type === 'eigene') {
-        label = 'kg';
+        label = 'kg/ha';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 't|m³';
+        label = 't|m³/ha';
       }
       break;
 
