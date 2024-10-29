@@ -87,38 +87,38 @@ export const outputConfig = {
   vfwertzf: { label: 'Vorfruchtwert Zwischenfrucht', print: false, bold: false, border: '' },
   nminman: { label: 'Manueller N-Min', print: false, bold: false, border: '' },
   redfaktor: { label: 'Reduktionsfaktor', print: false, bold: false, border: '' },
-  nmengehd: { label: 'N-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
-  nmengebw: { label: 'N-Menge aus Bewässerung', print: false, bold: false, border: '' },
+  nmengehd: { label: 'N aus Handelsdüngern', print: false, bold: false, border: '' },
+  nmengebw: { label: 'N aus Bewässerung', print: false, bold: false, border: '' },
   nmengesr: {
-    label: 'N-Menge aus organischen Sekundärrohstoffen',
+    label: 'N aus org. Sekundärrohstoffen',
     print: false,
     bold: false,
     border: '',
   },
-  nmengewd: { label: 'N-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
+  nmengewd: { label: 'N aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
   nabzug: { label: 'N-Abzug von Düngeobergrenze', print: false, bold: false, border: '' },
   nanrechenbar: { label: 'Anrechenbarer Stickstoff', print: true, bold: false, border: '' },
   nentzug: { label: 'N-Entzug', print: false, bold: false, border: '' },
   nbilanz: { label: 'N-Bilanz', print: true, bold: true, border: 'bottom' },
-  pmengehd: { label: 'P-Menge aus Handelsdüngern', print: false, bold: false, border: '' },
+  pmengehd: { label: 'P aus Handelsdüngern', print: false, bold: false, border: '' },
   pmengesr: {
-    label: 'P-Menge aus organischen Sekundärrohstoffen',
+    label: 'P aus org. Sekundärrohstoffen',
     print: false,
     bold: false,
     border: '',
   },
-  pmengewd: { label: 'P-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
+  pmengewd: { label: 'P aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
   pduengung: { label: 'P-Düngung', print: true, bold: false, border: '' },
   pentzug: { label: 'P-Entzug', print: false, bold: false, border: '' },
   pbilanz: { label: 'P-Bilanz', print: true, bold: true, border: 'bottom' },
-  kmengehd: { label: 'K-Mengen aus Handelsdüngern', print: false, bold: false, border: '' },
+  kmengehd: { label: 'K aus Handelsdüngern', print: false, bold: false, border: '' },
   kmengesr: {
-    label: 'K-Menge aus organischen Sekundärrohstoffen',
+    label: 'K aus org. Sekundärrohstoffen',
     print: false,
     bold: false,
     border: '',
   },
-  kmengewd: { label: 'K-Menge aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
+  kmengewd: { label: 'K aus Wirtschaftsdüngern', print: false, bold: false, border: '' },
   kduengung: { label: 'K-Düngung', print: true, bold: false, border: '' },
   kentzug: { label: 'K-Entzug', print: false, bold: false, border: '' },
   kbilanz: { label: 'K-Bilanz', print: true, bold: true, border: '' },
@@ -429,7 +429,20 @@ function calculateBilanz(retVal) {
       }
     }
 
-    // F ---------- ANRECHNUNG HAUPTFRUCH N AUF HAUPTFRUCHT N+1 --------------------------------------------
+    // F ---------- ANRECHNUNG NSALDO FÜR ALLE ANDEREN FÄLLE AUF HAUPTFRUCHT 1 ----------------------------
+    // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1
+    if (
+      c === 1 &&
+      !zfgenutzt &&
+      entry.value.vorfrucht === '' &&
+      entry.value.cultures[c].kultur !== ''
+    ) {
+      if (entry.value.nsaldo > 0) {
+        retVal[c].nsaldo = entry.value.nsaldo;
+      }
+    }
+
+    // G ---------- ANRECHNUNG HAUPTFRUCH N AUF HAUPTFRUCHT N+1 --------------------------------------------
     if (
       c > 1 &&
       entry.value.cultures[c].kultur !== '' &&
