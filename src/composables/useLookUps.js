@@ -83,8 +83,8 @@ const yearItems = [];
 }
 
 const ackerzahlItems = [
-  { title: 'Größer 30', value: 31 },
-  { title: 'Kleiner/gleich 30', value: 30 },
+  { title: 'Größer/Gleich 30', value: 30 },
+  { title: 'Kleiner 30', value: 29 },
 ];
 
 const fertilizationTypes = [
