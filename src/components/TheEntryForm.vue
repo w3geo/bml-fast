@@ -322,7 +322,7 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
-                        v-model.number="entry.cultures[i - 1].nmin"
+                        v-model="entry.cultures[i - 1].nmin"
                         label="NMin / manuell"
                         variant="outlined"
                         density="compact"
@@ -339,7 +339,7 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
-                        v-model.number="entry.cultures[i - 1].nminvorgabe"
+                        v-model="entry.cultures[i - 1].nminvorgabe"
                         label="Vorgabe"
                         variant="outlined"
                         density="compact"

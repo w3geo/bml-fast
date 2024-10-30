@@ -294,8 +294,9 @@ function calculateBilanz(retVal) {
       : 0;
 
   for (let c = 0; c < entry.value.cultures.length; c++) {
-    // A ---------- DÜNGEOBERGRENZE --------------------------------------------------------------------
+    // A ---------- DÜNGEOBERGRENZE / NMIN -------------------------------------------------------------
     if (entry.value.cultures[c].kultur !== '') {
+      // I Düngeobergrenze
       let elkey =
         'Düngeobergrenze EL ' + (c === 0 ? 'mittel' : entry.value.cultures[c].ertragslage);
       if (entry.value.nitratrisikogebiet) {
@@ -319,6 +320,37 @@ function calculateBilanz(retVal) {
 
       retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;
       dogSumme += retVal[c].duengeobergrenze;
+
+      // II Nmin Vorgabe
+      if (c === 1 && entry.value.vorfrucht !== '') {
+        let synced = false;
+        if (entry.value.cultures[c].nmin == entry.value.cultures[c].nminvorgabe) {
+          synced = true;
+        }
+
+        entry.value.cultures[c].nminvorgabe = tableAttribut(
+          'kulturen',
+          entry.value.vorfrucht,
+          'VFW | Nmin Folgejahr',
+        );
+        if (synced) {
+          entry.value.cultures[c].nmin = entry.value.cultures[c].nminvorgabe;
+        }
+      }
+      if (c > 1 && entry.value.cultures[c - 1].kultur !== '') {
+        let synced = false;
+        if (entry.value.cultures[c].nmin == entry.value.cultures[c].nminvorgabe) {
+          synced = true;
+        }
+        entry.value.cultures[c].nminvorgabe = tableAttribut(
+          'kulturen',
+          entry.value.cultures[c - 1].kultur,
+          'VFW | Nmin selbes Jahr',
+        );
+        if (synced) {
+          entry.value.cultures[c].nmin = entry.value.cultures[c].nminvorgabe;
+        }
+      }
     }
 
     // B ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
