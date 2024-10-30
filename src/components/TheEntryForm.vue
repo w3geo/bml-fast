@@ -733,10 +733,10 @@ function npkLabel(what, type, fid) {
         label = 'NO₃(mg/L)';
       }
       if (type === 'wirtschaftsdünger') {
-        label = 'N(kg/m³)';
+        label = 'Njw(kg/m³)';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 'N(kg/t|m³)';
+        label = 'Njw(kg/t|m³)';
       }
       break;
     case 'p':
