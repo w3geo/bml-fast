@@ -304,6 +304,19 @@ function calculateBilanz(retVal) {
       retVal[c].duengeobergrenze = Number(
         tableAttribut('kulturen', entry.value.cultures[c].kultur, elkey),
       );
+
+      if (entry.value.wrrl_duengeklasse !== '-') {
+        const wrrlCompare = Number(
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[c].kultur,
+            lookup.value.wrrltablecolumn[entry.value.wrrl_duengeklasse],
+          ),
+        );
+        retVal[c].duengeobergrenze =
+          wrrlCompare < retVal[c].duengeobergrenze ? wrrlCompare : retVal[c].duengeobergrenze;
+      }
+
       retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;
       dogSumme += retVal[c].duengeobergrenze;
     }
