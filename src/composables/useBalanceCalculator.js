@@ -265,7 +265,7 @@ function calculateEntzug(idx) {
   kEntzug = tableAttribut(
     'kulturen',
     entry.value.cultures[idx].kultur,
-    `Phosphor ${entry.value.kalium_gehaltsklasse}${kpostfix}`,
+    `Kalium ${entry.value.kalium_gehaltsklasse}${kpostfix}`,
   );
   return [Number(nEntzug), Number(pEntzug), Number(kEntzug)];
 }
