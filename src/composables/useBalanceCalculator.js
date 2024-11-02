@@ -476,15 +476,12 @@ function calculateBilanz(retVal) {
 
     // F ---------- ANRECHNUNG NSALDO FÜR ALLE ANDEREN FÄLLE AUF HAUPTFRUCHT 1 ----------------------------
     // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1
-    if (
-      c === 1 &&
-      !zfgenutzt &&
-      entry.value.vorfrucht === '' &&
-      entry.value.cultures[c].kultur !== ''
-    ) {
-      if (entry.value.nsaldo > 0) {
+    if (c === 1 && entry.value.vorfrucht === '' && entry.value.cultures[c].kultur !== '') {
+      if (!zfgenutzt && entry.value.nsaldo > 0) {
         retVal[c].nsaldo = entry.value.nsaldo;
       }
+      entry.value.cultures[c].nmin = 0;
+      entry.value.cultures[c].nminvorgabe = 0;
     }
 
     // G ---------- ANRECHNUNG HAUPTFRUCH N AUF HAUPTFRUCHT N+1 --------------------------------------------
