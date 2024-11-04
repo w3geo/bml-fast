@@ -169,14 +169,12 @@ function calculateEntzug(idx) {
   } else {
     // oder berechnen aus Ernte
     for (let e = 0; e < lookup.value.ertragsLagen.length; e++) {
-      if (
-        entry.value.cultures[idx].ernte >=
-        tableAttribut(
-          'kulturen',
-          entry.value.cultures[idx].kultur,
-          `EL ${lookup.value.ertragsLagen[e]} t / m3 ab`,
-        )
-      ) {
+      const aktELage = tableAttribut(
+        'kulturen',
+        entry.value.cultures[idx].kultur,
+        `EL ${lookup.value.ertragsLagen[e]} t / m3 ab`,
+      );
+      if (aktELage != '' && entry.value.cultures[idx].ernte >= Number(aktELage)) {
         ertragslage = lookup.value.ertragsLagen[e];
       }
     }
