@@ -26,6 +26,15 @@ const kornfeuchteListe = [
   { title: 16, value: 16 },
 ];
 
+const wrrl_tablecolumn = {
+  A: 'WRRL Steiermark EL niedrig',
+  B: 'WRRL Steiermark EL mittel -10%',
+  C: 'WRRL Steiermark EL mittel',
+  D: 'WRRL Steiermark EL hoch 1',
+  E: 'WRRL Steiermark EL hoch 2',
+  F: 'WRRL Steiermark EL hoch 3',
+};
+
 const proteinListe = {
   4: [
     { title: '11', value: 11 },
@@ -83,8 +92,8 @@ const yearItems = [];
 }
 
 const ackerzahlItems = [
-  { title: 'Größer 30', value: 31 },
-  { title: 'Kleiner/gleich 30', value: 30 },
+  { title: 'Größer/Gleich 30', value: 30 },
+  { title: 'Kleiner 30', value: 29 },
 ];
 
 const fertilizationTypes = [
@@ -149,6 +158,7 @@ export const lookup = shallowRef({
   handelsdünger,
   entzugstabelleWeizen,
   entzugstabelleBraugerste,
+  wrrltablecolumn: wrrl_tablecolumn,
 });
 
 /**

@@ -106,10 +106,11 @@
                 <v-row no-gutters v-if="entry.teilnahme_grundwasserschutz_acker">
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
-                      v-model="entry.nsaldo"
+                      v-model.number="entry.nsaldo"
                       label="N-Saldo (kg N/ha)"
                       variant="outlined"
                       density="compact"
+                      type="number"
                       hide-details
                     />
                   </v-col>
@@ -322,7 +323,7 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
-                        v-model.number="entry.cultures[i - 1].nmin"
+                        v-model="entry.cultures[i - 1].nmin"
                         label="NMin / manuell"
                         variant="outlined"
                         density="compact"
@@ -339,7 +340,7 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
-                        v-model.number="entry.cultures[i - 1].nminvorgabe"
+                        v-model="entry.cultures[i - 1].nminvorgabe"
                         label="Vorgabe"
                         variant="outlined"
                         density="compact"
@@ -733,10 +734,10 @@ function npkLabel(what, type, fid) {
         label = 'NO₃(mg/L)';
       }
       if (type === 'wirtschaftsdünger') {
-        label = 'N(kg/m³)';
+        label = 'Njw(kg/m³)';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 'N(kg/t|m³)';
+        label = 'Njw(kg/t|m³)';
       }
       break;
     case 'p':
@@ -769,10 +770,10 @@ function npkLabel(what, type, fid) {
         label = 'mm = l/m²';
       }
       if (type === 'wirtschaftsdünger' || type === 'eigene') {
-        label = 'm³';
+        label = 'kg/ha';
       }
       if (type === 'sekundärrohstoffe') {
-        label = 't|m³';
+        label = 't|m³/ha';
       }
       break;
 
