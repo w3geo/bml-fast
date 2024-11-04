@@ -294,8 +294,22 @@ function calculateBilanz(retVal) {
       : 0;
 
   for (let c = 0; c < entry.value.cultures.length; c++) {
+    const hfgemüse =
+      tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
+    const hfmanuell =
+      Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
+    const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
+
+    // NMIN nur bei GEMÜSE!
+    if (!hfgemüse) {
+      entry.value.cultures[c].nmin = 0;
+      entry.value.cultures[c].nminvorgabe = 0;
+    }
+
     // A ---------- DÜNGEOBERGRENZE / NMIN -------------------------------------------------------------
     if (entry.value.cultures[c].kultur !== '') {
+      const oldnminvorgabe = entry.value.cultures[c].nminvorgabe;
+
       // I Düngeobergrenze
       let elkey =
         'Düngeobergrenze EL ' + (c === 0 ? 'mittel' : entry.value.cultures[c].ertragslage);
@@ -323,33 +337,21 @@ function calculateBilanz(retVal) {
 
       // II Nmin Vorgabe
       if (c === 1 && entry.value.vorfrucht !== '') {
-        let synced = false;
-        if (entry.value.cultures[c].nmin == entry.value.cultures[c].nminvorgabe) {
-          synced = true;
-        }
-
         entry.value.cultures[c].nminvorgabe = tableAttribut(
           'kulturen',
           entry.value.vorfrucht,
           'VFW | Nmin Folgejahr',
         );
-        if (synced) {
+        if (entry.value.cultures[c].nmin === oldnminvorgabe) {
           entry.value.cultures[c].nmin = entry.value.cultures[c].nminvorgabe;
         }
       }
       if (c > 1 && entry.value.cultures[c - 1].kultur !== '') {
-        let synced = false;
-        if (entry.value.cultures[c].nmin == entry.value.cultures[c].nminvorgabe) {
-          synced = true;
-        }
         entry.value.cultures[c].nminvorgabe = tableAttribut(
           'kulturen',
           entry.value.cultures[c - 1].kultur,
           'VFW | Nmin selbes Jahr',
         );
-        if (synced) {
-          entry.value.cultures[c].nmin = entry.value.cultures[c].nminvorgabe;
-        }
       }
     }
 
@@ -425,12 +427,6 @@ function calculateBilanz(retVal) {
       !zfgenutzt &&
       entry.value.cultures[c].kultur !== ''
     ) {
-      const hfgemüse =
-        tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
-      const hfmanuell =
-        Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
-      const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
-
       // 1. N-Saldo
       if (
         entry.value.flaeche_grundwasserschutz > 0 &&
@@ -480,8 +476,6 @@ function calculateBilanz(retVal) {
       if (!zfgenutzt && entry.value.nsaldo > 0) {
         retVal[c].nsaldo = entry.value.nsaldo;
       }
-      entry.value.cultures[c].nmin = 0;
-      entry.value.cultures[c].nminvorgabe = 0;
     }
 
     // G ---------- ANRECHNUNG HAUPTFRUCH N AUF HAUPTFRUCHT N+1 --------------------------------------------
