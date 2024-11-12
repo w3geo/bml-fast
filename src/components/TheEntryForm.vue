@@ -765,12 +765,15 @@ function npkLabel(what, type, fid) {
       }
       break;
     case 'menge':
-      label = tableAttribut('handelsdünger', fid, 'Einheit');
+      label = tableAttribut('handelsdünger', fid, 'Einheit') + '/ha';
       if (type === 'bewässerung') {
         label = 'mm = l/m²';
       }
-      if (type === 'wirtschaftsdünger' || type === 'eigene') {
+      if (type === 'eigene') {
         label = 'kg/ha';
+      }
+      if (type === 'wirtschaftsdünger') {
+        label = 'm³/ha';
       }
       if (type === 'sekundärrohstoffe') {
         label = 't|m³/ha';
