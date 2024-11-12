@@ -816,11 +816,52 @@ function fertilizationChanged(what, cindex, findex) {
   }
 }
 
+function nMinCalculator(index) {
+  if (index >= entry.value.cultures.length || !entry.value.cultures[index].kultur) {
+    return;
+  }
+
+  const isgemüse =
+    tableAttribut('kulturen', entry.value.cultures[index].kultur, 'Gemüsekultur') === 'x';
+
+  const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
+    entry.value.cultures[0].kultur,
+  );
+
+  entry.value.cultures[index].nmin = 0;
+  entry.value.cultures[index].nminvorgabe = 0;
+  if (isgemüse) {
+    const oldnminvorgabe = entry.value.cultures[index].nminvorgabe;
+
+    if (index === 1 && entry.value.vorfrucht !== '' && !zfgenutzt) {
+      entry.value.cultures[index].nminvorgabe = tableAttribut(
+        'kulturen',
+        entry.value.vorfrucht,
+        'VFW | Nmin Folgejahr',
+      );
+      if (entry.value.cultures[index].nmin === oldnminvorgabe) {
+        entry.value.cultures[index].nmin = entry.value.cultures[index].nminvorgabe;
+      }
+    }
+    if (index > 1 && entry.value.cultures[index - 1].kultur !== '') {
+      entry.value.cultures[index].nminvorgabe = tableAttribut(
+        'kulturen',
+        entry.value.cultures[index - 1].kultur,
+        'VFW | Nmin selbes Jahr',
+      );
+      if (entry.value.cultures[index].nmin === oldnminvorgabe) {
+        entry.value.cultures[index].nmin = entry.value.cultures[index].nminvorgabe;
+      }
+    }
+  }
+}
+
 function cultureChanged(index) {
   if (index === -1) {
     if (!entry.value.vorfrucht) {
       entry.value.vorfrucht = '';
     }
+    nMinCalculator(1);
     return;
   }
 
@@ -832,12 +873,8 @@ function cultureChanged(index) {
     return;
   }
 
-  entry.value.cultures[index].nmin = tableAttribut(
-    'kulturen',
-    entry.value.cultures[index].kultur,
-    'VFW | Nmin selbes Jahr',
-  );
-  entry.value.cultures[index].nminvorgabe = Number(entry.value.cultures[index].nmin);
+  nMinCalculator(index);
+  nMinCalculator(index + 1);
 }
 
 function allCulturesReset() {

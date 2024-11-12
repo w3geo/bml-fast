@@ -298,15 +298,9 @@ function calculateBilanz(retVal) {
       Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
     const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
 
-    // NMIN nur bei GEMÜSE!
-    if (!hfgemüse) {
-      entry.value.cultures[c].nmin = 0;
-      entry.value.cultures[c].nminvorgabe = 0;
-    }
-
     // A ---------- DÜNGEOBERGRENZE / NMIN -------------------------------------------------------------
     if (entry.value.cultures[c].kultur !== '') {
-      const oldnminvorgabe = entry.value.cultures[c].nminvorgabe;
+      // const oldnminvorgabe = entry.value.cultures[c].nminvorgabe;
 
       // I Düngeobergrenze
       let elkey =
@@ -332,25 +326,6 @@ function calculateBilanz(retVal) {
 
       retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;
       dogSumme += retVal[c].duengeobergrenze;
-
-      // II Nmin Vorgabe
-      if (c === 1 && entry.value.vorfrucht !== '') {
-        entry.value.cultures[c].nminvorgabe = tableAttribut(
-          'kulturen',
-          entry.value.vorfrucht,
-          'VFW | Nmin Folgejahr',
-        );
-        if (entry.value.cultures[c].nmin === oldnminvorgabe) {
-          entry.value.cultures[c].nmin = entry.value.cultures[c].nminvorgabe;
-        }
-      }
-      if (c > 1 && entry.value.cultures[c - 1].kultur !== '') {
-        entry.value.cultures[c].nminvorgabe = tableAttribut(
-          'kulturen',
-          entry.value.cultures[c - 1].kultur,
-          'VFW | Nmin selbes Jahr',
-        );
-      }
     }
 
     // B ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
