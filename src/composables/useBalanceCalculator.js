@@ -411,7 +411,7 @@ function calculateBilanz(retVal) {
           retVal[c].nsaldo =
             entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
         }
-        if (hfmanuell && entry.value.nsaldo <= hfmanuellnmin) {
+        if (entry.value.nsaldo <= hfmanuellnmin) {
           retVal[c].nsaldo = 0;
         }
       }
