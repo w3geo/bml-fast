@@ -80,7 +80,7 @@ export const emptyEntry = {
   wrrl_duengeklasse: '-',
   teilnahme_grundwasserschutz_acker: false,
   gw_acker_gebietszuteilung: 'Trockengebiet',
-  ackerzahl: 31,
+  ackerzahl: 30,
   phosphor_gehaltsklasse: 'C',
   kalium_gehaltsklasse: 'C',
   bodenart: 'lS - lehmiger Sand',
