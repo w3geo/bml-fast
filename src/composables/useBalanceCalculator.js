@@ -296,7 +296,8 @@ function calculateBilanz(retVal) {
       tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
     const hfmanuell =
       Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
-    const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
+
+    retVal[c].nminman = Number(entry.value.cultures[c].nmin);
 
     // A ---------- DÜNGEOBERGRENZE / NMIN -------------------------------------------------------------
     if (entry.value.cultures[c].kultur !== '') {
@@ -411,7 +412,7 @@ function calculateBilanz(retVal) {
           retVal[c].nsaldo =
             entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
         }
-        if (entry.value.nsaldo <= hfmanuellnmin) {
+        if (entry.value.nsaldo <= retVal[c].nminman) {
           retVal[c].nsaldo = 0;
         }
       }
@@ -433,10 +434,9 @@ function calculateBilanz(retVal) {
 
       // 4. manueller NMin Wert
       if (hfmanuell) {
-        retVal[c].nminman = hfmanuellnmin;
         if (
-          (zfungenutzt && entry.value.nsaldo * redfaktor > hfmanuellnmin) ||
-          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > hfmanuellnmin)
+          (zfungenutzt && entry.value.nsaldo * redfaktor > retVal[c].nminman) ||
+          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > retVal[c].nminman)
         ) {
           retVal[c].nminman = 0;
         }
@@ -444,10 +444,15 @@ function calculateBilanz(retVal) {
     }
 
     // F ---------- ANRECHNUNG NSALDO FÜR ALLE ANDEREN FÄLLE AUF HAUPTFRUCHT 1 ----------------------------
-    // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1
+    // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1, bzw. Korrektur NMIN ODER SALDO
     if (c === 1 && entry.value.vorfrucht === '' && entry.value.cultures[c].kultur !== '') {
       if (!zfgenutzt && entry.value.nsaldo > 0) {
         retVal[c].nsaldo = entry.value.nsaldo;
+      }
+      if (entry.value.nsaldo <= retVal[c].nminman) {
+        retVal[c].nsaldo = 0;
+      } else {
+        retVal[c].nminman = 0;
       }
     }
 
