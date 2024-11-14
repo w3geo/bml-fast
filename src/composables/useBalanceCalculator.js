@@ -422,7 +422,8 @@ function calculateBilanz(retVal) {
       if (
         (vfgemüse && hfgemüse && hfmanuell) ||
         (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
-        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin)
+        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin) ||
+        retVal[c].vfwert === retVal[c].nminman
       ) {
         retVal[c].vfwert = 0;
       }
