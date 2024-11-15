@@ -32,7 +32,7 @@
             >{{
               bilanz.duengeobergrenze.toLocaleString('de-DE', {
                 style: 'decimal',
-                maximumFractionDigits: 4,
+                maximumFractionDigits: 2,
               })
             }}
           </v-col></v-row
@@ -45,7 +45,7 @@
             >{{
               bilanz.duengeobergrenzered.toLocaleString('de-DE', {
                 style: 'decimal',
-                maximumFractionDigits: 4,
+                maximumFractionDigits: 2,
               })
             }}
           </v-col></v-row
@@ -124,7 +124,7 @@
                     {{
                       pvalue.toLocaleString('de-DE', {
                         style: 'decimal',
-                        maximumFractionDigits: 4,
+                        maximumFractionDigits: 2,
                       })
                     }}
                   </td>

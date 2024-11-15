@@ -373,7 +373,7 @@ function calculateBilanz(retVal) {
     }
 
     // C ---------- ANRECHNUNG ZWISCHENFRUCHT GENUTZT VON VORFRUCHT ------------------------------------------------
-    // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
+    // Nur relevant, wenn genutzte ZF + Hauptfrucht 1
     if (c === 0 && zfgenutzt && entry.value.cultures[c].kultur !== '') {
       if (entry.value.vorfrucht !== '') {
         retVal[c].vfwert = vfnmin;
@@ -409,8 +409,7 @@ function calculateBilanz(retVal) {
       ) {
         retVal[c].nsaldo = entry.value.nsaldo;
         if (zfungenutzt) {
-          retVal[c].nsaldo =
-            entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
+          retVal[c].nsaldo = entry.value.nsaldo * redfaktor;
         }
         if (entry.value.nsaldo <= retVal[c].nminman) {
           retVal[c].nsaldo = 0;
@@ -448,9 +447,9 @@ function calculateBilanz(retVal) {
     // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1, bzw. Korrektur NMIN ODER SALDO
     if (c === 1 && entry.value.vorfrucht === '' && entry.value.cultures[c].kultur !== '') {
       if (!zfgenutzt && entry.value.nsaldo > 0) {
-        retVal[c].nsaldo = entry.value.nsaldo;
+        retVal[c].nsaldo = zfungenutzt ? entry.value.nsaldo * redfaktor : entry.value.nsaldo;
       }
-      if (entry.value.nsaldo <= retVal[c].nminman) {
+      if (retVal[c].nsaldo <= retVal[c].nminman) {
         retVal[c].nsaldo = 0;
       } else {
         retVal[c].nminman = 0;
@@ -546,6 +545,11 @@ function calculateBilanz(retVal) {
       if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell) {
         retVal[c].vfwert = 0;
       }
+    }
+
+    // Bewässerung unter 10 nicht berücksichtigen
+    if (Number(retVal[c].nmengebw) < 10) {
+      retVal[c].nmengebw = 0;
     }
 
     // Düngungen und Bilanz
