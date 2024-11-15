@@ -558,10 +558,18 @@ function calculateBilanz(retVal) {
       Number(retVal[c].vfwert) +
       Number(retVal[c].vfwertzf) +
       Number(retVal[c].nminman);
+
     retVal[c].pduengung =
       Number(retVal[c].pmengehd) + Number(retVal[c].pmengesr) + Number(retVal[c].pmengewd);
     retVal[c].kduengung =
       Number(retVal[c].kmengehd) + Number(retVal[c].kmengesr) + Number(retVal[c].kmengewd);
+
+    // Sonderfall ungenutzte ZF und HF1
+    if (c === 1 && zfungenutzt) {
+      retVal[1].nanrechenbar += retVal[0].nanrechenbar;
+      retVal[1].pduengung += retVal[0].pduengung;
+      retVal[1].kduengung += retVal[0].kduengung;
+    }
 
     retVal[c].nbilanz = retVal[c].nanrechenbar - Number(retVal[c].nentzug);
     retVal[c].pbilanz = retVal[c].pduengung - Number(retVal[c].pentzug);
