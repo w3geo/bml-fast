@@ -301,8 +301,6 @@ function calculateBilanz(retVal) {
 
     // A ---------- DÜNGEOBERGRENZE / NMIN -------------------------------------------------------------
     if (entry.value.cultures[c].kultur !== '') {
-      // const oldnminvorgabe = entry.value.cultures[c].nminvorgabe;
-
       // I Düngeobergrenze
       let elkey =
         'Düngeobergrenze EL ' + (c === 0 ? 'mittel' : entry.value.cultures[c].ertragslage);
@@ -422,7 +420,7 @@ function calculateBilanz(retVal) {
         (vfgemüse && hfgemüse && hfmanuell) ||
         (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
         (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin) ||
-        retVal[c].vfwert === retVal[c].nminman
+        (vfgemüse && retVal[c].vfwert === retVal[c].nminman)
       ) {
         retVal[c].vfwert = 0;
       }
