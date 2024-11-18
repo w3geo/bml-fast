@@ -460,6 +460,8 @@ function calculateBilanz(retVal) {
       entry.value.cultures[c].kultur !== '' &&
       entry.value.cultures[c - 1].kultur !== ''
     ) {
+      retVal[c].nminman = 0; // Wird hier neu berechnet
+
       const hf1gemüse =
         tableAttribut('kulturen', entry.value.cultures[c - 1].kultur, 'Gemüsekultur') === 'x';
       const hf2gemüse =
