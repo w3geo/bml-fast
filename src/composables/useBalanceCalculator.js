@@ -296,12 +296,11 @@ function calculateBilanz(retVal) {
       tableAttribut('kulturen', entry.value.cultures[c].kultur, 'Gemüsekultur') === 'x';
     const hfmanuell =
       Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
-    const hfmanuellnmin = Number(entry.value.cultures[c].nmin);
+
+    retVal[c].nminman = Number(entry.value.cultures[c].nmin);
 
     // A ---------- DÜNGEOBERGRENZE / NMIN -------------------------------------------------------------
     if (entry.value.cultures[c].kultur !== '') {
-      // const oldnminvorgabe = entry.value.cultures[c].nminvorgabe;
-
       // I Düngeobergrenze
       let elkey =
         'Düngeobergrenze EL ' + (c === 0 ? 'mittel' : entry.value.cultures[c].ertragslage);
@@ -372,7 +371,7 @@ function calculateBilanz(retVal) {
     }
 
     // C ---------- ANRECHNUNG ZWISCHENFRUCHT GENUTZT VON VORFRUCHT ------------------------------------------------
-    // Nur relevant, wenn Vorfrucht + keine oder ungenutzte ZF + Hauptfrucht 1
+    // Nur relevant, wenn genutzte ZF + Hauptfrucht 1
     if (c === 0 && zfgenutzt && entry.value.cultures[c].kultur !== '') {
       if (entry.value.vorfrucht !== '') {
         retVal[c].vfwert = vfnmin;
@@ -408,10 +407,9 @@ function calculateBilanz(retVal) {
       ) {
         retVal[c].nsaldo = entry.value.nsaldo;
         if (zfungenutzt) {
-          retVal[c].nsaldo =
-            entry.value.nsaldo * reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
+          retVal[c].nsaldo = entry.value.nsaldo * redfaktor;
         }
-        if (hfmanuell && entry.value.nsaldo <= hfmanuellnmin) {
+        if (entry.value.nsaldo <= retVal[c].nminman) {
           retVal[c].nsaldo = 0;
         }
       }
@@ -421,7 +419,8 @@ function calculateBilanz(retVal) {
       if (
         (vfgemüse && hfgemüse && hfmanuell) ||
         (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
-        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin)
+        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin) ||
+        (vfgemüse && retVal[c].vfwert === retVal[c].nminman)
       ) {
         retVal[c].vfwert = 0;
       }
@@ -433,10 +432,9 @@ function calculateBilanz(retVal) {
 
       // 4. manueller NMin Wert
       if (hfmanuell) {
-        retVal[c].nminman = hfmanuellnmin;
         if (
-          (zfungenutzt && entry.value.nsaldo * redfaktor > hfmanuellnmin) ||
-          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > hfmanuellnmin)
+          (zfungenutzt && entry.value.nsaldo * redfaktor > retVal[c].nminman) ||
+          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > retVal[c].nminman)
         ) {
           retVal[c].nminman = 0;
         }
@@ -444,10 +442,15 @@ function calculateBilanz(retVal) {
     }
 
     // F ---------- ANRECHNUNG NSALDO FÜR ALLE ANDEREN FÄLLE AUF HAUPTFRUCHT 1 ----------------------------
-    // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1
+    // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1, bzw. Korrektur NMIN ODER SALDO
     if (c === 1 && entry.value.vorfrucht === '' && entry.value.cultures[c].kultur !== '') {
       if (!zfgenutzt && entry.value.nsaldo > 0) {
-        retVal[c].nsaldo = entry.value.nsaldo;
+        retVal[c].nsaldo = zfungenutzt ? entry.value.nsaldo * redfaktor : entry.value.nsaldo;
+      }
+      if (retVal[c].nsaldo <= retVal[c].nminman) {
+        retVal[c].nsaldo = 0;
+      } else {
+        retVal[c].nminman = 0;
       }
     }
 
@@ -457,6 +460,8 @@ function calculateBilanz(retVal) {
       entry.value.cultures[c].kultur !== '' &&
       entry.value.cultures[c - 1].kultur !== ''
     ) {
+      retVal[c].nminman = 0; // Wird hier neu berechnet
+
       const hf1gemüse =
         tableAttribut('kulturen', entry.value.cultures[c - 1].kultur, 'Gemüsekultur') === 'x';
       const hf2gemüse =
@@ -542,6 +547,11 @@ function calculateBilanz(retVal) {
       }
     }
 
+    // Bewässerung unter 10 nicht berücksichtigen
+    if (Number(retVal[c].nmengebw) < 10) {
+      retVal[c].nmengebw = 0;
+    }
+
     // Düngungen und Bilanz
     retVal[c].nanrechenbar =
       Number(retVal[c].nmengehd) +
@@ -552,10 +562,18 @@ function calculateBilanz(retVal) {
       Number(retVal[c].vfwert) +
       Number(retVal[c].vfwertzf) +
       Number(retVal[c].nminman);
+
     retVal[c].pduengung =
       Number(retVal[c].pmengehd) + Number(retVal[c].pmengesr) + Number(retVal[c].pmengewd);
     retVal[c].kduengung =
       Number(retVal[c].kmengehd) + Number(retVal[c].kmengesr) + Number(retVal[c].kmengewd);
+
+    // Sonderfall ungenutzte ZF und HF1
+    if (c === 1 && zfungenutzt) {
+      retVal[1].nanrechenbar += retVal[0].nanrechenbar;
+      retVal[1].pduengung += retVal[0].pduengung;
+      retVal[1].kduengung += retVal[0].kduengung;
+    }
 
     retVal[c].nbilanz = retVal[c].nanrechenbar - Number(retVal[c].nentzug);
     retVal[c].pbilanz = retVal[c].pduengung - Number(retVal[c].pentzug);

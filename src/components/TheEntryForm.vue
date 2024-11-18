@@ -826,6 +826,7 @@ function nMinCalculator(index) {
 
   const isgemüse =
     tableAttribut('kulturen', entry.value.cultures[index].kultur, 'Gemüsekultur') === 'x';
+  const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
 
   const zfgenutzt = lookup.value.aussaatTypeFilter.zwischenG.includes(
     entry.value.cultures[0].kultur,
@@ -836,7 +837,7 @@ function nMinCalculator(index) {
   if (isgemüse) {
     const oldnminvorgabe = entry.value.cultures[index].nminvorgabe;
 
-    if (index === 1 && entry.value.vorfrucht !== '' && !zfgenutzt) {
+    if (index === 1 && entry.value.vorfrucht !== '' && vfgemüse && !zfgenutzt) {
       entry.value.cultures[index].nminvorgabe = tableAttribut(
         'kulturen',
         entry.value.vorfrucht,
