@@ -1,12 +1,12 @@
 import { shallowRef } from 'vue';
-import feldstücknutzungsarten from '../assets/data/feldstücknutzungsarten.json';
-import bodenartenbodenschwere from '../assets/data/bodenartenbodenschwere.json';
-import kulturen from '../assets/data/kulturen.json';
-import wirtschaftsdünger from '../assets/data/wirtschaftsdünger.json';
-import sekundärrohstoffe from '../assets/data/sekundärrohstoffe.json';
-import handelsdünger from '../assets/data/handelsdünger.json';
-import entzugstabelleWeizen from '../assets/data/entzugstabelle-weizen.json';
-import entzugstabelleBraugerste from '../assets/data/entzugstabelle-braugerste.json';
+import feldstücknutzungsarten from '../assets/data/feldstücknutzungsarten.json' with { type: 'json' };
+import bodenartenbodenschwere from '../assets/data/bodenartenbodenschwere.json' with { type: 'json' };
+import kulturen from '../assets/data/kulturen.json' with { type: 'json' };
+import wirtschaftsdünger from '../assets/data/wirtschaftsdünger.json' with { type: 'json' };
+import sekundärrohstoffe from '../assets/data/sekundärrohstoffe.json' with { type: 'json' };
+import handelsdünger from '../assets/data/handelsdünger.json' with { type: 'json' };
+import entzugstabelleWeizen from '../assets/data/entzugstabelle-weizen.json' with { type: 'json' };
+import entzugstabelleBraugerste from '../assets/data/entzugstabelle-braugerste.json' with { type: 'json' };
 
 const wrrl = [
   { value: '-', title: '-', code: 'Keine' },
