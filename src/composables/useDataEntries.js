@@ -105,7 +105,7 @@ export const currentSaved = ref(null);
 export const dataWindow = ref(0);
 
 // load from local storage, if existing
-{
+if (typeof localStorage !== 'undefined') {
   const saved = localStorage.getItem('fasttool');
   if (saved) {
     savedData.value = JSON.parse(saved);
