@@ -460,6 +460,7 @@ function calculateBilanz(retVal) {
       entry.value.cultures[c].kultur !== '' &&
       entry.value.cultures[c - 1].kultur !== ''
     ) {
+      const tempnmin = retVal[c].nminman;
       retVal[c].nminman = 0; // Wird hier neu berechnet
 
       const hf1gemüse =
@@ -493,6 +494,7 @@ function calculateBilanz(retVal) {
         entry.value.teilnahme_grundwasserschutz_acker
       ) {
         if (hf1gemüse && hf2gemüse) {
+          console.log('do samma daham');
           if (
             (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
             (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2nmin)
@@ -529,6 +531,7 @@ function calculateBilanz(retVal) {
         hf2gemüse &&
         (retVal[c].nsaldo > 0 || retVal[c].nminman > 0 || retVal[c - 1].nbilanz <= 20)
       ) {
+        console.log('hürbini', retVal[c].nsaldo, retVal[c].nminman, retVal[c - 1].nbilanz);
         retVal[c].vfwert = 0;
       }
       if (
