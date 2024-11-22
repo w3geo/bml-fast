@@ -460,7 +460,6 @@ function calculateBilanz(retVal) {
       entry.value.cultures[c].kultur !== '' &&
       entry.value.cultures[c - 1].kultur !== ''
     ) {
-      const tempnmin = retVal[c].nminman;
       retVal[c].nminman = 0; // Wird hier neu berechnet
 
       const hf1gemüse =
@@ -493,17 +492,27 @@ function calculateBilanz(retVal) {
         entry.value.flaeche_grundwasserschutz > 0 &&
         entry.value.teilnahme_grundwasserschutz_acker
       ) {
-        if (hf1gemüse && hf2gemüse) {
-          console.log('do samma daham');
-          if (
-            (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
-            (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2nmin)
-          ) {
-            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
-          }
-        } else {
-          if (retVal[c - 1].nbilanz > 20) {
-            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+        console.log(
+          'Bilanz = ' +
+            retVal[c - 1].nbilanz +
+            ' reduziert = ' +
+            retVal[c - 1].nbilanz * redfaktor +
+            ' und hf2nmin = ' +
+            hf2nmin,
+        );
+        if (retVal[c - 1].nbilanz > 20) {
+          if (hf1gemüse && hf2gemüse) {
+            if (
+              (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
+              (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2nmin)
+            ) {
+              retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+              retVal[c].vfwert = 0;
+            }
+          } else {
+            if (retVal[c - 1].nbilanz > 20) {
+              retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+            }
           }
         }
       }
@@ -528,11 +537,14 @@ function calculateBilanz(retVal) {
         entry.value.flaeche_grundwasserschutz > 0 &&
         entry.value.teilnahme_grundwasserschutz_acker &&
         hf1gemüse &&
-        hf2gemüse &&
-        (retVal[c].nsaldo > 0 || retVal[c].nminman > 0 || retVal[c - 1].nbilanz <= 20)
+        hf2gemüse
       ) {
-        console.log('hürbini', retVal[c].nsaldo, retVal[c].nminman, retVal[c - 1].nbilanz);
-        retVal[c].vfwert = 0;
+        if (hf2manuell || retVal[c].nsaldo > 0) {
+          retVal[c].vfwert = 0;
+        }
+
+        // (retVal[c].nsaldo > 0 || retVal[c].nminman > 0 || retVal[c - 1].nbilanz <= 20)
+        //
       }
       if (
         entry.value.flaeche_grundwasserschutz > 0 &&
