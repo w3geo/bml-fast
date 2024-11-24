@@ -476,12 +476,6 @@ function calculateBilanz(retVal) {
               ),
             )
           : 0;
-      const hf2nmin =
-        entry.value.cultures[c].kultur !== ''
-          ? Number(
-              tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
-            )
-          : 0;
 
       const hf2manuell =
         Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
@@ -492,19 +486,11 @@ function calculateBilanz(retVal) {
         entry.value.flaeche_grundwasserschutz > 0 &&
         entry.value.teilnahme_grundwasserschutz_acker
       ) {
-        console.log(
-          'Bilanz = ' +
-            retVal[c - 1].nbilanz +
-            ' reduziert = ' +
-            retVal[c - 1].nbilanz * redfaktor +
-            ' und hf2nmin = ' +
-            hf2nmin,
-        );
         if (retVal[c - 1].nbilanz > 20) {
           if (hf1gemüse && hf2gemüse) {
             if (
               (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
-              (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2nmin)
+              (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf1nmin)
             ) {
               retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
               retVal[c].vfwert = 0;
@@ -542,10 +528,8 @@ function calculateBilanz(retVal) {
         if (hf2manuell || retVal[c].nsaldo > 0) {
           retVal[c].vfwert = 0;
         }
-
-        // (retVal[c].nsaldo > 0 || retVal[c].nminman > 0 || retVal[c - 1].nbilanz <= 20)
-        //
       }
+
       if (
         entry.value.flaeche_grundwasserschutz > 0 &&
         !entry.value.teilnahme_grundwasserschutz_acker &&
@@ -557,7 +541,7 @@ function calculateBilanz(retVal) {
       if (entry.value.flaeche_grundwasserschutz === 0 && !hf2gemüse) {
         retVal[c].vfwert = 0;
       }
-      if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell) {
+      if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell && hf1gemüse) {
         retVal[c].vfwert = 0;
       }
     }
