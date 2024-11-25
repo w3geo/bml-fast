@@ -54,7 +54,10 @@
 
       <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
         <v-card
-          v-if="entry.cultures[index].kultur !== ''"
+          v-if="
+            entry.cultures[index].kultur !== '' &&
+            !lookup.aussaatTypeFilter.zwischenU.includes(entry.cultures[index].kultur)
+          "
           class="ma-2 cardBorder"
           :class="index == 0 ? 'zwischenfrucht' : 'hauptfrucht'"
           elevation="0"
@@ -162,7 +165,7 @@ import { useLookup } from '../composables/useLookUps.js';
 const winMaximize = ref(false);
 
 const bilanz = computed(() => updateBilanz());
-const { tableAttribut } = useLookup();
+const { lookup, tableAttribut } = useLookup();
 </script>
 
 <style scoped>

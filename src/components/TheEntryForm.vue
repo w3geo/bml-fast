@@ -353,12 +353,15 @@
                   <v-row
                     no-gutters
                     v-if="
-                      entry.cultures[i - 1].kultur != '' &&
-                      tableAttribut(
-                        'kulturen',
-                        entry.cultures[i - 1].kultur,
-                        'Ertragserfassungsart',
-                      ) !== 'Düngeverbot'
+                      (i === 1 &&
+                        lookup.aussaatTypeFilter.zwischenG.includes(entry.cultures[0].kultur)) ||
+                      (i > 1 &&
+                        entry.cultures[i - 1].kultur != '' &&
+                        tableAttribut(
+                          'kulturen',
+                          entry.cultures[i - 1].kultur,
+                          'Ertragserfassungsart',
+                        ) !== 'Düngeverbot')
                     "
                   >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
@@ -650,12 +653,26 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col :cols="dataWindow === 1 ? 12 : 6" class="pa-2">
+      ><v-col :cols="dataWindow === 1 ? 12 : 4" class="pa-2">
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
-      ><v-col cols="6" class="pa-2" v-if="dataWindow === 2">
-        <v-btn density="compact" color="green" prepend-icon="mdi-check" block @click.stop="saveData"
+      ><v-col cols="4" class="pa-2" v-if="dataWindow === 2">
+        <v-btn
+          density="compact"
+          color="green"
+          prepend-icon="mdi-check"
+          block
+          @click.stop="saveData(true)"
+          >Kopie Speichern</v-btn
+        > </v-col
+      ><v-col cols="4" class="pa-2" v-if="dataWindow === 2">
+        <v-btn
+          density="compact"
+          color="green-darken-2"
+          prepend-icon="mdi-check"
+          block
+          @click.stop="saveData(false)"
           >Speichern</v-btn
         >
       </v-col></v-row
@@ -935,13 +952,13 @@ function FloatTrunc(input) {
   return result;
 }
 
-async function saveData() {
+async function saveData(copy) {
   const validated = await entryform.value.validate();
   if (!validated.valid) {
     return;
   }
 
-  if (currentSaved.value !== null) {
+  if (!copy && currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
   } else {
     savedData.value.push({ ...entry.value });

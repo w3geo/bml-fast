@@ -409,35 +409,58 @@ function calculateBilanz(retVal) {
         if (zfungenutzt) {
           retVal[c].nsaldo = entry.value.nsaldo * redfaktor;
         }
-        if (entry.value.nsaldo <= retVal[c].nminman) {
+        if (vfgemüse && !zfungenutzt && !zfgenutzt) {
+          if (retVal[c].nsaldo > retVal[c].nminman) {
+            retVal[c].nminman = 0;
+          } else {
+            retVal[c].nsaldo = 0;
+          }
+        }
+
+        if (hfmanuell && vfgemüse && zfungenutzt && retVal[c].nsaldo > retVal[c].nminman) {
+          retVal[c].nminman = 0;
+        }
+      }
+      // 2. Vorfruchtwert der Vorfrucht
+      if (
+        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && !hfmanuell) ||
+        (vfgemüse && !hfgemüse && !zfgenutzt && !hfmanuell) ||
+        (!vfgemüse && !zfgenutzt)
+      ) {
+        if (entry.value.flaeche_grundwasserschutz > 0 && hfgemüse && retVal[c].nsaldo <= vfnmin) {
+          retVal[c].vfwert = vfnmin;
+          retVal[c].nminman = 0;
           retVal[c].nsaldo = 0;
+        }
+        if (!vfgemüse) {
+          retVal[c].vfwert = vfnmin;
+        }
+        if (!hfgemüse) {
+          retVal[c].vfwert = vfnmin;
+          retVal[c].nminman = 0;
         }
       }
 
-      // 2. Vorfruchtwert der Vorfrucht
-      retVal[c].vfwert = vfnmin;
-      if (
-        (vfgemüse && hfgemüse && hfmanuell) ||
-        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
-        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin) ||
-        (vfgemüse && retVal[c].vfwert === retVal[c].nminman)
-      ) {
-        retVal[c].vfwert = 0;
+      // Ungenutzte ZF
+      if (vfgemüse && hfgemüse && zfungenutzt) {
+        if (!hfmanuell && retVal[c].nsaldo < vfnmin) {
+          retVal[c].vfwert = vfnmin;
+          retVal[c].nminman = 0;
+          retVal[c].nsaldo = 0;
+        }
+        if (hfmanuell && retVal[c].nsaldo <= retVal[c].nminman) {
+          retVal[c].vfwert = 0;
+          retVal[c].nsaldo = 0;
+        }
+        if (!hfmanuell && retVal[c].nsaldo > retVal[c].nminman) {
+          retVal[c].vfwert = 0;
+          retVal[c].nminman = 0;
+        }
       }
 
       // 3. Vorfruchtwert der Zwischenfrucht
       if (zfungenutzt) {
         retVal[c].vfwertzf = zfnmin;
-      }
-
-      // 4. manueller NMin Wert
-      if (hfmanuell) {
-        if (
-          (zfungenutzt && entry.value.nsaldo * redfaktor > retVal[c].nminman) ||
-          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > retVal[c].nminman)
-        ) {
-          retVal[c].nminman = 0;
-        }
       }
     }
 
@@ -476,12 +499,6 @@ function calculateBilanz(retVal) {
               ),
             )
           : 0;
-      const hf2nmin =
-        entry.value.cultures[c].kultur !== ''
-          ? Number(
-              tableAttribut('kulturen', entry.value.cultures[c].kultur, 'VFW | Nmin selbes Jahr'),
-            )
-          : 0;
 
       const hf2manuell =
         Number(entry.value.cultures[c].nmin) !== Number(entry.value.cultures[c].nminvorgabe);
@@ -492,16 +509,19 @@ function calculateBilanz(retVal) {
         entry.value.flaeche_grundwasserschutz > 0 &&
         entry.value.teilnahme_grundwasserschutz_acker
       ) {
-        if (hf1gemüse && hf2gemüse) {
-          if (
-            (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
-            (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2nmin)
-          ) {
-            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
-          }
-        } else {
-          if (retVal[c - 1].nbilanz > 20) {
-            retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+        if (retVal[c - 1].nbilanz > 20) {
+          if (hf1gemüse && hf2gemüse) {
+            if (
+              (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
+              (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf1nmin)
+            ) {
+              retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+              retVal[c].vfwert = 0;
+            }
+          } else {
+            if (retVal[c - 1].nbilanz > 20) {
+              retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+            }
           }
         }
       }
@@ -526,11 +546,13 @@ function calculateBilanz(retVal) {
         entry.value.flaeche_grundwasserschutz > 0 &&
         entry.value.teilnahme_grundwasserschutz_acker &&
         hf1gemüse &&
-        hf2gemüse &&
-        (retVal[c].nsaldo > 0 || retVal[c].nminman > 0 || retVal[c - 1].nbilanz <= 20)
+        hf2gemüse
       ) {
-        retVal[c].vfwert = 0;
+        if (hf2manuell || retVal[c].nsaldo > 0) {
+          retVal[c].vfwert = 0;
+        }
       }
+
       if (
         entry.value.flaeche_grundwasserschutz > 0 &&
         !entry.value.teilnahme_grundwasserschutz_acker &&
@@ -542,7 +564,7 @@ function calculateBilanz(retVal) {
       if (entry.value.flaeche_grundwasserschutz === 0 && !hf2gemüse) {
         retVal[c].vfwert = 0;
       }
-      if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell) {
+      if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell && hf1gemüse) {
         retVal[c].vfwert = 0;
       }
     }
