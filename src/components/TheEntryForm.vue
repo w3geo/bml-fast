@@ -353,12 +353,15 @@
                   <v-row
                     no-gutters
                     v-if="
-                      entry.cultures[i - 1].kultur != '' &&
-                      tableAttribut(
-                        'kulturen',
-                        entry.cultures[i - 1].kultur,
-                        'Ertragserfassungsart',
-                      ) !== 'Düngeverbot'
+                      (i === 1 &&
+                        lookup.aussaatTypeFilter.zwischenG.includes(entry.cultures[0].kultur)) ||
+                      (i > 1 &&
+                        entry.cultures[i - 1].kultur != '' &&
+                        tableAttribut(
+                          'kulturen',
+                          entry.cultures[i - 1].kultur,
+                          'Ertragserfassungsart',
+                        ) !== 'Düngeverbot')
                     "
                   >
                     <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
