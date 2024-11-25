@@ -1,4 +1,4 @@
-/*import { expect, test } from 'vitest';
+import { expect, test } from 'vitest';
 import { updateBilanz } from './useBalanceCalculator.js';
 import { entry } from './useDataEntries.js';
 import { dirname, join } from 'path';
@@ -20,4 +20,3 @@ for (let i = 0; i < fixtures.length; ++i) {
     expect(updateBilanz()).toStrictEqual(json.output);
   });
 }
-  */
