@@ -409,35 +409,58 @@ function calculateBilanz(retVal) {
         if (zfungenutzt) {
           retVal[c].nsaldo = entry.value.nsaldo * redfaktor;
         }
-        if (entry.value.nsaldo <= retVal[c].nminman) {
+        if (vfgemüse && !zfungenutzt && !zfgenutzt) {
+          if (retVal[c].nsaldo > retVal[c].nminman) {
+            retVal[c].nminman = 0;
+          } else {
+            retVal[c].nsaldo = 0;
+          }
+        }
+
+        if (hfmanuell && vfgemüse && zfungenutzt && retVal[c].nsaldo > retVal[c].nminman) {
+          retVal[c].nminman = 0;
+        }
+      }
+      // 2. Vorfruchtwert der Vorfrucht
+      if (
+        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && !hfmanuell) ||
+        (vfgemüse && !hfgemüse && !zfgenutzt && !hfmanuell) ||
+        (!vfgemüse && !zfgenutzt)
+      ) {
+        if (entry.value.flaeche_grundwasserschutz > 0 && hfgemüse && retVal[c].nsaldo <= vfnmin) {
+          retVal[c].vfwert = vfnmin;
+          retVal[c].nminman = 0;
           retVal[c].nsaldo = 0;
+        }
+        if (!vfgemüse) {
+          retVal[c].vfwert = vfnmin;
+        }
+        if (!hfgemüse) {
+          retVal[c].vfwert = vfnmin;
+          retVal[c].nminman = 0;
         }
       }
 
-      // 2. Vorfruchtwert der Vorfrucht
-      retVal[c].vfwert = vfnmin;
-      if (
-        (vfgemüse && hfgemüse && hfmanuell) ||
-        (vfgemüse && hfgemüse && !zfungenutzt && !zfgenutzt && entry.value.nsaldo > vfnmin) ||
-        (vfgemüse && hfgemüse && zfungenutzt && entry.value.nsaldo * redfaktor > vfnmin) ||
-        (vfgemüse && retVal[c].vfwert === retVal[c].nminman)
-      ) {
-        retVal[c].vfwert = 0;
+      // Ungenutzte ZF
+      if (vfgemüse && hfgemüse && zfungenutzt) {
+        if (!hfmanuell && retVal[c].nsaldo < vfnmin) {
+          retVal[c].vfwert = vfnmin;
+          retVal[c].nminman = 0;
+          retVal[c].nsaldo = 0;
+        }
+        if (hfmanuell && retVal[c].nsaldo <= retVal[c].nminman) {
+          retVal[c].vfwert = 0;
+          retVal[c].nsaldo = 0;
+        }
+        if (!hfmanuell && retVal[c].nsaldo > retVal[c].nminman) {
+          retVal[c].vfwert = 0;
+          retVal[c].nminman = 0;
+        }
       }
 
       // 3. Vorfruchtwert der Zwischenfrucht
       if (zfungenutzt) {
         retVal[c].vfwertzf = zfnmin;
-      }
-
-      // 4. manueller NMin Wert
-      if (hfmanuell) {
-        if (
-          (zfungenutzt && entry.value.nsaldo * redfaktor > retVal[c].nminman) ||
-          (!zfungenutzt && !zfgenutzt && entry.value.nsaldo > retVal[c].nminman)
-        ) {
-          retVal[c].nminman = 0;
-        }
       }
     }
 
