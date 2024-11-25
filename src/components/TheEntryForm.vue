@@ -653,12 +653,26 @@
       </v-col>
     </v-row>
     <v-row no-gutters class="bg-grey-darken-2"
-      ><v-col :cols="dataWindow === 1 ? 12 : 6" class="pa-2">
+      ><v-col :cols="dataWindow === 1 ? 12 : 4" class="pa-2">
         <v-btn density="compact" color="red" prepend-icon="mdi-close" block @click.stop="cancelData"
           >Abbrechen</v-btn
         > </v-col
-      ><v-col cols="6" class="pa-2" v-if="dataWindow === 2">
-        <v-btn density="compact" color="green" prepend-icon="mdi-check" block @click.stop="saveData"
+      ><v-col cols="4" class="pa-2" v-if="dataWindow === 2">
+        <v-btn
+          density="compact"
+          color="green"
+          prepend-icon="mdi-check"
+          block
+          @click.stop="saveData(true)"
+          >Kopie Speichern</v-btn
+        > </v-col
+      ><v-col cols="4" class="pa-2" v-if="dataWindow === 2">
+        <v-btn
+          density="compact"
+          color="green-darken-2"
+          prepend-icon="mdi-check"
+          block
+          @click.stop="saveData(false)"
           >Speichern</v-btn
         >
       </v-col></v-row
@@ -938,13 +952,13 @@ function FloatTrunc(input) {
   return result;
 }
 
-async function saveData() {
+async function saveData(copy) {
   const validated = await entryform.value.validate();
   if (!validated.valid) {
     return;
   }
 
-  if (currentSaved.value !== null) {
+  if (!copy && currentSaved.value !== null) {
     savedData.value[currentSaved.value] = { ...entry.value };
   } else {
     savedData.value.push({ ...entry.value });
