@@ -285,7 +285,7 @@ function calculateBilanz(retVal) {
   );
   const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
   const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
-  const vfnmin = Number(tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'));
+  let vfnmin = Number(tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'));
   const zfnmin =
     entry.value.cultures[0].kultur !== ''
       ? Number(tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin selbes Jahr'))
@@ -399,6 +399,22 @@ function calculateBilanz(retVal) {
       !zfgenutzt &&
       entry.value.cultures[c].kultur !== ''
     ) {
+      // Prefix: Ausnahmen Vorfruchtwirkung
+      const vfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.vorfrucht,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      const hfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.cultures[c].kultur,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      if (vfAusnahme === 'Spargel' && hfAusnahme === 'Spargel') {
+        console.log('yes!');
+        vfnmin = 0;
+      }
+
       // 1. N-Saldo
       if (
         entry.value.flaeche_grundwasserschutz > 0 &&

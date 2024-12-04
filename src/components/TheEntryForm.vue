@@ -851,10 +851,29 @@ function nMinCalculator(index) {
 
   entry.value.cultures[index].nmin = 0;
   entry.value.cultures[index].nminvorgabe = 0;
+
   if (isgemüse) {
     const oldnminvorgabe = entry.value.cultures[index].nminvorgabe;
 
     if (index === 1 && entry.value.vorfrucht !== '' && vfgemüse && !zfgenutzt) {
+      // Vorfrucht-Ausnamen Gemüse
+      const vfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.vorfrucht,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      const hfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.cultures[1].kultur,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      if (
+        (vfAusnahme === 'Spargel' && hfAusnahme === 'Spargel') ||
+        (vfAusnahme === 'Rhabarber' && hfAusnahme === 'Rhabarber')
+      ) {
+        return 0;
+      }
+
       entry.value.cultures[index].nminvorgabe = tableAttribut(
         'kulturen',
         entry.value.vorfrucht,
