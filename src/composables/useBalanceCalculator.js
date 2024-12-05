@@ -399,22 +399,6 @@ function calculateBilanz(retVal) {
       !zfgenutzt &&
       entry.value.cultures[c].kultur !== ''
     ) {
-      // Prefix: Ausnahmen Vorfruchtwirkung
-      const vfAusnahme = tableAttribut(
-        'kulturen',
-        entry.value.vorfrucht,
-        'Ausnahme Vorfruchtwirkung',
-      );
-      const hfAusnahme = tableAttribut(
-        'kulturen',
-        entry.value.cultures[c].kultur,
-        'Ausnahme Vorfruchtwirkung',
-      );
-      if (vfAusnahme === 'Spargel' && hfAusnahme === 'Spargel') {
-        console.log('yes!');
-        vfnmin = 0;
-      }
-
       // 1. N-Saldo
       if (
         entry.value.flaeche_grundwasserschutz > 0 &&
@@ -477,6 +461,24 @@ function calculateBilanz(retVal) {
       // 3. Vorfruchtwert der Zwischenfrucht
       if (zfungenutzt) {
         retVal[c].vfwertzf = zfnmin;
+      }
+
+      // 4. Ausnahmen Vorfruchtwirkung
+      const vfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.vorfrucht,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      const hfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.cultures[c].kultur,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      if (
+        (vfAusnahme === 'Ackerfutter' && hfAusnahme === 'Ackerfutter') ||
+        (vfAusnahme === 'Grünland' && hfAusnahme === 'Grünland')
+      ) {
+        retVal[c].vfwert = 0;
       }
     }
 
