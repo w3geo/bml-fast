@@ -1020,6 +1020,9 @@ watch(schlagInfo, (value) => {
     entry.value.schlaginfo.basic = JSON.parse(JSON.stringify(schlagInfo.value));
 
     entry.value.jahr = new Date().getFullYear();
+    if (entry.value.jahr < 2025) {
+      entry.value.jahr = 2025;
+    }
 
     dataWindow.value = 2;
   }
