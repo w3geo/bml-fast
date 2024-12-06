@@ -485,6 +485,8 @@ function calculateBilanz(retVal) {
     // F ---------- ANRECHNUNG NSALDO FÜR ALLE ANDEREN FÄLLE AUF HAUPTFRUCHT 1 ----------------------------
     // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1, bzw. Korrektur NMIN ODER SALDO
     if (c === 1 && entry.value.vorfrucht === '' && entry.value.cultures[c].kultur !== '') {
+      retVal[c].vfwert = zfnmin;
+
       if (!zfgenutzt && entry.value.nsaldo > 0) {
         retVal[c].nsaldo = zfungenutzt ? entry.value.nsaldo * redfaktor : entry.value.nsaldo;
       }
