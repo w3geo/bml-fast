@@ -86,7 +86,7 @@ const limitAckerzahl = ['niedrig', 'mittel'];
 const yearItems = [];
 {
   const thisYear = new Date().getFullYear();
-  for (let y = thisYear - 2; y < thisYear + 2; y++) {
+  for (let y = thisYear + 1; y < thisYear + 5; y++) {
     yearItems.push(y);
   }
 }

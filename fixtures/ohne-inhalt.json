@@ -146,12 +146,14 @@
         "pmengewd": 0,
         "pduengung": 0,
         "pentzug": 0,
+        "pbedarf": 0,
         "pbilanz": 0,
         "kmengehd": 0,
         "kmengesr": 0,
         "kmengewd": 0,
         "kduengung": 0,
         "kentzug": 0,
+        "kbedarf": 0,
         "kbilanz": 0
       },
       {
@@ -177,12 +179,14 @@
         "pmengewd": 0,
         "pduengung": 0,
         "pentzug": 0,
+        "pbedarf": 0,
         "pbilanz": 0,
         "kmengehd": 0,
         "kmengesr": 0,
         "kmengewd": 0,
         "kduengung": 0,
         "kentzug": 0,
+        "kbedarf": 0,
         "kbilanz": 0
       }
     ],

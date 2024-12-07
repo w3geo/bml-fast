@@ -20,12 +20,14 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @property {number} nanrechenbar Anrechenbarer Stickstoff
  * @property {number} nentzug N-Entzug
  * @property {number} nbilanz N-Bilanz
+ * @property {number} pbedarf P-Bedarf der Kultur
  * @property {number} pmengehd P-Menge aus Handelsdüngern
  * @property {number} pmengesr P-Menge aus organischen Sekundärrohstoffen
  * @property {number} pmengewd P-Menge aus Wirtschaftsdüngern
  * @property {number} pduengung P-Düngung
  * @property {number} pentzug P-Entzug
  * @property {number} pbilanz P-Bilanz
+ * @property {number} kbedarf K-Bedarf der Kultur
  * @property {number} kmengehd K-Mengen aus Handelsdüngern
  * @property {number} kmengesr K-Menge aus organischen Sekundärrohstoffen
  * @property {number} kmengewd K-Menge aus Wirtschaftsdüngern
@@ -55,12 +57,14 @@ const emptyKulturbilanz = {
   nanrechenbar: 0,
   nentzug: 0,
   nbilanz: 0,
+  pbedarf: 0,
   pmengehd: 0,
   pmengesr: 0,
   pmengewd: 0,
   pduengung: 0,
   pentzug: 0,
   pbilanz: 0,
+  kbedarf: 0,
   kmengehd: 0,
   kmengesr: 0,
   kmengewd: 0,
@@ -100,6 +104,7 @@ export const outputConfig = {
   nanrechenbar: { label: 'Anrechenbarer Stickstoff', print: true, bold: false, border: '' },
   nentzug: { label: 'N-Entzug', print: false, bold: false, border: '' },
   nbilanz: { label: 'N-Bilanz', print: true, bold: true, border: 'bottom' },
+  pbedarf: { label: 'P-Bedarf', print: true, bold: false, border: '' },
   pmengehd: { label: 'P aus Handelsdüngern', print: false, bold: false, border: '' },
   pmengesr: {
     label: 'P aus org. Sekundärrohstoffen',
@@ -111,6 +116,7 @@ export const outputConfig = {
   pduengung: { label: 'P-Düngung', print: true, bold: false, border: '' },
   pentzug: { label: 'P-Entzug', print: false, bold: false, border: '' },
   pbilanz: { label: 'P-Bilanz', print: true, bold: true, border: 'bottom' },
+  kbedarf: { label: 'K-Bedarf', print: true, bold: false, border: '' },
   kmengehd: { label: 'K aus Handelsdüngern', print: false, bold: false, border: '' },
   kmengesr: {
     label: 'K aus org. Sekundärrohstoffen',
@@ -135,6 +141,8 @@ function calculateEntzug(idx) {
   let nEntzug = 0;
   let pEntzug = 0;
   let kEntzug = 0;
+  let pBedarf = 0;
+  let kBedarf = 0;
   const saldierung = Number(
     tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Saldierungsart'),
   );
@@ -249,7 +257,20 @@ function calculateEntzug(idx) {
       }
       break;
   }
-  // 3. P-Entzug , nur nach erreichter Ertragslage
+
+  // 3a. P-Bedarf nach erwarteter Ertragslage
+  //  entry.value.cultures[idx].ertragslage
+  const eppostfix =
+    entry.value.phosphor_gehaltsklasse === 'E'
+      ? ''
+      : ` ${entry.value.cultures[idx].ertragslage.split(' ')[0]}`;
+  pBedarf = tableAttribut(
+    'kulturen',
+    entry.value.cultures[idx].kultur,
+    `Phosphor ${entry.value.phosphor_gehaltsklasse}${eppostfix}`,
+  );
+
+  // 3b. P-Entzug , nur nach erreichter Ertragslage
   const ppostfix =
     entry.value.phosphor_gehaltsklasse === 'E' ? '' : ` ${ertragslage.split(' ')[0]}`;
   pEntzug = tableAttribut(
@@ -258,14 +279,26 @@ function calculateEntzug(idx) {
     `Phosphor ${entry.value.phosphor_gehaltsklasse}${ppostfix}`,
   );
 
-  // 4. K-Entzug , nur nach erreichter Ertragslage
+  // 4a. K-Bedarf nach erwarteter Ertragslage
+  //  entry.value.cultures[idx].ertragslage
+  const ekpostfix =
+    entry.value.phosphor_gehaltsklasse === 'E'
+      ? ''
+      : ` ${entry.value.cultures[idx].ertragslage.split(' ')[0]}`;
+  kBedarf = tableAttribut(
+    'kulturen',
+    entry.value.cultures[idx].kultur,
+    `Kalium ${entry.value.phosphor_gehaltsklasse}${ekpostfix}`,
+  );
+
+  // 4b. K-Entzug , nur nach erreichter Ertragslage
   const kpostfix = entry.value.kalium_gehaltsklasse === 'E' ? '' : ` ${ertragslage.split(' ')[0]}`;
   kEntzug = tableAttribut(
     'kulturen',
     entry.value.cultures[idx].kultur,
     `Kalium ${entry.value.kalium_gehaltsklasse}${kpostfix}`,
   );
-  return [Number(nEntzug), Number(pEntzug), Number(kEntzug)];
+  return [Number(nEntzug), Number(pBedarf), Number(pEntzug), Number(kBedarf), Number(kEntzug)];
 }
 
 /**
@@ -285,7 +318,7 @@ function calculateBilanz(retVal) {
   );
   const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
   const redfaktor = reduktionsfaktor[entry.value.gw_acker_gebietszuteilung];
-  const vfnmin = Number(tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'));
+  let vfnmin = Number(tableAttribut('kulturen', entry.value.vorfrucht, 'VFW | Nmin Folgejahr'));
   const zfnmin =
     entry.value.cultures[0].kultur !== ''
       ? Number(tableAttribut('kulturen', entry.value.cultures[0].kultur, 'VFW | Nmin selbes Jahr'))
@@ -329,7 +362,13 @@ function calculateBilanz(retVal) {
 
     // B ---------- ANRECHNUNG AUS DÜNGUNG UND ENTZÜGE -------------------------------------------------
 
-    [retVal[c].nentzug, retVal[c].pentzug, retVal[c].kentzug] = calculateEntzug(c);
+    [
+      retVal[c].nentzug,
+      retVal[c].pbedarf,
+      retVal[c].pentzug,
+      retVal[c].kbedarf,
+      retVal[c].kentzug,
+    ] = calculateEntzug(c);
     for (let d = 0; d < entry.value.cultures[c].duengung.length; d++) {
       // Düngungen iterieren
       // 1. Anteile Handelsdünger
@@ -462,11 +501,31 @@ function calculateBilanz(retVal) {
       if (zfungenutzt) {
         retVal[c].vfwertzf = zfnmin;
       }
+
+      // 4. Ausnahmen Vorfruchtwirkung
+      const vfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.vorfrucht,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      const hfAusnahme = tableAttribut(
+        'kulturen',
+        entry.value.cultures[c].kultur,
+        'Ausnahme Vorfruchtwirkung',
+      );
+      if (
+        (vfAusnahme === 'Ackerfutter' && hfAusnahme === 'Ackerfutter') ||
+        (vfAusnahme === 'Grünland' && hfAusnahme === 'Grünland')
+      ) {
+        retVal[c].vfwert = 0;
+      }
     }
 
     // F ---------- ANRECHNUNG NSALDO FÜR ALLE ANDEREN FÄLLE AUF HAUPTFRUCHT 1 ----------------------------
     // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1, bzw. Korrektur NMIN ODER SALDO
     if (c === 1 && entry.value.vorfrucht === '' && entry.value.cultures[c].kultur !== '') {
+      retVal[c].vfwert = zfnmin;
+
       if (!zfgenutzt && entry.value.nsaldo > 0) {
         retVal[c].nsaldo = zfungenutzt ? entry.value.nsaldo * redfaktor : entry.value.nsaldo;
       }
