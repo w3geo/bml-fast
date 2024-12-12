@@ -30,10 +30,12 @@
           ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (brutto)</v-col
           ><v-col vols="2" class="pa-2 text-right tableHeader"
             >{{
-              bilanz.duengeobergrenze.toLocaleString('de-DE', {
-                style: 'decimal',
-                maximumFractionDigits: 2,
-              })
+              bilanz.duengeobergrenze
+                ? bilanz.duengeobergrenze.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                : '-'
             }}
           </v-col></v-row
         ></v-card
@@ -43,10 +45,12 @@
           ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (netto)</v-col
           ><v-col vols="2" class="pa-2 text-right tableHeader"
             >{{
-              bilanz.duengeobergrenzered.toLocaleString('de-DE', {
-                style: 'decimal',
-                maximumFractionDigits: 2,
-              })
+              bilanz.duengeobergrenzered
+                ? bilanz.duengeobergrenzered.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                : '-'
             }}
           </v-col></v-row
         ></v-card
@@ -125,10 +129,12 @@
                   </td>
                   <td :class="`border${outputConfig[pkey].border}`">
                     {{
-                      pvalue.toLocaleString('de-DE', {
-                        style: 'decimal',
-                        maximumFractionDigits: 2,
-                      })
+                      pvalue
+                        ? pvalue.toLocaleString('de-DE', {
+                            style: 'decimal',
+                            maximumFractionDigits: 2,
+                          })
+                        : '-'
                     }}
                   </td>
                 </tr>
