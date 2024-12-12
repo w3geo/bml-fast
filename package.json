@@ -16,7 +16,7 @@
     "vitest": "vitest"
   },
   "dependencies": {
-    "@w3geo/vue-place-search": "^1.0.2",
+    "@w3geo/vue-place-search": "^1.1.0",
     "csvtojson": "^2.0.10",
     "ol": "^10.1.1-dev.1726748362724",
     "ol-mapbox-style": "^12.3.5",
@@ -46,7 +46,7 @@
     "yargs": "^17.7.2"
   },
   "engines": {
-    "node": "=20",
+    "node": ">=20",
     "npm": ">=10"
   }
 }
