@@ -143,6 +143,7 @@ function calculateEntzug(idx) {
   let kEntzug = 0;
   let pBedarf = 0;
   let kBedarf = 0;
+
   const saldierung = Number(
     tableAttribut('kulturen', entry.value.cultures[idx].kultur, 'Saldierungsart'),
   );
@@ -352,8 +353,10 @@ function calculateBilanz(retVal) {
             lookup.value.wrrltablecolumn[entry.value.wrrl_duengeklasse],
           ),
         );
-        retVal[c].duengeobergrenze =
-          wrrlCompare < retVal[c].duengeobergrenze ? wrrlCompare : retVal[c].duengeobergrenze;
+        if (wrrlCompare && wrrlCompare > 0) {
+          retVal[c].duengeobergrenze =
+            wrrlCompare < retVal[c].duengeobergrenze ? wrrlCompare : retVal[c].duengeobergrenze;
+        }
       }
 
       retVal[c].duengeobergrenzered = retVal[c].duengeobergrenze;

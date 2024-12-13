@@ -35,7 +35,7 @@
                     style: 'decimal',
                     maximumFractionDigits: 2,
                   })
-                : '-'
+                : '0'
             }}
           </v-col></v-row
         ></v-card
@@ -50,7 +50,7 @@
                     style: 'decimal',
                     maximumFractionDigits: 2,
                   })
-                : '-'
+                : '0'
             }}
           </v-col></v-row
         ></v-card
@@ -134,7 +134,7 @@
                             style: 'decimal',
                             maximumFractionDigits: 2,
                           })
-                        : '-'
+                        : '0'
                     }}
                   </td>
                 </tr>
