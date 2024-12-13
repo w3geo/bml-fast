@@ -301,7 +301,6 @@ function calculateEntzug(idx) {
     entry.value.phosphor_gehaltsklasse === 'E'
       ? ''
       : ` ${entry.value.cultures[idx].ertragslage.split(' ')[0]}`;
-  console.log(idx, ekpostfix);
   kBedarf = tableAttribut(
     'kulturen',
     entry.value.cultures[idx].kultur,
@@ -543,7 +542,7 @@ function calculateBilanz(retVal) {
     // F ---------- ANRECHNUNG NSALDO FÜR ALLE ANDEREN FÄLLE AUF HAUPTFRUCHT 1 ----------------------------
     // Nur relevant, wenn keine VF, keine oder ungenutzte ZF + Hauptfrucht 1, bzw. Korrektur NMIN ODER SALDO
     if (c === 1 && entry.value.vorfrucht === '' && entry.value.cultures[c].kultur !== '') {
-      retVal[c].vfwert = zfnmin;
+      retVal[c].vfwertzf = zfnmin;
 
       if (!zfgenutzt && entry.value.nsaldo > 0) {
         retVal[c].nsaldo = zfungenutzt ? entry.value.nsaldo * redfaktor : entry.value.nsaldo;
