@@ -162,12 +162,26 @@ function calculateEntzug(idx) {
             `Düngeobergrenze EL mittel${entry.value.nitratrisikogebiet ? ' A5' : ''}`,
           ),
         ),
+        Number(
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            `Phosphor ${entry.value.phosphor_gehaltsklasse} mittel`,
+          ),
+        ),
         0,
+        Number(
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            `Kalium ${entry.value.kalium_gehaltsklasse} mittel`,
+          ),
+        ),
         0,
       ];
     }
     // KEIN ENTZUG
-    return [0, 0, 0];
+    return [0, 0, 0, 0, 0];
   }
 
   // 1. Ertragslage bestimmen
@@ -282,10 +296,12 @@ function calculateEntzug(idx) {
 
   // 4a. K-Bedarf nach erwarteter Ertragslage
   //  entry.value.cultures[idx].ertragslage
+
   const ekpostfix =
     entry.value.phosphor_gehaltsklasse === 'E'
       ? ''
       : ` ${entry.value.cultures[idx].ertragslage.split(' ')[0]}`;
+  console.log(idx, ekpostfix);
   kBedarf = tableAttribut(
     'kulturen',
     entry.value.cultures[idx].kultur,
