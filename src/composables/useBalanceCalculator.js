@@ -638,9 +638,6 @@ function calculateBilanz(retVal) {
         retVal[c].vfwert = 0;
       }
 
-      if (entry.value.flaeche_grundwasserschutz === 0 && !hf2gemüse) {
-        retVal[c].vfwert = 0;
-      }
       if (entry.value.flaeche_grundwasserschutz === 0 && hf2manuell && hf1gemüse) {
         retVal[c].vfwert = 0;
       }
