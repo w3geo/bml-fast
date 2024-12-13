@@ -533,6 +533,7 @@ function calculateBilanz(retVal) {
       );
       if (
         (vfAusnahme === 'Ackerfutter' && hfAusnahme === 'Ackerfutter') ||
+        (vfAusnahme === 'Ackerfutter' && hfAusnahme === 'Grünland') ||
         (vfAusnahme === 'Grünland' && hfAusnahme === 'Grünland')
       ) {
         retVal[c].vfwert = 0;
