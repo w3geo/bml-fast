@@ -593,12 +593,14 @@ function calculateBilanz(retVal) {
               (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
               (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf1nmin)
             ) {
-              retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+              const maxBilanz = Math.min(retVal[c - 1].nbilanz, 100);
+              retVal[c].nsaldo = maxBilanz * redfaktor;
               retVal[c].vfwert = 0;
             }
           } else {
             if (retVal[c - 1].nbilanz > 20) {
-              retVal[c].nsaldo = retVal[c - 1].nbilanz * redfaktor;
+              const maxBilanz = Math.min(retVal[c - 1].nbilanz, 100);
+              retVal[c].nsaldo = maxBilanz * redfaktor;
             }
           }
         }
