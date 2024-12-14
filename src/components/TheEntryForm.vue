@@ -329,6 +329,7 @@
                         density="compact"
                         type="number"
                         hide-details
+                        @change="nminmanChanged(i - 1)"
                       />
                     </v-col>
                     <v-col
@@ -732,6 +733,12 @@ mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
+
+function nminmanChanged(idx) {
+  if (entry.value.cultures[idx].nmin == '') {
+    entry.value.cultures[idx].nmin = 0;
+  }
+}
 
 function clearSearch(what) {
   search.value[what] = null;
