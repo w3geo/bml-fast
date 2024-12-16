@@ -54,14 +54,7 @@
             ></v-card
           >
 
-          <v-card
-            color="grey"
-            class="ma-1 pa-1"
-            elevation="0"
-            v-if="index === 0 || kultur.duengeobergrenze > 0"
-          >
-            <v-sheet class="bg-grey tableHeader">Bilanz</v-sheet>
-
+          <v-card class="ma-1 pa-1" elevation="0" v-if="index === 0 || kultur.duengeobergrenze > 0">
             <v-sheet v-if="kultur.errorsOG.length === 0" class="py-1">
               <v-card
                 class="ma-1"
@@ -84,19 +77,14 @@
                     // @ts-ignore
                     markred: bilanz.redmarked.includes(pkey),
                     hidezero:
-                      // @ts-ignore
-                      pkey === 'errorsBI' ||
-                      // @ts-ignore
-                      pkey === 'errorsOG',
-                    //                       ||                      (pvalue === 0 && !outputConfig[pkey].print),
-                    //                    hide: !outputConfig[pkey].print,
+                      pkey === 'errorsBI' || pkey === 'errorsOG' || !outputConfig[pkey].print,
                     bold: outputConfig[pkey].bold,
                   }"
                 >
-                  <td :class="`border${outputConfig[pkey].border}`">
+                  <td :class="`cellborder${outputConfig[pkey].border}`">
                     {{ outputConfig[pkey].label }}
                   </td>
-                  <td :class="`border${outputConfig[pkey].border}`">
+                  <td :class="`cellborder${outputConfig[pkey].border}`">
                     {{
                       pvalue
                         ? pvalue.toLocaleString('de-DE', {
@@ -176,14 +164,23 @@ table.bilanz tr.markred td {
 }
 
 table.bilanz td {
-  padding: 2px;
-  border: 1px solid #eee;
+  padding: 3px;
+  padding-left: 5px;
   font-size: 11px;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
   color: #777;
   font-weight: 500;
   letter-spacing: 0.0892857143em !important;
   font-family: 'Roboto', sans-serif;
   text-transform: uppercase !important;
+}
+
+table.bilanz td.cellbordertop {
+  border-top: 10px solid #ddd;
+}
+table.bilanz td.cellborderbottom {
+  border-bottom: 10px solid #ddd;
 }
 
 table.bilanz tr.bold td {
