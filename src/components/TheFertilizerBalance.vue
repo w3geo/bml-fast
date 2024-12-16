@@ -25,37 +25,6 @@
         ></v-card
       >
 
-      <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
-        <v-row no-gutters class="error bg-orange-darken-4"
-          ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (brutto)</v-col
-          ><v-col vols="2" class="pa-2 text-right tableHeader"
-            >{{
-              bilanz.duengeobergrenze
-                ? bilanz.duengeobergrenze.toLocaleString('de-DE', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                  })
-                : '0'
-            }}
-          </v-col></v-row
-        ></v-card
-      >
-      <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
-        <v-row no-gutters class="error bg-green-darken-4"
-          ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (netto)</v-col
-          ><v-col vols="2" class="pa-2 text-right tableHeader"
-            >{{
-              bilanz.duengeobergrenzered
-                ? bilanz.duengeobergrenzered.toLocaleString('de-DE', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                  })
-                : '0'
-            }}
-          </v-col></v-row
-        ></v-card
-      >
-
       <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
         <v-card
           v-if="
@@ -118,9 +87,9 @@
                       // @ts-ignore
                       pkey === 'errorsBI' ||
                       // @ts-ignore
-                      pkey === 'errorsOG' ||
-                      (pvalue === 0 && !outputConfig[pkey].print),
-                    hide: !outputConfig[pkey].print,
+                      pkey === 'errorsOG',
+                    //                       ||                      (pvalue === 0 && !outputConfig[pkey].print),
+                    //                    hide: !outputConfig[pkey].print,
                     bold: outputConfig[pkey].bold,
                   }"
                 >
