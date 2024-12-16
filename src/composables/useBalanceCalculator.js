@@ -169,7 +169,13 @@ function calculateEntzug(idx) {
             `Phosphor ${entry.value.phosphor_gehaltsklasse} mittel`,
           ),
         ),
-        0,
+        Number(
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            `Phosphor ${entry.value.phosphor_gehaltsklasse} mittel`,
+          ),
+        ),
         Number(
           tableAttribut(
             'kulturen',
@@ -177,7 +183,13 @@ function calculateEntzug(idx) {
             `Kalium ${entry.value.kalium_gehaltsklasse} mittel`,
           ),
         ),
-        0,
+        Number(
+          tableAttribut(
+            'kulturen',
+            entry.value.cultures[idx].kultur,
+            `Kalium ${entry.value.phosphor_gehaltsklasse} mittel`,
+          ),
+        ),
       ];
     }
     // KEIN ENTZUG

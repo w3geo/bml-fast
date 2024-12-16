@@ -3,7 +3,9 @@
     <v-app-bar density="compact">
       <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" />
       <v-img max-width="38" :src="logo"></v-img>
-      <v-app-bar-title class="font-weight-black text-grey-darken-2">FaST Tool </v-app-bar-title>
+      <v-app-bar-title class="font-weight-black text-grey-darken-2"
+        >INB - Integrierte Nährstoffbilanz</v-app-bar-title
+      >
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" disable-resize-watcher temporary @click="drawer = false">
       <v-row no-gutters class="mt-4">
