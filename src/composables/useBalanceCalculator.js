@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import { entry } from './useDataEntries.js';
 import { tableAttribut, lookup } from './useLookUps.js';
 
@@ -72,6 +73,12 @@ const emptyKulturbilanz = {
   kentzug: 0,
   kbilanz: 0,
 };
+
+/** @type {import('vue').Ref<Array>} */
+export const currentBilanz = ref([
+  JSON.parse(JSON.stringify(emptyKulturbilanz)),
+  JSON.parse(JSON.stringify(emptyKulturbilanz)),
+]);
 
 /**
  * @type {Object<keyof kulturbilanz, Object>}
@@ -777,9 +784,10 @@ export function updateBilanz() {
   }
 
   [duengeobergrenze, duengeobergrenzered] = calculateBilanz(bilanz);
+  currentBilanz.value = bilanz;
   return { duengeobergrenze, duengeobergrenzered, bilanz, errors, redmarked };
 }
 
 export function useBalanceCalculator() {
-  return { updateBilanz, outputConfig };
+  return { updateBilanz, outputConfig, currentBilanz };
 }
