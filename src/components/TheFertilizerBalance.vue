@@ -85,17 +85,27 @@
                   }"
                 >
                   <td :class="`cellborder${outputConfig[pkey].border}`">
-                    {{ outputConfig[pkey].label }}
+                    <div :class="`cell header${outputConfig[pkey].header}`">
+                      {{ outputConfig[pkey].header }}
+                    </div>
+                    <div>
+                      {{ outputConfig[pkey].label }}
+                    </div>
                   </td>
                   <td :class="`cellborder${outputConfig[pkey].border}`">
-                    {{
-                      pvalue
-                        ? pvalue.toLocaleString('de-DE', {
-                            style: 'decimal',
-                            maximumFractionDigits: 2,
-                          })
-                        : '0'
-                    }}
+                    <div :class="`cell header${outputConfig[pkey].header}`">
+                      {{ outputConfig[pkey].unit }}
+                    </div>
+                    <div>
+                      {{
+                        pvalue
+                          ? pvalue.toLocaleString('de-DE', {
+                              style: 'decimal',
+                              maximumFractionDigits: 2,
+                            })
+                          : '0'
+                      }}
+                    </div>
                   </td>
                 </tr>
               </table>
@@ -106,85 +116,112 @@
 
       <v-card class="ma-2 cardBorder schlag" elevation="0">
         <v-row no-gutters class="bg-grey-darken-3">
-          <v-col cols="12" class="pa-1 cultureHeader"> Schlagbilanz / je ha</v-col></v-row
+          <v-col cols="12" class="pa-1 cultureHeader">Schlag: Bilanz / ha</v-col></v-row
         >
 
         <table class="bilanz">
           <tr>
-            <td class="cellbordertop">Anrechenbarer Stickstoff (kg N/ha)</td>
             <td class="cellbordertop">
-              {{
-                bilanz.summen.nanrechenbarSumme.toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div class="cell">Stickstoff</div>
+              <div>Anrechenbarer Stickstoff</div>
             </td>
-          </tr>
-          <tr>
-            <td class="cellborder">Stickstoffentzug durch Erntegut (kg N/ha)</td>
-            <td class="cellborder">
-              {{
-                bilanz.summen.nentzugSumme.toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
-            </td>
-          </tr>
-          <tr>
-            <td class="cellborder">N-Saldo für Folgekultur (kg/ha)</td>
-            <td class="cellborder">
-              {{
-                bilanz.summen.nsaldoSumme.toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
-            </td>
-          </tr>
-          <tr>
-            <td class="cellbordertop">Phosphordüngung (kg P₂O₅/ha)</td>
             <td class="cellbordertop">
-              {{
-                bilanz.summen.pduengungSumme.toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div class="cell">kg N/ha</div>
+              <div>
+                {{
+                  bilanz.summen.nanrechenbarSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
           <tr>
-            <td class="cellborder">Phosphorentzug gem. Ertrag (kg P₂O₅/ha)</td>
+            <td class="cellborder"><div>Entzug mit dem Erntegut</div></td>
             <td class="cellborder">
-              {{
-                bilanz.summen.pentzugSumme.toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div>
+                {{
+                  bilanz.summen.nentzugSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
           <tr>
-            <td class="cellbordertop">Kaliumdüngung (kg K₂O/ha)</td>
+            <td class="cellborder"><div>N-Saldo für Folgekultur</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  bilanz.summen.nsaldoSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
             <td class="cellbordertop">
-              {{
-                bilanz.summen.kduengungSumme.toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div class="cell">Phosphor</div>
+              <div>Düngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg P₂O₅/ha</div>
+              <div>
+                {{
+                  bilanz.summen.pduengungSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
           <tr>
-            <td class="cellborder">Kaliumentzug (kg K₂O/ha)</td>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
             <td class="cellborder">
-              {{
-                bilanz.summen.kentzugSumme.toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div>
+                {{
+                  bilanz.summen.pentzugSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Kalium</div>
+              <div>Düngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg K₂O/ha</div>
+
+              <div>
+                {{
+                  bilanz.summen.kduengungSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  bilanz.summen.kentzugSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
         </table>
@@ -194,7 +231,7 @@
         <v-row no-gutters class="bg-grey-darken-3">
           <v-col cols="12" class="pa-1 cultureHeader"
             >{{
-              'Schlagbilanz / gesamt (' +
+              'Schlag: Bilanz gesamt (' +
               entry.flaeche.toLocaleString('de-DE', {
                 style: 'decimal',
                 maximumFractionDigits: 2,
@@ -206,80 +243,106 @@
 
         <table class="bilanz">
           <tr>
-            <td class="cellbordertop">Anrechenbarer Stickstoff (kg N/ha)</td>
             <td class="cellbordertop">
-              {{
-                (entry.flaeche * bilanz.summen.nanrechenbarSumme).toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div class="cell">Stickstoff</div>
+              <div>Anrechenbarer Stickstoff (kg N/ha)</div>
             </td>
-          </tr>
-          <tr>
-            <td class="cellborder">Stickstoffentzug durch Erntegut (kg N/ha)</td>
-            <td class="cellborder">
-              {{
-                (entry.flaeche * bilanz.summen.nentzugSumme).toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
-            </td>
-          </tr>
-          <tr>
-            <td class="cellborder">N-Saldo für Folgekultur (kg/ha)</td>
-            <td class="cellborder">
-              {{
-                (entry.flaeche * bilanz.summen.nsaldoSumme).toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
-            </td>
-          </tr>
-          <tr>
-            <td class="cellbordertop">Phosphordüngung (kg P₂O₅/ha)</td>
             <td class="cellbordertop">
-              {{
-                (entry.flaeche * bilanz.summen.pduengungSumme).toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div class="cell">kg K₂O</div>
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.nanrechenbarSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
           <tr>
-            <td class="cellborder">Phosphorentzug gem. Ertrag (kg P₂O₅/ha)</td>
+            <td class="cellborder"><div>Entzug mit dem Erntegut</div></td>
             <td class="cellborder">
-              {{
-                (entry.flaeche * bilanz.summen.pentzugSumme).toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.nentzugSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
           <tr>
-            <td class="cellbordertop">Kaliumdüngung (kg K₂O/ha)</td>
+            <td class="cellborder"><div>N-Saldo für Folgekultur</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.nsaldoSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
             <td class="cellbordertop">
-              {{
-                (entry.flaeche * bilanz.summen.kduengungSumme).toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div class="cell">Phosphor</div>
+              <div>Phosphordüngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg P₂O₅</div>
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.pduengungSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
           <tr>
-            <td class="cellborder">Kaliumentzug (kg K₂O/ha)</td>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
             <td class="cellborder">
-              {{
-                (entry.flaeche * bilanz.summen.kentzugSumme).toLocaleString('de-DE', {
-                  style: 'decimal',
-                  maximumFractionDigits: 2,
-                })
-              }}
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.pentzugSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Kalium</div>
+              <div>Kaliumdüngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg K₂O</div>
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.kduengungSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.kentzugSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
             </td>
           </tr>
         </table>
@@ -323,6 +386,19 @@ table.bilanz {
 table.bilanz tr {
   padding: 0px;
 }
+
+table.bilanz td div {
+  line-height: 22px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+table.bilanz td div.cell {
+  background-color: #ddd;
+  font-weight: 500;
+
+  color: black;
+}
+
 table.bilanz tr.hide {
   font-style: italic;
 }
@@ -348,27 +424,23 @@ table.bilanz tr.markred td {
 }
 
 table.bilanz td {
-  padding: 3px;
-  padding-left: 5px;
-  font-size: 11px;
+  font-size: 12px;
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
-  color: #777;
-  font-weight: 500;
+  color: #444;
   letter-spacing: 0.0892857143em !important;
   font-family: 'Roboto', sans-serif;
-  text-transform: uppercase !important;
 }
 
 table.bilanz td.cellbordertop {
-  border-top: 10px solid #ddd;
+  border-top: 1px solid #ddd;
 }
 table.bilanz td.cellborderbottom {
-  border-bottom: 10px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 table.bilanz tr.bold td {
-  font-weight: bold;
+  font-weight: 900;
   color: #000;
 }
 
@@ -377,12 +449,12 @@ table.bilanz td.borderbottom {
 }
 
 table.bilanz tr td:nth-child(1) {
-  width: 85%;
+  width: 75%;
   white-space: nowrap;
   overflow: hidden;
 }
 table.bilanz tr td:nth-child(2) {
-  width: 15%;
+  width: 25%;
   text-align: right;
 }
 
