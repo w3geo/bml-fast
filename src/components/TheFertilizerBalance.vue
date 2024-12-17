@@ -8,7 +8,7 @@
     <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
-        Nährstoffbilanz für
+        Nährstoffbilanz für...
       </v-col>
     </v-row>
     <v-sheet height="calc(100% - 70px)" class="overflow-auto">
@@ -37,7 +37,10 @@
         >
           <v-row no-gutters class="bg-brown-lighten-2">
             <v-col cols="12" class="pa-1 cultureHeader">
-              {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}</v-col
+              {{
+                (index === 0 ? 'Zwischenfrucht: ' : index + '.Hauptfrucht: ') +
+                tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur')
+              }}</v-col
             ></v-row
           >
 
@@ -100,6 +103,187 @@
           </v-card>
         </v-card>
       </v-sheet>
+
+      <v-card class="ma-2 cardBorder schlag" elevation="0">
+        <v-row no-gutters class="bg-grey-darken-3">
+          <v-col cols="12" class="pa-1 cultureHeader"> Schlagbilanz / je ha</v-col></v-row
+        >
+
+        <table class="bilanz">
+          <tr>
+            <td class="cellbordertop">Anrechenbarer Stickstoff (kg N/ha)</td>
+            <td class="cellbordertop">
+              {{
+                bilanz.summen.nanrechenbarSumme.toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">Stickstoffentzug durch Erntegut (kg N/ha)</td>
+            <td class="cellborder">
+              {{
+                bilanz.summen.nentzugSumme.toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">N-Saldo für Folgekultur (kg/ha)</td>
+            <td class="cellborder">
+              {{
+                bilanz.summen.nsaldoSumme.toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">Phosphordüngung (kg P₂O₅/ha)</td>
+            <td class="cellbordertop">
+              {{
+                bilanz.summen.pduengungSumme.toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">Phosphorentzug gem. Ertrag (kg P₂O₅/ha)</td>
+            <td class="cellborder">
+              {{
+                bilanz.summen.pentzugSumme.toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">Kaliumdüngung (kg K₂O/ha)</td>
+            <td class="cellbordertop">
+              {{
+                bilanz.summen.kduengungSumme.toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">Kaliumentzug (kg K₂O/ha)</td>
+            <td class="cellborder">
+              {{
+                bilanz.summen.kentzugSumme.toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+        </table>
+      </v-card>
+
+      <v-card class="ma-2 cardBorder schlag" elevation="0">
+        <v-row no-gutters class="bg-grey-darken-3">
+          <v-col cols="12" class="pa-1 cultureHeader"
+            >{{
+              'Schlagbilanz / gesamt (' +
+              entry.flaeche.toLocaleString('de-DE', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+              }) +
+              'ha)'
+            }}
+          </v-col></v-row
+        >
+
+        <table class="bilanz">
+          <tr>
+            <td class="cellbordertop">Anrechenbarer Stickstoff (kg N/ha)</td>
+            <td class="cellbordertop">
+              {{
+                (entry.flaeche * bilanz.summen.nanrechenbarSumme).toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">Stickstoffentzug durch Erntegut (kg N/ha)</td>
+            <td class="cellborder">
+              {{
+                (entry.flaeche * bilanz.summen.nentzugSumme).toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">N-Saldo für Folgekultur (kg/ha)</td>
+            <td class="cellborder">
+              {{
+                (entry.flaeche * bilanz.summen.nsaldoSumme).toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">Phosphordüngung (kg P₂O₅/ha)</td>
+            <td class="cellbordertop">
+              {{
+                (entry.flaeche * bilanz.summen.pduengungSumme).toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">Phosphorentzug gem. Ertrag (kg P₂O₅/ha)</td>
+            <td class="cellborder">
+              {{
+                (entry.flaeche * bilanz.summen.pentzugSumme).toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">Kaliumdüngung (kg K₂O/ha)</td>
+            <td class="cellbordertop">
+              {{
+                (entry.flaeche * bilanz.summen.kduengungSumme).toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder">Kaliumentzug (kg K₂O/ha)</td>
+            <td class="cellborder">
+              {{
+                (entry.flaeche * bilanz.summen.kentzugSumme).toLocaleString('de-DE', {
+                  style: 'decimal',
+                  maximumFractionDigits: 2,
+                })
+              }}
+            </td>
+          </tr>
+        </table>
+      </v-card>
     </v-sheet>
     <v-row no-gutters class="bg-grey-darken-2"
       ><v-col class="pa-2">
@@ -234,6 +418,11 @@ table.bilanz tr td:nth-child(2) {
 .cardBorder.hauptfrucht {
   border-color: #a1887f;
 }
+
+.cardBorder.schlag {
+  border-color: rgb(66, 66, 66);
+}
+
 .cultureHeader {
   font-size: 12px;
   text-transform: uppercase;
