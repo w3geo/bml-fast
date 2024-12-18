@@ -1,0 +1,233 @@
+{
+  "name": "LeerFeld",
+  "input": {
+    "jahr": 2025,
+    "feldstuecksnummer": 1,
+    "schlagnummer": "",
+    "feldstuecksname": "LeerFeld",
+    "flaechennutzungsart": "A",
+    "flaeche": 4.7029,
+    "flaeche_nitratrisikogebiet": 0,
+    "nitratrisikogebiet": false,
+    "flaeche_schwereboeden": 0,
+    "flaeche_grundwasserschutz": 0,
+    "wrrl": false,
+    "wrrl_duengeklasse": "-",
+    "teilnahme_grundwasserschutz_acker": false,
+    "gw_acker_gebietszuteilung": "Trockengebiet",
+    "ackerzahl": 30,
+    "phosphor_gehaltsklasse": "C",
+    "kalium_gehaltsklasse": "C",
+    "bodenart": "lS - lehmiger Sand",
+    "vorfrucht": "",
+    "nsaldo": 0,
+    "extent": [13.802869208157054, 48.10330969097589, 13.807610012590876, 48.105657836531634],
+    "parts": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.8073481619358, 48.105657836531634],
+            [13.8073531910777, 48.105611716475124],
+            [13.807491324841967, 48.10438101210855],
+            [13.807610012590876, 48.103323124607954],
+            [13.806588426232329, 48.1033121538087],
+            [13.806362785398951, 48.10330969097589],
+            [13.80617905408143, 48.10331192991478],
+            [13.804187178611745, 48.10333678213027],
+            [13.804181143641463, 48.10338559095092],
+            [13.804111070930949, 48.10365157581961],
+            [13.80392801016568, 48.10404204269574],
+            [13.803900517523278, 48.10411435934324],
+            [13.803900517523278, 48.10411458323364],
+            [13.802951015532008, 48.10413227057151],
+            [13.80295068025588, 48.10413227057151],
+            [13.802904412150374, 48.10431339751642],
+            [13.802869208157054, 48.10445086550101],
+            [13.803212866187087, 48.10455542152329],
+            [13.806488178670397, 48.10449340437944],
+            [13.80648784339427, 48.10449497160059],
+            [13.80636479705571, 48.10541716102398],
+            [13.806374184787263, 48.105421414833415],
+            [13.806581050157538, 48.105513431362255],
+            [13.806749358773224, 48.105550372258136],
+            [13.806930407881728, 48.10558037272378],
+            [13.806991763412944, 48.10559089527101],
+            [13.807202316820613, 48.105627388343606],
+            [13.8073481619358, 48.105657836531634]
+          ]
+        ]
+      }
+    ],
+    "schlaginfo": {
+      "basic": {
+        "fnar_code": "A",
+        "inspire_id": "https://data.inspire.gv.at/0095/bbd8ee1b-76a1-451f-88ef-84e9c7a1faaf/elu.ExistingLandUseObject/113194343/MFA-2024",
+        "sl_flaeche_brutto_ha": 4.70297043,
+        "snar_bezeichnung": "WINTERGERSTE",
+        "BL_KZ": "4",
+        "layer": "invekos_schlaege_polygon",
+        "loading": false,
+        "id": 2409717,
+        "extent": [13.802869208157054, 48.10330969097589, 13.807610012590876, 48.105657836531634],
+        "parts": [
+          {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [13.8073481619358, 48.105657836531634],
+                [13.8073531910777, 48.105611716475124],
+                [13.807491324841967, 48.10438101210855],
+                [13.807610012590876, 48.103323124607954],
+                [13.806588426232329, 48.1033121538087],
+                [13.806362785398951, 48.10330969097589],
+                [13.80617905408143, 48.10331192991478],
+                [13.804187178611745, 48.10333678213027],
+                [13.804181143641463, 48.10338559095092],
+                [13.804111070930949, 48.10365157581961],
+                [13.80392801016568, 48.10404204269574],
+                [13.803900517523278, 48.10411435934324],
+                [13.803900517523278, 48.10411458323364],
+                [13.802951015532008, 48.10413227057151],
+                [13.80295068025588, 48.10413227057151],
+                [13.802904412150374, 48.10431339751642],
+                [13.802869208157054, 48.10445086550101],
+                [13.803212866187087, 48.10455542152329],
+                [13.806488178670397, 48.10449340437944],
+                [13.80648784339427, 48.10449497160059],
+                [13.80636479705571, 48.10541716102398],
+                [13.806374184787263, 48.105421414833415],
+                [13.806581050157538, 48.105513431362255],
+                [13.806749358773224, 48.105550372258136],
+                [13.806930407881728, 48.10558037272378],
+                [13.806991763412944, 48.10559089527101],
+                [13.807202316820613, 48.105627388343606],
+                [13.8073481619358, 48.105657836531634]
+              ]
+            ]
+          }
+        ]
+      },
+      "programs": {
+        "nitrataktionsprogramm": 0,
+        "bdfl_l16_grundwasserschutz_acker": 0,
+        "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_3": 0,
+        "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_2": 0,
+        "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_hoch_1": 0,
+        "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel": 0,
+        "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_mittel_10": 0,
+        "bdfl_l26_wasserrahmenrichtlinie_ertragslagen-el_niedrig": 0,
+        "schwere_boeden": 0
+      }
+    },
+    "cultures": [
+      {
+        "kultur": "",
+        "ertragslage": "",
+        "ernte": 0,
+        "ertragslageernte": "",
+        "feuchte": 14,
+        "protein": 12,
+        "nmin": 0,
+        "nminvorgabe": 0,
+        "duengung": []
+      },
+      {
+        "kultur": "",
+        "ertragslage": "",
+        "ernte": 0,
+        "ertragslageernte": "",
+        "feuchte": 14,
+        "protein": 12,
+        "nmin": 0,
+        "nminvorgabe": 0,
+        "duengung": []
+      }
+    ]
+  },
+  "output": {
+    "summen": {
+      "dogSumme": 0,
+      "dogRedSumme": 0,
+      "nanrechenbarSumme": 0,
+      "nentzugSumme": 0,
+      "pduengungSumme": 0,
+      "pentzugSumme": 0,
+      "kduengungSumme": 0,
+      "kentzugSumme": 0,
+      "nsaldoSumme": 0
+    },
+    "bilanz": [
+      {
+        "errorsOG": [],
+        "errorsBI": [],
+        "duengeobergrenze": 0,
+        "nsaldo": 0,
+        "vfwert": 0,
+        "vfwertzf": 0,
+        "nminman": 0,
+        "duengeobergrenzered": 0,
+        "redfaktor": 0,
+        "nmengehd": 0,
+        "nmengebw": 0,
+        "nmengesr": 0,
+        "nmengewd": 0,
+        "nabzug": 0,
+        "nanrechenbar": 0,
+        "nentzug": 0,
+        "nbilanz": 0,
+        "pbedarf": 0,
+        "pmengehd": 0,
+        "pmengesr": 0,
+        "pmengewd": 0,
+        "pduengung": 0,
+        "pentzug": 0,
+        "pbilanz": 0,
+        "kbedarf": 0,
+        "kmengehd": 0,
+        "kmengesr": 0,
+        "kmengewd": 0,
+        "kduengung": 0,
+        "kentzug": 0,
+        "kbilanz": 0
+      },
+      {
+        "errorsOG": [],
+        "errorsBI": [],
+        "duengeobergrenze": 0,
+        "nsaldo": 0,
+        "vfwert": 0,
+        "vfwertzf": 0,
+        "nminman": 0,
+        "duengeobergrenzered": 0,
+        "redfaktor": 0,
+        "nmengehd": 0,
+        "nmengebw": 0,
+        "nmengesr": 0,
+        "nmengewd": 0,
+        "nabzug": 0,
+        "nanrechenbar": 0,
+        "nentzug": 0,
+        "nbilanz": 0,
+        "pbedarf": 0,
+        "pmengehd": 0,
+        "pmengesr": 0,
+        "pmengewd": 0,
+        "pduengung": 0,
+        "pentzug": 0,
+        "pbilanz": 0,
+        "kbedarf": 0,
+        "kmengehd": 0,
+        "kmengesr": 0,
+        "kmengewd": 0,
+        "kduengung": 0,
+        "kentzug": 0,
+        "kbilanz": 0
+      }
+    ],
+    "errors": [
+      "Keine Kulturen spezifiziert. Es werden keine Düngeobergrenzen oder Bilanzen berechnet."
+    ],
+    "redmarked": []
+  }
+}
