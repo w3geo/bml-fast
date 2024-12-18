@@ -8,7 +8,7 @@
     <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
-        Düngeobergrenzen / Bilanz
+        Nährstoffbilanz für...
       </v-col>
     </v-row>
     <v-sheet height="calc(100% - 70px)" class="overflow-auto">
@@ -25,37 +25,6 @@
         ></v-card
       >
 
-      <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
-        <v-row no-gutters class="error bg-orange-darken-4"
-          ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (brutto)</v-col
-          ><v-col vols="2" class="pa-2 text-right tableHeader"
-            >{{
-              bilanz.duengeobergrenze
-                ? bilanz.duengeobergrenze.toLocaleString('de-DE', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                  })
-                : '0'
-            }}
-          </v-col></v-row
-        ></v-card
-      >
-      <v-card class="ma-2" elevation="0" v-if="bilanz.errors.length === 0">
-        <v-row no-gutters class="error bg-green-darken-4"
-          ><v-col cols="10" class="pa-2 tableHeader">Düngeobergrenze gesamt (netto)</v-col
-          ><v-col vols="2" class="pa-2 text-right tableHeader"
-            >{{
-              bilanz.duengeobergrenzered
-                ? bilanz.duengeobergrenzered.toLocaleString('de-DE', {
-                    style: 'decimal',
-                    maximumFractionDigits: 2,
-                  })
-                : '0'
-            }}
-          </v-col></v-row
-        ></v-card
-      >
-
       <v-sheet v-for="(kultur, index) in bilanz.bilanz" :key="`bilanztable${index}`">
         <v-card
           v-if="
@@ -68,7 +37,10 @@
         >
           <v-row no-gutters class="bg-brown-lighten-2">
             <v-col cols="12" class="pa-1 cultureHeader">
-              {{ tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur') }}</v-col
+              {{
+                (index === 0 ? 'Zwischenfrucht: ' : index + '.Hauptfrucht: ') +
+                tableAttribut('kulturen', entry.cultures[index].kultur, 'Kultur')
+              }}</v-col
             ></v-row
           >
 
@@ -85,14 +57,7 @@
             ></v-card
           >
 
-          <v-card
-            color="grey"
-            class="ma-1 pa-1"
-            elevation="0"
-            v-if="index === 0 || kultur.duengeobergrenze > 0"
-          >
-            <v-sheet class="bg-grey tableHeader">Bilanz</v-sheet>
-
+          <v-card class="ma-1 pa-1" elevation="0" v-if="index === 0 || kultur.duengeobergrenze > 0">
             <v-sheet v-if="kultur.errorsOG.length === 0" class="py-1">
               <v-card
                 class="ma-1"
@@ -115,27 +80,32 @@
                     // @ts-ignore
                     markred: bilanz.redmarked.includes(pkey),
                     hidezero:
-                      // @ts-ignore
-                      pkey === 'errorsBI' ||
-                      // @ts-ignore
-                      pkey === 'errorsOG' ||
-                      (pvalue === 0 && !outputConfig[pkey].print),
-                    hide: !outputConfig[pkey].print,
+                      pkey === 'errorsBI' || pkey === 'errorsOG' || !outputConfig[pkey].print,
                     bold: outputConfig[pkey].bold,
                   }"
                 >
-                  <td :class="`border${outputConfig[pkey].border}`">
-                    {{ outputConfig[pkey].label }}
+                  <td :class="`cellborder${outputConfig[pkey].border}`">
+                    <div :class="`cell header${outputConfig[pkey].header}`">
+                      {{ outputConfig[pkey].header }}
+                    </div>
+                    <div>
+                      {{ outputConfig[pkey].label }}
+                    </div>
                   </td>
-                  <td :class="`border${outputConfig[pkey].border}`">
-                    {{
-                      pvalue
-                        ? pvalue.toLocaleString('de-DE', {
-                            style: 'decimal',
-                            maximumFractionDigits: 2,
-                          })
-                        : '0'
-                    }}
+                  <td :class="`cellborder${outputConfig[pkey].border}`">
+                    <div :class="`cell header${outputConfig[pkey].header}`">
+                      {{ outputConfig[pkey].unit }}
+                    </div>
+                    <div>
+                      {{
+                        pvalue
+                          ? pvalue.toLocaleString('de-DE', {
+                              style: 'decimal',
+                              maximumFractionDigits: 2,
+                            })
+                          : '0'
+                      }}
+                    </div>
                   </td>
                 </tr>
               </table>
@@ -143,6 +113,240 @@
           </v-card>
         </v-card>
       </v-sheet>
+
+      <v-card class="ma-2 cardBorder schlag" elevation="0">
+        <v-row no-gutters class="bg-grey-darken-3">
+          <v-col cols="12" class="pa-1 cultureHeader">Schlag: Bilanz / ha</v-col></v-row
+        >
+
+        <table class="bilanz">
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Stickstoff</div>
+              <div>Anrechenbarer Stickstoff</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg N/ha</div>
+              <div>
+                {{
+                  bilanz.summen.nanrechenbarSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug mit dem Erntegut</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  bilanz.summen.nentzugSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>N-Saldo für Folgekultur</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  bilanz.summen.nsaldoSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Phosphor</div>
+              <div>Düngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg P₂O₅/ha</div>
+              <div>
+                {{
+                  bilanz.summen.pduengungSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  bilanz.summen.pentzugSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Kalium</div>
+              <div>Düngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg K₂O/ha</div>
+
+              <div>
+                {{
+                  bilanz.summen.kduengungSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  bilanz.summen.kentzugSumme.toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </v-card>
+
+      <v-card class="ma-2 cardBorder schlag" elevation="0">
+        <v-row no-gutters class="bg-grey-darken-3">
+          <v-col cols="12" class="pa-1 cultureHeader"
+            >{{
+              'Schlag: Bilanz gesamt (' +
+              entry.flaeche.toLocaleString('de-DE', {
+                style: 'decimal',
+                maximumFractionDigits: 2,
+              }) +
+              'ha)'
+            }}
+          </v-col></v-row
+        >
+
+        <table class="bilanz">
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Stickstoff</div>
+              <div>Anrechenbarer Stickstoff (kg N/ha)</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg K₂O</div>
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.nanrechenbarSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug mit dem Erntegut</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.nentzugSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>N-Saldo für Folgekultur</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.nsaldoSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Phosphor</div>
+              <div>Phosphordüngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg P₂O₅</div>
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.pduengungSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.pentzugSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellbordertop">
+              <div class="cell">Kalium</div>
+              <div>Kaliumdüngung</div>
+            </td>
+            <td class="cellbordertop">
+              <div class="cell">kg K₂O</div>
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.kduengungSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+            <td class="cellborder">
+              <div>
+                {{
+                  (entry.flaeche * bilanz.summen.kentzugSumme).toLocaleString('de-DE', {
+                    style: 'decimal',
+                    maximumFractionDigits: 2,
+                  })
+                }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </v-card>
     </v-sheet>
     <v-row no-gutters class="bg-grey-darken-2"
       ><v-col class="pa-2">
@@ -182,6 +386,19 @@ table.bilanz {
 table.bilanz tr {
   padding: 0px;
 }
+
+table.bilanz td div {
+  line-height: 22px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+table.bilanz td div.cell {
+  background-color: #ddd;
+  font-weight: 500;
+
+  color: black;
+}
+
 table.bilanz tr.hide {
   font-style: italic;
 }
@@ -207,18 +424,23 @@ table.bilanz tr.markred td {
 }
 
 table.bilanz td {
-  padding: 2px;
-  border: 1px solid #eee;
-  font-size: 11px;
-  color: #777;
-  font-weight: 500;
+  font-size: 12px;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  color: #444;
   letter-spacing: 0.0892857143em !important;
   font-family: 'Roboto', sans-serif;
-  text-transform: uppercase !important;
+}
+
+table.bilanz td.cellbordertop {
+  border-top: 1px solid #ddd;
+}
+table.bilanz td.cellborderbottom {
+  border-bottom: 1px solid #ddd;
 }
 
 table.bilanz tr.bold td {
-  font-weight: bold;
+  font-weight: 900;
   color: #000;
 }
 
@@ -227,12 +449,12 @@ table.bilanz td.borderbottom {
 }
 
 table.bilanz tr td:nth-child(1) {
-  width: 85%;
+  width: 75%;
   white-space: nowrap;
   overflow: hidden;
 }
 table.bilanz tr td:nth-child(2) {
-  width: 15%;
+  width: 25%;
   text-align: right;
 }
 
@@ -268,6 +490,11 @@ table.bilanz tr td:nth-child(2) {
 .cardBorder.hauptfrucht {
   border-color: #a1887f;
 }
+
+.cardBorder.schlag {
+  border-color: rgb(66, 66, 66);
+}
+
 .cultureHeader {
   font-size: 12px;
   text-transform: uppercase;

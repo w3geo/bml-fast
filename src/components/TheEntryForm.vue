@@ -542,6 +542,38 @@
                         ></v-col>
                       </v-row>
                     </v-card>
+
+                    <v-card
+                      class="ma-1 w-100"
+                      elevation="0"
+                      color="red-lighten-1"
+                      v-if="currentBilanz[i - 1] && currentBilanz[i - 1].nbilanz > 0"
+                    >
+                      <v-row no-gutters class="error"
+                        ><v-col cols="1" class="pa-1"
+                          ><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+                        ><v-col vols="11" class="pa-2"
+                          >Stickstoffdüngung in jahreswirksamer Form übersteigt den Bedarf der
+                          Kultur.
+                        </v-col></v-row
+                      ></v-card
+                    >
+                    <v-card
+                      class="ma-1 w-100"
+                      elevation="0"
+                      color="black"
+                      v-if="currentBilanz[i - 1] && currentBilanz[i - 1].pbilanz > 0"
+                    >
+                      <v-row no-gutters class="error"
+                        ><v-col cols="1" class="pa-1"
+                          ><v-icon dark size="24">mdi-alert-box</v-icon></v-col
+                        ><v-col vols="11" class="pa-2"
+                          >Phosphordüngung übersteigt den Bedarf der Kultur. Bitte beachten Sie die
+                          gesamtbetrieblichen Grenzwerte von 100 kg P₂O₅ / ha und den Phosphorsaldo
+                          gemäß GLÖZ 10 Standard
+                        </v-col></v-row
+                      ></v-card
+                    >
                     <v-col cols="12" class="pa-2">
                       <v-btn
                         block
@@ -689,6 +721,9 @@ import { mapReady, useMap } from '../composables/useMap.js';
 import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
+import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
+
+const { currentBilanz } = useBalanceCalculator();
 
 const debug = true; // TRUE FÜR DEBUG PANEL
 
