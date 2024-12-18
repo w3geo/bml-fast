@@ -17,7 +17,7 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @property {number} nmengebw N-Menge aus Bewässerung
  * @property {number} nmengesr N-Menge aus organischen Sekundärrohstoffen
  * @property {number} nmengewd N-Menge aus Wirtschaftsdüngern
- * @property {number} nabzug N-Abzug von Düngeobergrenze
+ * @property {number} nabzug N-Abzug von Düngeobergrenze (n-Düngung);
  * @property {number} nanrechenbar Anrechenbarer Stickstoff
  * @property {number} nentzug N-Entzug
  * @property {number} nbilanz N-Bilanz
@@ -166,8 +166,8 @@ export const outputConfig = {
   nabzug: {
     header: '',
     unit: '',
-    label: 'Abzug von Düngeobergrenze',
-    print: false,
+    label: 'Düngung Summe',
+    print: true,
     bold: false,
     border: '',
   },
@@ -845,10 +845,29 @@ function calculateBilanz(retVal) {
       Number(retVal[c].vfwertzf) +
       Number(retVal[c].nminman);
 
-    retVal[c].pduengung =
-      Number(retVal[c].pmengehd) + Number(retVal[c].pmengesr) + Number(retVal[c].pmengewd);
-    retVal[c].kduengung =
-      Number(retVal[c].kmengehd) + Number(retVal[c].kmengesr) + Number(retVal[c].kmengewd);
+    retVal[c].nabzug = Number(
+      (
+        Number(retVal[c].nmengehd) +
+        Number(retVal[c].nmengebw) +
+        Number(retVal[c].nmengesr) +
+        Number(retVal[c].nmengewd)
+      ).toFixed(4),
+    );
+
+    retVal[c].pduengung = Number(
+      (
+        Number(retVal[c].pmengehd) +
+        Number(retVal[c].pmengesr) +
+        Number(retVal[c].pmengewd)
+      ).toFixed(4),
+    );
+    retVal[c].kduengung = Number(
+      (
+        Number(retVal[c].kmengehd) +
+        Number(retVal[c].kmengesr) +
+        Number(retVal[c].kmengewd)
+      ).toFixed(4),
+    );
 
     // Sonderfall ungenutzte ZF und HF1
     if (c === 1 && zfungenutzt) {

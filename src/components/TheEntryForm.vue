@@ -547,7 +547,11 @@
                       class="ma-1 w-100"
                       elevation="0"
                       color="red-lighten-1"
-                      v-if="currentBilanz[i - 1] && currentBilanz[i - 1].nbilanz > 0"
+                      v-if="
+                        entry.cultures[i - 1].ertragslage != '' &&
+                        currentBilanz[i - 1] &&
+                        currentBilanz[i - 1].duengeobergrenzered < currentBilanz[i - 1].nabzug
+                      "
                     >
                       <v-row no-gutters class="error"
                         ><v-col cols="1" class="pa-1"
@@ -562,7 +566,11 @@
                       class="ma-1 w-100"
                       elevation="0"
                       color="black"
-                      v-if="currentBilanz[i - 1] && currentBilanz[i - 1].pbilanz > 0"
+                      v-if="
+                        entry.cultures[i - 1].ertragslage != '' &&
+                        currentBilanz[i - 1] &&
+                        currentBilanz[i - 1].pbedarf < currentBilanz[i - 1].pduengung
+                      "
                     >
                       <v-row no-gutters class="error"
                         ><v-col cols="1" class="pa-1"

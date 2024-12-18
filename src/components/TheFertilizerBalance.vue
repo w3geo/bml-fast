@@ -245,10 +245,10 @@
           <tr>
             <td class="cellbordertop">
               <div class="cell">Stickstoff</div>
-              <div>Anrechenbarer Stickstoff (kg N/ha)</div>
+              <div>Anrechenbarer Stickstoff</div>
             </td>
             <td class="cellbordertop">
-              <div class="cell">kg K₂O</div>
+              <div class="cell">kg N</div>
               <div>
                 {{
                   (entry.flaeche * bilanz.summen.nanrechenbarSumme).toLocaleString('de-DE', {
