@@ -21,6 +21,7 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @property {number} nanrechenbar Anrechenbarer Stickstoff
  * @property {number} nentzug N-Entzug
  * @property {number} nbilanz N-Bilanz
+ * @property {number} nsaldoff N-Saldo für Folgefrucht
  * @property {number} pbedarf P-Bedarf der Kultur
  * @property {number} pmengehd P-Menge aus Handelsdüngern
  * @property {number} pmengesr P-Menge aus organischen Sekundärrohstoffen
@@ -58,6 +59,7 @@ const emptyKulturbilanz = {
   nanrechenbar: 0,
   nentzug: 0,
   nbilanz: 0,
+  nsaldoff: 0,
   pbedarf: 0,
   pmengehd: 0,
   pmengesr: 0,
@@ -184,6 +186,15 @@ export const outputConfig = {
     border: '',
   },
   nbilanz: { header: '', unit: '', label: 'Bilanz', print: true, bold: false, border: 'bottom' },
+  nsaldoff: {
+    header: '',
+    unit: '',
+    label: 'N-Saldo für Folgekultur',
+    print: true,
+    bold: false,
+    border: '',
+  },
+
   pbedarf: {
     header: 'Phosphor',
     unit: 'kg P₂O₅/ha',
@@ -879,6 +890,16 @@ function calculateBilanz(retVal) {
     retVal[c].nbilanz = retVal[c].nanrechenbar - Number(retVal[c].nentzug);
     retVal[c].pbilanz = retVal[c].pduengung - Number(retVal[c].pentzug);
     retVal[c].kbilanz = retVal[c].kduengung - Number(retVal[c].kentzug);
+
+    // N-Saldo der Folgefrucht
+    if (
+      entry.value.flaeche_grundwasserschutz > 0 &&
+      entry.value.teilnahme_grundwasserschutz_acker &&
+      retVal[c].nbilanz > 20
+    ) {
+      const maxBilanz = Math.min(retVal[c].nbilanz, 100);
+      retVal[c].nsaldoff = maxBilanz * redfaktor;
+    }
 
     retVal[c].duengeobergrenzered =
       retVal[c].duengeobergrenze -
