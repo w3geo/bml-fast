@@ -215,7 +215,7 @@ export const outputConfig = {
   nabzug: {
     header: '',
     unit: '',
-    labelshort: 'N-Düngung',
+    labelshort: '∑ N-Düngung',
     label: 'Stickstoff aus aktiver Düngung',
     printnotzero: false,
     print: true,

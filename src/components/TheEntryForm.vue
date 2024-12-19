@@ -548,7 +548,10 @@
                       elevation="0"
                       color="red-lighten-1"
                       v-if="
-                        entry.cultures[i - 1].ertragslage != '' &&
+                        (lookup.aussaatTypeFilter.zwischenG.includes(
+                          entry.cultures[i - 1].kultur,
+                        ) ||
+                          entry.cultures[i - 1].ertragslage != '') &&
                         currentBilanz[i - 1] &&
                         currentBilanz[i - 1].duengeobergrenzered < currentBilanz[i - 1].nabzug
                       "
@@ -567,7 +570,10 @@
                       elevation="0"
                       color="black"
                       v-if="
-                        entry.cultures[i - 1].ertragslage != '' &&
+                        (lookup.aussaatTypeFilter.zwischenG.includes(
+                          entry.cultures[i - 1].kultur,
+                        ) ||
+                          entry.cultures[i - 1].ertragslage != '') &&
                         currentBilanz[i - 1] &&
                         currentBilanz[i - 1].pbedarf < currentBilanz[i - 1].pduengung
                       "
