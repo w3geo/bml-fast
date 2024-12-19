@@ -17,10 +17,11 @@ import { tableAttribut, lookup } from './useLookUps.js';
  * @property {number} nmengebw N-Menge aus Bewässerung
  * @property {number} nmengesr N-Menge aus organischen Sekundärrohstoffen
  * @property {number} nmengewd N-Menge aus Wirtschaftsdüngern
- * @property {number} nabzug N-Abzug von Düngeobergrenze
+ * @property {number} nabzug N-Abzug von Düngeobergrenze (n-Düngung);
  * @property {number} nanrechenbar Anrechenbarer Stickstoff
  * @property {number} nentzug N-Entzug
  * @property {number} nbilanz N-Bilanz
+ * @property {number} nsaldoff N-Saldo für Folgefrucht
  * @property {number} pbedarf P-Bedarf der Kultur
  * @property {number} pmengehd P-Menge aus Handelsdüngern
  * @property {number} pmengesr P-Menge aus organischen Sekundärrohstoffen
@@ -58,6 +59,7 @@ const emptyKulturbilanz = {
   nanrechenbar: 0,
   nentzug: 0,
   nbilanz: 0,
+  nsaldoff: 0,
   pbedarf: 0,
   pmengehd: 0,
   pmengesr: 0,
@@ -84,20 +86,42 @@ export const currentBilanz = ref([
  * @type {Object<keyof kulturbilanz, Object>}
  */
 export const outputConfig = {
-  errorsOG: { header: '', unit: '', label: 'Fehler OG', print: false, bold: false, border: '' },
-  errorsBI: { header: '', unit: '', label: 'Fehler BI', print: false, bold: false, border: '' },
+  errorsOG: {
+    header: '',
+    unit: '',
+    labelshort: '',
+    label: 'Fehler OG',
+    printnotzero: false,
+    print: false,
+    bold: false,
+    border: '',
+  },
+  errorsBI: {
+    header: '',
+    unit: '',
+    labelshort: '',
+    label: 'Fehler BI',
+    printnotzero: false,
+    print: false,
+    bold: false,
+    border: '',
+  },
   duengeobergrenze: {
     header: 'Stickstoff',
     unit: 'kg/ha',
+    labelshort: 'Düngeobergrenze',
     label: 'Düngeobergrenze',
+    printnotzero: false,
     print: true,
-    bold: false,
-    border: '',
+    bold: true,
+    border: 'bottom',
   },
   nsaldo: {
     header: '',
     unit: '',
-    label: 'N-Saldo für Folgekultur',
+    labelshort: 'N-Saldo',
+    label: 'Stickstoffsaldo',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -105,7 +129,9 @@ export const outputConfig = {
   vfwert: {
     header: '',
     unit: '',
-    label: 'Vorfruchtwert der Vorfrucht',
+    labelshort: 'Vorfruchtwert - Vorfrucht',
+    label: 'Vorfruchtwert aus der Vorfrucht',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -113,22 +139,37 @@ export const outputConfig = {
   vfwertzf: {
     header: '',
     unit: '',
-    label: 'Vorfruchtwert der Zwischenfrucht',
+    labelshort: 'Vorfruchtwert - Zwischenfrucht',
+    label: 'Vorfruchtwert aus der Zwischenfrucht',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
   },
-  nminman: { header: '', unit: '', label: 'Manueller N-Min', print: true, bold: false, border: '' },
-  duengeobergrenzered: {
-    label: 'Düngeobergrenze nach Abzügen',
+  nminman: {
+    header: '',
+    unit: '',
+    labelshort: 'NMin gemessen',
+    label: 'NMin gemessen',
+    printnotzero: false,
     print: true,
     bold: false,
-    border: 'bottom',
+    border: '',
+  },
+  duengeobergrenzered: {
+    labelshort: 'max. N-Düngung',
+    label: 'maximal mögliche N-Düngung',
+    printnotzero: false,
+    print: true,
+    bold: true,
+    border: 'top',
   },
   redfaktor: {
     header: '',
     unit: '',
+    labelshort: '',
     label: 'Reduktionsfaktor',
+    printnotzero: false,
     print: false,
     bold: false,
     border: '',
@@ -136,21 +177,27 @@ export const outputConfig = {
   nmengehd: {
     header: 'Stickstoff',
     unit: 'kg/ha',
-    label: 'Aus Handelsdüngern',
+    labelshort: 'N aus Handelsdüngern',
+    label: 'Stickstoff aus Handelsdüngern',
+    printnotzero: true,
     print: true,
     bold: false,
-    border: 'top',
+    border: '',
   },
   nmengebw: {
     header: '',
     unit: '',
-    label: 'Aus Bewässerung',
+    labelshort: 'Stickstoff aus Bewässerung',
+    label: 'Stickstoff aus Bewässerung',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
   },
   nmengesr: {
-    label: 'Aus org. Sekundärrohstoffen',
+    labelshort: 'N aus org. Sekundärrohstoffen',
+    label: 'Stickstoff aus org. Sekundärrohstoffen',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -158,7 +205,9 @@ export const outputConfig = {
   nmengewd: {
     header: '',
     unit: '',
-    label: 'Aus Wirtschaftsdüngern',
+    labelshort: 'N aus Wirtschaftsdüngern',
+    label: 'Stickstoff aus Wirtschaftsdüngern',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -166,42 +215,74 @@ export const outputConfig = {
   nabzug: {
     header: '',
     unit: '',
-    label: 'Abzug von Düngeobergrenze',
-    print: false,
-    bold: false,
-    border: '',
+    labelshort: 'N-Düngung',
+    label: 'Stickstoff aus aktiver Düngung',
+    printnotzero: false,
+    print: true,
+    bold: true,
+    border: 'top',
   },
   nanrechenbar: {
-    label: 'Anrechenbarer Stickstoff',
+    labelshort: 'Anzurechnender Stickstoff',
+    label: 'Anzurechnender Stickstoff',
+    printnotzero: false,
     print: true,
-    bold: false,
-    border: '',
+    bold: true,
+    border: 'top',
   },
   nentzug: {
-    label: 'Entzug mit dem Erntegut',
+    labelshort: 'N-Entzug',
+    label: 'Stickstoff-Entzug mit dem Erntegut',
+    printnotzero: false,
     print: true,
-    bold: false,
+    bold: true,
     border: '',
   },
-  nbilanz: { header: '', unit: '', label: 'Bilanz', print: true, bold: false, border: 'bottom' },
+  nbilanz: {
+    header: '',
+    unit: '',
+    labelshort: 'N-Bilanz',
+    label: 'Stickstoff-Bilanz',
+    printnotzero: false,
+    print: true,
+    bold: true,
+    border: '',
+  },
+  nsaldoff: {
+    header: '',
+    unit: '',
+    labelshort: 'N-Saldo Folgekultur',
+    label: 'N-Saldo für Folgekultur',
+    printnotzero: true,
+    print: true,
+    bold: true,
+    border: '',
+  },
+
   pbedarf: {
     header: 'Phosphor',
     unit: 'kg P₂O₅/ha',
-    label: 'Bedarf',
+    labelshort: 'P-Bedarf gem. Ertraglage',
+    label: 'Phosphor-Bedarf gemäß Ertraglage',
+    printnotzero: false,
     print: true,
-    bold: false,
-    border: '',
+    bold: true,
+    border: 'bottom',
   },
   pmengehd: {
     header: '',
     unit: '',
-    label: 'Aus Handelsdüngern',
+    labelshort: 'P aus Handelsdüngern',
+    label: 'Phosphor aus Handelsdüngern',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
   },
   pmengesr: {
-    label: 'Aus org. Sekundärrohstoffen',
+    labelshort: 'P aus org. Sekundärrohstoffen',
+    label: 'Phosphor aus org. Sekundärrohstoffen',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -209,7 +290,9 @@ export const outputConfig = {
   pmengewd: {
     header: '',
     unit: '',
-    label: 'Aus Wirtschaftsdüngern',
+    labelshort: 'P aus Wirtschaftsdüngern',
+    label: 'Phosphor aus Wirtschaftsdüngern',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -217,43 +300,55 @@ export const outputConfig = {
   pduengung: {
     header: '',
     unit: '',
-    label: 'Düngung',
+    labelshort: 'P-Düngung',
+    label: 'Phosphor-Düngung',
+    printnotzero: false,
     print: true,
-    bold: false,
-    border: '',
+    bold: true,
+    border: 'top',
   },
   pentzug: {
-    label: 'Entzug gemäß Ertrag',
+    labelshort: 'P-Entzug',
+    label: 'Phosphor-Entzug',
+    printnotzero: false,
     print: true,
-    bold: false,
+    bold: true,
     border: '',
   },
   pbilanz: {
     header: '',
     unit: '',
-    label: 'Bilanz',
+    labelshort: 'P-Bilanz',
+    label: 'Phosphor-Bilanz',
+    printnotzero: false,
     print: true,
-    bold: false,
+    bold: true,
     border: 'bottom',
   },
   kbedarf: {
     header: 'Kalium',
     unit: 'kg K₂O/ha',
-    label: 'Kalium-Bedarf',
+    labelshort: 'K-Bedarf',
+    label: 'Kalium-Bedarf gem. Ertragslage',
+    printnotzero: false,
     print: true,
-    bold: false,
-    border: '',
+    bold: true,
+    border: 'bottom',
   },
   kmengehd: {
     header: '',
     unit: '',
-    label: 'Aus Handelsdüngern',
+    labelshort: 'K aus Handelsdüngern',
+    label: 'Kalium aus Handelsdüngern',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
   },
   kmengesr: {
-    label: 'Aus org. Sekundärrohstoffen',
+    labelshort: 'K aus org. Sekundärrohstoffen',
+    label: 'Kalium aus org. Sekundärrohstoffen',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -261,7 +356,9 @@ export const outputConfig = {
   kmengewd: {
     header: '',
     unit: '',
-    label: 'Aus Wirtschaftsdüngern',
+    labelshort: 'K aus Wirtschaftsdüngern',
+    label: 'Kalium aus Wirtschaftsdüngern',
+    printnotzero: true,
     print: true,
     bold: false,
     border: '',
@@ -269,25 +366,31 @@ export const outputConfig = {
   kduengung: {
     header: '',
     unit: '',
-    label: 'Düngung',
+    labelshort: 'K-Düngung',
+    label: 'Kalium-Düngung',
+    printnotzero: false,
     print: true,
-    bold: false,
-    border: '',
+    bold: true,
+    border: 'top',
   },
   kentzug: {
     header: '',
     unit: '',
-    label: 'Entzug gemäß Ertrag',
+    labelshort: 'K-Entzug',
+    label: 'Kalium-Entzug',
+    printnotzero: false,
     print: true,
-    bold: false,
+    bold: true,
     border: '',
   },
   kbilanz: {
     header: '',
     unit: '',
-    label: 'Bilanz',
+    labelshort: 'K-Bilanz',
+    label: 'Kalium-Bilanz',
+    printnotzero: false,
     print: true,
-    bold: false,
+    bold: true,
     border: 'bottom',
   },
 };
@@ -845,10 +948,29 @@ function calculateBilanz(retVal) {
       Number(retVal[c].vfwertzf) +
       Number(retVal[c].nminman);
 
-    retVal[c].pduengung =
-      Number(retVal[c].pmengehd) + Number(retVal[c].pmengesr) + Number(retVal[c].pmengewd);
-    retVal[c].kduengung =
-      Number(retVal[c].kmengehd) + Number(retVal[c].kmengesr) + Number(retVal[c].kmengewd);
+    retVal[c].nabzug = Number(
+      (
+        Number(retVal[c].nmengehd) +
+        Number(retVal[c].nmengebw) +
+        Number(retVal[c].nmengesr) +
+        Number(retVal[c].nmengewd)
+      ).toFixed(4),
+    );
+
+    retVal[c].pduengung = Number(
+      (
+        Number(retVal[c].pmengehd) +
+        Number(retVal[c].pmengesr) +
+        Number(retVal[c].pmengewd)
+      ).toFixed(4),
+    );
+    retVal[c].kduengung = Number(
+      (
+        Number(retVal[c].kmengehd) +
+        Number(retVal[c].kmengesr) +
+        Number(retVal[c].kmengewd)
+      ).toFixed(4),
+    );
 
     // Sonderfall ungenutzte ZF und HF1
     if (c === 1 && zfungenutzt) {
@@ -860,6 +982,16 @@ function calculateBilanz(retVal) {
     retVal[c].nbilanz = retVal[c].nanrechenbar - Number(retVal[c].nentzug);
     retVal[c].pbilanz = retVal[c].pduengung - Number(retVal[c].pentzug);
     retVal[c].kbilanz = retVal[c].kduengung - Number(retVal[c].kentzug);
+
+    // N-Saldo der Folgefrucht
+    if (
+      entry.value.flaeche_grundwasserschutz > 0 &&
+      entry.value.teilnahme_grundwasserschutz_acker &&
+      retVal[c].nbilanz > 20
+    ) {
+      const maxBilanz = Math.min(retVal[c].nbilanz, 100);
+      retVal[c].nsaldoff = maxBilanz * redfaktor;
+    }
 
     retVal[c].duengeobergrenzered =
       retVal[c].duengeobergrenze -

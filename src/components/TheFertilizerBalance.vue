@@ -80,7 +80,10 @@
                     // @ts-ignore
                     markred: bilanz.redmarked.includes(pkey),
                     hidezero:
-                      pkey === 'errorsBI' || pkey === 'errorsOG' || !outputConfig[pkey].print,
+                      !outputConfig[pkey].print ||
+                      (pkey === 'nminman' &&
+                        Number(pvalue) === Number(entry.cultures[index].nminvorgabe)) ||
+                      (outputConfig[pkey].printnotzero && Number(pvalue) == 0),
                     bold: outputConfig[pkey].bold,
                   }"
                 >
@@ -89,7 +92,7 @@
                       {{ outputConfig[pkey].header }}
                     </div>
                     <div>
-                      {{ outputConfig[pkey].label }}
+                      {{ winMaximize ? outputConfig[pkey].label : outputConfig[pkey].labelshort }}
                     </div>
                   </td>
                   <td :class="`cellborder${outputConfig[pkey].border}`">
@@ -120,10 +123,16 @@
         >
 
         <table class="bilanz">
-          <tr>
+          <tr class="bold">
             <td class="cellbordertop">
               <div class="cell">Stickstoff</div>
-              <div>Anrechenbarer Stickstoff</div>
+              <div>
+                {{
+                  winMaximize
+                    ? outputConfig['nanrechenbar'].label
+                    : outputConfig['nanrechenbar'].labelshort
+                }}
+              </div>
             </td>
             <td class="cellbordertop">
               <div class="cell">kg N/ha</div>
@@ -137,8 +146,14 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>Entzug mit dem Erntegut</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{
+                  winMaximize ? outputConfig['nentzug'].label : outputConfig['nentzug'].labelshort
+                }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -150,8 +165,12 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>N-Saldo für Folgekultur</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{ winMaximize ? outputConfig['nsaldo'].label : outputConfig['nsaldo'].labelshort }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -163,10 +182,16 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr class="bold">
             <td class="cellbordertop">
               <div class="cell">Phosphor</div>
-              <div>Düngung</div>
+              <div>
+                {{
+                  winMaximize
+                    ? outputConfig['pduengung'].label
+                    : outputConfig['pduengung'].labelshort
+                }}
+              </div>
             </td>
             <td class="cellbordertop">
               <div class="cell">kg P₂O₅/ha</div>
@@ -180,8 +205,14 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{
+                  winMaximize ? outputConfig['pentzug'].label : outputConfig['pentzug'].labelshort
+                }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -193,10 +224,16 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr class="bold">
             <td class="cellbordertop">
               <div class="cell">Kalium</div>
-              <div>Düngung</div>
+              <div>
+                {{
+                  winMaximize
+                    ? outputConfig['kduengung'].label
+                    : outputConfig['kduengung'].labelshort
+                }}
+              </div>
             </td>
             <td class="cellbordertop">
               <div class="cell">kg K₂O/ha</div>
@@ -211,8 +248,14 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{
+                  winMaximize ? outputConfig['kentzug'].label : outputConfig['kentzug'].labelshort
+                }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -242,13 +285,19 @@
         >
 
         <table class="bilanz">
-          <tr>
+          <tr class="bold">
             <td class="cellbordertop">
               <div class="cell">Stickstoff</div>
-              <div>Anrechenbarer Stickstoff (kg N/ha)</div>
+              <div>
+                {{
+                  winMaximize
+                    ? outputConfig['nanrechenbar'].label
+                    : outputConfig['nanrechenbar'].labelshort
+                }}
+              </div>
             </td>
             <td class="cellbordertop">
-              <div class="cell">kg K₂O</div>
+              <div class="cell">kg N</div>
               <div>
                 {{
                   (entry.flaeche * bilanz.summen.nanrechenbarSumme).toLocaleString('de-DE', {
@@ -259,8 +308,14 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>Entzug mit dem Erntegut</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{
+                  winMaximize ? outputConfig['nentzug'].label : outputConfig['nentzug'].labelshort
+                }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -272,8 +327,12 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>N-Saldo für Folgekultur</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{ winMaximize ? outputConfig['nsaldo'].label : outputConfig['nsaldo'].labelshort }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -285,10 +344,16 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr class="bold">
             <td class="cellbordertop">
               <div class="cell">Phosphor</div>
-              <div>Phosphordüngung</div>
+              <div>
+                {{
+                  winMaximize
+                    ? outputConfig['pduengung'].label
+                    : outputConfig['pduengung'].labelshort
+                }}
+              </div>
             </td>
             <td class="cellbordertop">
               <div class="cell">kg P₂O₅</div>
@@ -302,8 +367,14 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{
+                  winMaximize ? outputConfig['pentzug'].label : outputConfig['pentzug'].labelshort
+                }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -315,10 +386,16 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr class="bold">
             <td class="cellbordertop">
               <div class="cell">Kalium</div>
-              <div>Kaliumdüngung</div>
+              <div>
+                {{
+                  winMaximize
+                    ? outputConfig['kduengung'].label
+                    : outputConfig['kduengung'].labelshort
+                }}
+              </div>
             </td>
             <td class="cellbordertop">
               <div class="cell">kg K₂O</div>
@@ -332,8 +409,14 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="cellborder"><div>Entzug gemäß Ertrag</div></td>
+          <tr class="bold">
+            <td class="cellborder">
+              <div>
+                {{
+                  winMaximize ? outputConfig['kentzug'].label : outputConfig['kentzug'].labelshort
+                }}
+              </div>
+            </td>
             <td class="cellborder">
               <div>
                 {{
@@ -440,7 +523,7 @@ table.bilanz td.cellborderbottom {
 }
 
 table.bilanz tr.bold td {
-  font-weight: 900;
+  font-weight: 600;
   color: #000;
 }
 
