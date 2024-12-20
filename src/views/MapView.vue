@@ -1,5 +1,6 @@
 <template>
   <div ref="mapContainer" class="map" />
+  <the-disclaimer />
   <the-entry-list />
   <the-entry-form />
   <the-fertilizer-balance />
@@ -8,6 +9,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import TheDisclaimer from '../components/TheDisclaimer.vue';
 import TheEntryList from '../components/TheEntryList.vue';
 import TheFertilizerBalance from '../components/TheFertilizerBalance.vue';
 import TheLoadSavePanel from '../components/TheLoadSavePanel.vue';
