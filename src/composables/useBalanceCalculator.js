@@ -108,7 +108,7 @@ export const outputConfig = {
   },
   duengeobergrenze: {
     header: 'Stickstoff',
-    unit: 'kg/ha',
+    unit: 'kg N/ha',
     labelshort: 'Düngeobergrenze',
     label: 'Düngeobergrenze',
     printnotzero: false,
@@ -162,7 +162,7 @@ export const outputConfig = {
     printnotzero: false,
     print: true,
     bold: true,
-    border: 'top',
+    border: 'topbottom',
   },
   redfaktor: {
     header: '',
@@ -175,8 +175,8 @@ export const outputConfig = {
     border: '',
   },
   nmengehd: {
-    header: 'Stickstoff',
-    unit: 'kg/ha',
+    header: '',
+    unit: '',
     labelshort: 'N aus Handelsdüngern',
     label: 'Stickstoff aus Handelsdüngern',
     printnotzero: true,
@@ -215,7 +215,7 @@ export const outputConfig = {
   nabzug: {
     header: '',
     unit: '',
-    labelshort: '∑ N-Düngung',
+    labelshort: 'Summe N-Düngung',
     label: 'Stickstoff aus aktiver Düngung',
     printnotzero: false,
     print: true,

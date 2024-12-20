@@ -522,6 +522,11 @@ table.bilanz td.cellborderbottom {
   border-bottom: 1px solid #ddd;
 }
 
+table.bilanz td.cellbordertopbottom {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
 table.bilanz tr.bold td {
   font-weight: 600;
   color: #000;
