@@ -966,7 +966,6 @@ function cultureChanged(index) {
     entry.value.cultures[index].kultur = '';
     entry.value.cultures[index].nminvorgabe = 0;
     entry.value.cultures[index].nmin = 0;
-    return;
   }
 
   nMinCalculator(index);
