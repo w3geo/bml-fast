@@ -897,6 +897,11 @@ function nMinCalculator(index) {
     return;
   }
 
+  const vorkulturgemüse =
+    index > 1
+      ? tableAttribut('kulturen', entry.value.cultures[index - 1].kultur, 'Gemüsekultur') === 'x'
+      : false;
+
   const isgemüse =
     tableAttribut('kulturen', entry.value.cultures[index].kultur, 'Gemüsekultur') === 'x';
   const vfgemüse = tableAttribut('kulturen', entry.value.vorfrucht, 'Gemüsekultur') === 'x';
@@ -939,7 +944,7 @@ function nMinCalculator(index) {
         entry.value.cultures[index].nmin = entry.value.cultures[index].nminvorgabe;
       }
     }
-    if (index > 1 && entry.value.cultures[index - 1].kultur !== '') {
+    if (index > 1 && vorkulturgemüse && entry.value.cultures[index - 1].kultur !== '') {
       entry.value.cultures[index].nminvorgabe = tableAttribut(
         'kulturen',
         entry.value.cultures[index - 1].kultur,
