@@ -89,11 +89,11 @@ export const emptyEntry = {
   extent: [],
   parts: [],
   schlaginfo: { basic: null, programs: null },
-  cultures: [{ ...emptyCulture }, { ...emptyCulture }],
+  cultures: [JSON.parse(JSON.stringify(emptyCulture)), JSON.parse(JSON.stringify(emptyCulture))],
 };
 
 /** @type {import('vue').Ref<DataEntry>} */
-export const entry = ref({ ...emptyEntry });
+export const entry = ref(JSON.parse(JSON.stringify(emptyEntry)));
 
 /** @type {import('vue').Ref<Array>} */
 export const savedData = ref([]);

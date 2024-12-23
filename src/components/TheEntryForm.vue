@@ -859,7 +859,7 @@ function npkLabel(what, type, fid) {
 }
 
 function addFertilization(cindex) {
-  entry.value.cultures[cindex].duengung.push({ ...emptyFertilization });
+  entry.value.cultures[cindex].duengung.push(JSON.parse(JSON.stringify(emptyFertilization)));
 }
 
 function deleteFertilization(cindex, findex) {
@@ -896,6 +896,11 @@ function nMinCalculator(index) {
   if (index >= entry.value.cultures.length || !entry.value.cultures[index].kultur) {
     return;
   }
+
+  const vorkulturgemüse =
+    index > 1
+      ? tableAttribut('kulturen', entry.value.cultures[index - 1].kultur, 'Gemüsekultur') === 'x'
+      : false;
 
   const isgemüse =
     tableAttribut('kulturen', entry.value.cultures[index].kultur, 'Gemüsekultur') === 'x';
@@ -939,7 +944,7 @@ function nMinCalculator(index) {
         entry.value.cultures[index].nmin = entry.value.cultures[index].nminvorgabe;
       }
     }
-    if (index > 1 && entry.value.cultures[index - 1].kultur !== '') {
+    if (index > 1 && vorkulturgemüse && entry.value.cultures[index - 1].kultur !== '') {
       entry.value.cultures[index].nminvorgabe = tableAttribut(
         'kulturen',
         entry.value.cultures[index - 1].kultur,
@@ -966,7 +971,6 @@ function cultureChanged(index) {
     entry.value.cultures[index].kultur = '';
     entry.value.cultures[index].nminvorgabe = 0;
     entry.value.cultures[index].nmin = 0;
-    return;
   }
 
   nMinCalculator(index);
@@ -1013,7 +1017,7 @@ function deleteCulture(nr) {
 }
 
 function addCulture() {
-  entry.value.cultures.push({ ...emptyCulture });
+  entry.value.cultures.push(JSON.parse(JSON.stringify(emptyCulture)));
 }
 
 function dataSort(a, b) {
@@ -1034,9 +1038,9 @@ async function saveData(copy) {
   }
 
   if (!copy && currentSaved.value !== null) {
-    savedData.value[currentSaved.value] = { ...entry.value };
+    savedData.value[currentSaved.value] = JSON.parse(JSON.stringify(entry.value));
   } else {
-    savedData.value.push({ ...entry.value });
+    savedData.value.push(JSON.parse(JSON.stringify(entry.value)));
     savedData.value.sort(dataSort);
   }
   localStorage.setItem('fasttool', JSON.stringify(savedData.value));

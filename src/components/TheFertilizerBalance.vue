@@ -83,6 +83,9 @@
                       !outputConfig[pkey].print ||
                       (pkey === 'nminman' &&
                         Number(pvalue) === Number(entry.cultures[index].nminvorgabe)) ||
+                      (pkey === 'nminman' &&
+                        Number(pvalue) === 0 &&
+                        Number(entry.cultures[index].nmin) !== 0) ||
                       (outputConfig[pkey].printnotzero && Number(pvalue) == 0),
                     bold: outputConfig[pkey].bold,
                   }"
