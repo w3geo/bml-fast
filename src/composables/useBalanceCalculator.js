@@ -770,7 +770,12 @@ function calculateBilanz(retVal) {
         (vfgemüse && !hfgemüse && !zfgenutzt && !hfmanuell) ||
         (!vfgemüse && !zfgenutzt)
       ) {
-        if (entry.value.flaeche_grundwasserschutz > 0 && hfgemüse && retVal[c].nsaldo <= vfnmin) {
+        if (
+          entry.value.flaeche_grundwasserschutz > 0 &&
+          vfgemüse &&
+          hfgemüse &&
+          retVal[c].nsaldo <= vfnmin
+        ) {
           retVal[c].vfwert = vfnmin;
           retVal[c].nminman = 0;
           retVal[c].nsaldo = 0;
