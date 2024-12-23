@@ -993,12 +993,14 @@ function calculateBilanz(retVal) {
       retVal[c].nsaldoff = maxBilanz * redfaktor;
     }
 
-    retVal[c].duengeobergrenzered =
+    retVal[c].duengeobergrenzered = Math.max(
+      0,
       retVal[c].duengeobergrenze -
-      retVal[c].nsaldo -
-      retVal[c].vfwert -
-      retVal[c].vfwertzf -
-      retVal[c].nminman;
+        retVal[c].nsaldo -
+        retVal[c].vfwert -
+        retVal[c].vfwertzf -
+        retVal[c].nminman,
+    );
 
     summen.dogRedSumme += retVal[c].duengeobergrenzered;
 

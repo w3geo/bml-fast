@@ -859,7 +859,7 @@ function npkLabel(what, type, fid) {
 }
 
 function addFertilization(cindex) {
-  entry.value.cultures[cindex].duengung.push({ ...emptyFertilization });
+  entry.value.cultures[cindex].duengung.push(JSON.parse(JSON.stringify(emptyFertilization)));
 }
 
 function deleteFertilization(cindex, findex) {
@@ -1013,7 +1013,7 @@ function deleteCulture(nr) {
 }
 
 function addCulture() {
-  entry.value.cultures.push({ ...emptyCulture });
+  entry.value.cultures.push(JSON.parse(JSON.stringify(emptyCulture)));
 }
 
 function dataSort(a, b) {
@@ -1034,9 +1034,9 @@ async function saveData(copy) {
   }
 
   if (!copy && currentSaved.value !== null) {
-    savedData.value[currentSaved.value] = { ...entry.value };
+    savedData.value[currentSaved.value] = JSON.parse(JSON.stringify(entry.value));
   } else {
-    savedData.value.push({ ...entry.value });
+    savedData.value.push(JSON.parse(JSON.stringify(entry.value)));
     savedData.value.sort(dataSort);
   }
   localStorage.setItem('fasttool', JSON.stringify(savedData.value));
