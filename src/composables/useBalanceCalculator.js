@@ -881,17 +881,15 @@ function calculateBilanz(retVal) {
         if (retVal[c - 1].nbilanz > 20) {
           if (hf1gemüse && hf2gemüse) {
             if (
-              (hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin) ||
-              (!hf2manuell && retVal[c - 1].nbilanz * redfaktor > hf1nmin)
+              (hf2manuell && retVal[c - 1].nsaldoff >= hf2manuellnmin) ||
+              (!hf2manuell && retVal[c - 1].nsaldoff >= hf1nmin)
             ) {
-              const maxBilanz = Math.min(retVal[c - 1].nbilanz, 100);
-              retVal[c].nsaldo = maxBilanz * redfaktor;
+              retVal[c].nsaldo = retVal[c - 1].nsaldoff;
               retVal[c].vfwert = 0;
             }
           } else {
             if (retVal[c - 1].nbilanz > 20) {
-              const maxBilanz = Math.min(retVal[c - 1].nbilanz, 100);
-              retVal[c].nsaldo = maxBilanz * redfaktor;
+              retVal[c].nsaldo = retVal[c - 1].nsaldoff;
             }
           }
         }
@@ -905,7 +903,7 @@ function calculateBilanz(retVal) {
           entry.value.teilnahme_grundwasserschutz_acker &&
           hf1gemüse &&
           hf2gemüse &&
-          retVal[c - 1].nbilanz * redfaktor > hf2manuellnmin
+          retVal[c - 1].nsaldoff >= hf2manuellnmin
         ) {
           retVal[c].nminman = 0;
         }
