@@ -10,9 +10,12 @@
     <v-navigation-drawer v-model="drawer" disable-resize-watcher temporary @click="drawer = false">
       <v-row no-gutters class="mt-4">
         <v-col cols="12" class="pa-3 pt-1">
-          <a class="drawerLdink" href="https://info.bml.gv.at/impressum.html" target="_blank"
+          <a class="drawerLink" href="https://info.bml.gv.at/impressum.html" target="_blank"
             >Impressum</a
           >
+        </v-col>
+        <v-col cols="12" class="pa-3 pt-1">
+          <a class="drawerLink" @click="showOverlay = true">Hinweise & Feedback</a>
         </v-col>
       </v-row>
     </v-navigation-drawer>
@@ -31,6 +34,9 @@ import { ref } from 'vue';
 import '@w3geo/vue-place-search/dist/style.css';
 import { PlaceSearch } from '@w3geo/vue-place-search';
 import logo from './assets/img/logo.svg';
+import { useDisclaimer } from './composables/useDisclaimer.js';
+
+const { showOverlay } = useDisclaimer();
 
 const drawer = ref(false);
 </script>
@@ -49,6 +55,7 @@ const drawer = ref(false);
   color: #666;
   text-decoration: none;
   font-size: 18px;
+  cursor: pointer;
 }
 </style>
 <style>

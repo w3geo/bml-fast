@@ -95,10 +95,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
+import { useDisclaimer } from '../composables/useDisclaimer.js';
 
-const showOverlay = ref(false);
-const neverShowOverlay = ref(false);
+const { showOverlay, neverShowOverlay } = useDisclaimer();
 
 onMounted(() => {
   if (!localStorage.getItem('fasttooldisclaimer')) {
