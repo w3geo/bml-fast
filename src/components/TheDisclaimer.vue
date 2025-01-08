@@ -41,7 +41,8 @@
             zeitweise nicht zu veröffentlichen.
           </p>
           <p class="px-4 py-2">
-            Dieser Webkartendienst wird vom Unternehmen W3Geo GmbH betrieben. W3Geo übernimmt
+            Dieser Webkartendienst wird vom Unternehmen
+            <a href="https://www.w3geo.at" target="_blank">W3Geo GmbH</a> betrieben. W3Geo übernimmt
             keinerlei Haftung für Schäden oder Mängelfolgeschäden, welche durch die Verwendung
             dieses Webdienstes und all seiner Inhalte entstehen. Die Nutzung der Inhalte dieses
             Webdienstes erfolgt ausschließlich auf Risiko der Benutzerin bzw. des Benutzers.
