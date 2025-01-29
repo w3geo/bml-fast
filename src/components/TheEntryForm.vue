@@ -5,10 +5,13 @@
     elevation="10"
   >
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
-      <v-col class="text-button text-white">
+      <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-list-box </v-icon>
-        Datenfenster
+        Schlag-Daten
       </v-col>
+      <v-col cols="2" class="text-right pr-1"
+        ><v-icon size="small" @click="showHelp('datawindow')">mdi-help-circle</v-icon></v-col
+      >
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
@@ -1224,10 +1227,6 @@ div.obligatory div.v-input--disabled {
   top: 1px;
   left: -17px;
   color: grey;
-}
-
-.inbForm .v-input__append .v-icon:hover {
-  color: #ff9800;
 }
 
 .inbForm .v-input__append .v-icon--size-default {

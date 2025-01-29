@@ -8,8 +8,11 @@
     <v-row no-gutters class="boxHeader bg-grey-darken-3">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-chart-pie </v-icon>
-        Nährstoffbilanz für...
+        Nährstoffbilanzen
       </v-col>
+      <v-col cols="2" class="text-right pr-1"
+        ><v-icon size="small" @click="showHelp('fertilizerbalance')">mdi-help-circle</v-icon></v-col
+      >
     </v-row>
     <v-sheet height="calc(100% - 70px)" class="overflow-auto">
       <v-card
@@ -453,6 +456,9 @@
 import { useDataEntries } from '../composables/useDataEntries.js';
 import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
 import { ref, computed } from 'vue';
+import { useHelp } from '../composables/useHelp.js';
+
+const { showHelp } = useHelp();
 
 const { dataWindow, entry } = useDataEntries();
 const { updateBilanz, outputConfig } = useBalanceCalculator();

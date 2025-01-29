@@ -2,10 +2,13 @@
   <v-card class="entryList" elevation="10">
     <div class="greyOut" v-if="dataWindow > 0" />
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
-      <v-col class="text-button text-white">
+      <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-view-list </v-icon>
         Gespeicherte Einträge
       </v-col>
+      <v-col cols="2" class="text-right pr-1"
+        ><v-icon size="small" @click="showHelp('entrylist')">mdi-help-circle</v-icon></v-col
+      >
     </v-row>
     <v-row class="theList" no-gutters
       ><v-col>
@@ -81,6 +84,9 @@
 import { useSchlag } from '../composables/useSchlag.js';
 import { useDataEntries } from '../composables/useDataEntries.js';
 import { watch } from 'vue';
+import { useHelp } from '../composables/useHelp.js';
+
+const { showHelp } = useHelp();
 
 const { savedData, currentSaved, dataWindow, emptyEntry, entry } = useDataEntries();
 const { showSchlagParts, removeSchlagParts } = useSchlag();
