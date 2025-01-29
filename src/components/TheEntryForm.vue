@@ -7,7 +7,7 @@
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
       <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-list-box </v-icon>
-        Schlag-Daten
+        Schlag- und Nährstoff-Daten
       </v-col>
       <v-col cols="2" class="text-right pr-1"
         ><v-icon size="small" @click="showHelp('datawindow')">mdi-help-circle</v-icon></v-col
@@ -753,7 +753,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <div class="pa-2 bg-blue-lighten-5" style="overflow: hidden">
-                  SCHLAG-DATEN:<br />
+                  Schlag-Daten:<br />
                   <pre>{{ entry.schlaginfo.basic }}</pre>
                   <pre>{{ entry.schlaginfo.programs }}</pre>
                 </div>
@@ -805,7 +805,7 @@ import { useHelp } from '../composables/useHelp.js';
 const { showHelp } = useHelp();
 const { currentBilanz } = useBalanceCalculator();
 
-const debug = true; // TRUE FÜR DEBUG PANEL
+const debug = false; // TRUE FÜR DEBUG PANEL
 
 const { savedData, currentSaved, dataWindow, emptyCulture, emptyFertilization, entry } =
   useDataEntries();

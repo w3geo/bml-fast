@@ -10,7 +10,7 @@
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="12" class="pa-2"> {{ currentHelp.text }}</v-col>
+      <v-col cols="12" class="pa-3 helpText text-body-2"> {{ currentHelp.text }}</v-col>
     </v-row>
   </v-card>
 </template>
@@ -26,8 +26,12 @@ const { helpToggle, currentHelp } = useHelp();
   right: 10px;
   top: 60px;
   width: 400px;
+  height: 210px;
+  z-index: 1000;
+}
+
+.helpText {
   height: 180px;
   overflow: auto;
-  z-index: 1000;
 }
 </style>
