@@ -35,7 +35,6 @@ export const helpToggle = shallowRef(false);
  * @param {string} key
  */
 export function showHelp(key) {
-  console.log(key, allHelp);
   if (allHelp[key]) {
     currentHelp.value = { title: allHelp[key].title, text: allHelp[key].text };
   } else {

@@ -29,7 +29,7 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
                       append-icon="mdi-help-circle"
-                      @click:append="showHelp('feldstuecksname')"
+                      @click:append="showHelp('form_feldstuecksname')"
                       v-model="entry.feldstuecksname"
                       label="Feldstück/Name"
                       variant="outlined"
@@ -66,7 +66,7 @@
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
                       append-icon="mdi-help-circle"
-                      @click:append="showHelp('form_flaechennutzungsart')"
+                      @click="showHelp('form_flaechennutzungsart')"
                       v-model="lookup.feldstücknutzungsarten[entry.flaechennutzungsart]"
                       label="Flächennutzungsart"
                       variant="outlined"
@@ -156,7 +156,6 @@
                       variant="outlined"
                       density="compact"
                       hide-details
-                      disabled
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3" v-if="entry.wrrl">
@@ -303,7 +302,7 @@
                     <v-col cols="12" class="px-4 obligatory mb-3">
                       <v-autocomplete
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].kultur')"
+                        @click:append="showHelp('form_zwischenfrucht')"
                         v-model="entry.cultures[i - 1].kultur"
                         v-model:search="search.kultur"
                         :items="
@@ -344,7 +343,7 @@
                     >
                       <v-select
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].ertragslage')"
+                        @click:append="showHelp('form_ertragslage')"
                         v-model="entry.cultures[i - 1].ertragslage"
                         :items="ertragsLagen(entry.cultures[i - 1].kultur, false)"
                         label="Erwartete Ertragslage"
@@ -364,7 +363,7 @@
                     >
                       <v-text-field
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].nmin')"
+                        @click:append="showHelp('form_nmin')"
                         v-model="entry.cultures[i - 1].nmin"
                         label="NMin / manuell"
                         variant="outlined"
@@ -384,7 +383,7 @@
                     >
                       <v-text-field
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].nminvorgabe')"
+                        @click:append="showHelp('form_nminvorgabe')"
                         v-model="entry.cultures[i - 1].nminvorgabe"
                         label="Vorgabe"
                         variant="outlined"
@@ -445,7 +444,7 @@
                         >
                           <v-select
                             append-icon="mdi-help-circle"
-                            @click:append="showHelp('form_cultures[i - 1].duengung[f - 1].typ')"
+                            @click:append="showHelp('form_duengung_typ')"
                             v-model="entry.cultures[i - 1].duengung[f - 1].typ"
                             :items="lookup.fertilizationTypes"
                             label="Typ"
@@ -466,7 +465,7 @@
                         >
                           <v-autocomplete
                             append-icon="mdi-help-circle"
-                            @click:append="showHelp('form_cultures[i - 1].duengung[f - 1].id')"
+                            @click:append="showHelp('form_duengung_id')"
                             v-model="entry.cultures[i - 1].duengung[f - 1].id"
                             v-model:search="search.duengung"
                             :items="lookup[entry.cultures[i - 1].duengung[f - 1].typ]"
@@ -492,7 +491,7 @@
                         >
                           <v-text-field
                             append-icon="mdi-help-circle"
-                            @click:append="showHelp('form_cultures[i - 1].duengung[f - 1].menge')"
+                            @click:append="showHelp('form_duengung_menge')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
                             :label="
                               npkLabel(
@@ -523,7 +522,7 @@
                           <v-text-field
                             :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
                             append-icon="mdi-help-circle"
-                            @click:append="showHelp('form_cultures[i - 1].duengung[f - 1].n')"
+                            @click:append="showHelp('form_duengung_n')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
                             :label="npkLabel('n', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
@@ -549,7 +548,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             append-icon="mdi-help-circle"
-                            @click:append="showHelp('form_cultures[i - 1].duengung[f - 1].p')"
+                            @click:append="showHelp('form_duengung_p')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
                             :label="npkLabel('p', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
@@ -575,7 +574,7 @@
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
                             append-icon="mdi-help-circle"
-                            @click:append="showHelp('form_cultures[i - 1].duengung[f - 1].k')"
+                            @click:append="showHelp('form_duengung_k')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
                             :label="npkLabel('k', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
@@ -677,7 +676,7 @@
                       <v-select
                         v-if="ertragsTyp(entry.cultures[i - 1].kultur, 'einheit') == 'EL Auswahl'"
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].ertragslageernte')"
+                        @click:append="showHelp('form_ertragslageernte')"
                         v-model="entry.cultures[i - 1].ertragslageernte"
                         :items="ertragsLagen(entry.cultures[i - 1].kultur, true)"
                         label="Ertrag (Klasse)"
@@ -690,7 +689,7 @@
                           ['t', 'm3'].includes(ertragsTyp(entry.cultures[i - 1].kultur, 'einheit'))
                         "
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].ernte')"
+                        @click:append="showHelp('form_ernte')"
                         v-model.number="entry.cultures[i - 1].ernte"
                         :label="`Ernte (in ${ertragsTyp(entry.cultures[i - 1].kultur, 'einheit')})`"
                         variant="outlined"
@@ -707,7 +706,7 @@
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].feuchte')"
+                        @click:append="showHelp('form_feuchte')"
                         v-model="entry.cultures[i - 1].feuchte"
                         label="Kornfeuchte"
                         :items="lookup.kornfeuchteListe"
@@ -723,7 +722,7 @@
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_cultures[i - 1].protein')"
+                        @click:append="showHelp('form_protein')"
                         v-model="entry.cultures[i - 1].protein"
                         label="Proteingehalt"
                         :items="lookup.proteinListe[ertragsTyp(entry.cultures[i - 1].kultur, '')]"
