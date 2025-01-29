@@ -797,7 +797,9 @@ import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
 import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
+import { useHelp } from '../composables/useHelp.js';
 
+const { showHelp } = useHelp();
 const { currentBilanz } = useBalanceCalculator();
 
 const debug = true; // TRUE FÜR DEBUG PANEL
@@ -843,10 +845,6 @@ mapReady.then(() => {
   const date = new Date(map.get('mapbox-style').metadata.sources[SCHLAEGE_SOURCE].lastModified);
   schlaegeLastModified.value = new Intl.DateTimeFormat('de-AT').format(date);
 });
-
-function hover() {
-  alert('hey');
-}
 
 function nminmanChanged(idx) {
   if (entry.value.cultures[idx].nmin == '') {
@@ -1229,7 +1227,7 @@ div.obligatory div.v-input--disabled {
 }
 
 .inbForm .v-input__append .v-icon:hover {
-  color: rgb(255, 136, 0);
+  color: #ff9800;
 }
 
 .inbForm .v-input__append .v-icon--size-default {
