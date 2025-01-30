@@ -66,13 +66,13 @@
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
                       append-icon="mdi-help-circle"
-                      @click="showHelp('form_flaechennutzungsart')"
+                      @click:append="showHelp('form_flaechennutzungsart')"
                       v-model="lookup.feldstücknutzungsarten[entry.flaechennutzungsart]"
                       label="Flächennutzungsart"
                       variant="outlined"
                       density="compact"
                       hide-details
-                      disabled
+                      readonly
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
@@ -101,6 +101,7 @@
                       variant="outlined"
                       density="compact"
                       hide-details
+                      readonly
                     />
                   </v-col>
 
@@ -156,6 +157,7 @@
                       variant="outlined"
                       density="compact"
                       hide-details
+                      readonly
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3" v-if="entry.wrrl">
@@ -389,7 +391,7 @@
                         variant="outlined"
                         density="compact"
                         type="number"
-                        disabled
+                        readonly
                         hide-details
                       />
                     </v-col>
@@ -520,7 +522,7 @@
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            :readonly="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
                             append-icon="mdi-help-circle"
                             @click:append="showHelp('form_duengung_n')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
@@ -543,7 +545,7 @@
                           "
                         >
                           <v-text-field
-                            :disabled="
+                            :readonly="
                               entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
@@ -569,7 +571,7 @@
                           "
                         >
                           <v-text-field
-                            :disabled="
+                            :readonly="
                               entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
@@ -1211,7 +1213,7 @@ div.obligatory div.v-field {
   opacity: 0.7 !important;
 }
 
-div.obligatory div.v-input--disabled {
+div.obligatory div.v-input--readonly {
   font-style: italic;
 }
 
