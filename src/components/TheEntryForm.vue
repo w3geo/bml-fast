@@ -1213,7 +1213,7 @@ div.obligatory div.v-field {
   opacity: 0.7 !important;
 }
 
-div.obligatory div.v-input--readonly {
+div.v-input--readonly {
   font-style: italic;
 }
 
