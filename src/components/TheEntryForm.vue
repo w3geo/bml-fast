@@ -280,20 +280,21 @@
                 >
                   <v-row no-gutters class="bg-brown-lighten-2">
                     <v-col cols="10" class="pl-2">
-                      <span class="text-button">{{
-                        i === 1 ? 'Zwischenfrucht' : `${i - 1}. Hauptfrucht`
-                      }}</span>
-                    </v-col>
-                    <v-col cols="2" class="text-right">
+                      <div class="text-button d-inline-flex">
+                        {{ i === 1 ? 'Zwischenfrucht' : `${i - 1}. Hauptfrucht` }}
+                      </div>
                       <v-btn
                         v-if="i > 1"
                         icon
-                        size="20"
+                        size="18"
                         @click="deleteCulture(i - 1)"
-                        class="mt-2 mr-2"
+                        class="ml-4 mb-1"
                       >
-                        <v-icon size="20" color="red" icon="mdi-close"
+                        <v-icon size="16" color="red" icon="mdi-close"
                       /></v-btn>
+                    </v-col>
+                    <v-col cols="2" class="text-right pt-2 pr-2">
+                      <v-icon @click="showHelp('zwischenfrucht')">mdi-help-circle</v-icon>
                     </v-col>
                   </v-row>
 
@@ -304,7 +305,7 @@
                     <v-col cols="12" class="px-4 obligatory mb-3">
                       <v-autocomplete
                         append-icon="mdi-help-circle"
-                        @click:append="showHelp('form_zwischenfrucht')"
+                        @click:append="showHelp('form_zwischenfrucht_kultur')"
                         v-model="entry.cultures[i - 1].kultur"
                         v-model:search="search.kultur"
                         :items="
@@ -410,7 +411,10 @@
                         ) !== 'Düngeverbot')
                     "
                   >
-                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
+                    <v-col cols="10" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
+                    <v-col cols="2" class="text-right mb-2 pt-1 pr-2 bg-brown-lighten-4">
+                      <v-icon color="white" @click="showHelp('duengungen')">mdi-help-circle</v-icon>
+                    </v-col>
                     <v-card
                       v-for="f in entry.cultures[i - 1].duengung.length"
                       :key="`kultur${i}duengung${f}`"
@@ -420,17 +424,16 @@
                       <v-row no-gutters class="bg-light-green-lighten-3">
                         <v-col cols="10" class="pl-2">
                           <span class="text-subtitle-2">{{ f }}. Düngung</span>
-                        </v-col>
-                        <v-col cols="2" class="text-right">
                           <v-btn
                             icon
                             size="18"
                             @click.stop="deleteFertilization(i - 1, f - 1)"
-                            class="mt-0 mr-1"
+                            class="ml-4"
                           >
                             <v-icon size="18" color="red" icon="mdi-close"
                           /></v-btn>
                         </v-col>
+                        <v-col cols="2" class="text-right pr-1"> </v-col>
                       </v-row>
 
                       <v-row no-gutters>
@@ -673,7 +676,13 @@
                       ) !== 'keine Ertragserfassung'
                     "
                   >
-                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
+                    <v-col cols="10" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
+                    <v-col cols="2" class="text-right mb-2 pt-1 pr-2 bg-brown-lighten-4">
+                      <v-icon color="white" @click="showHelp('ernteertrag')"
+                        >mdi-help-circle</v-icon
+                      >
+                    </v-col>
+
                     <v-col cols="6" class="pa-2">
                       <v-select
                         v-if="ertragsTyp(entry.cultures[i - 1].kultur, 'einheit') == 'EL Auswahl'"
