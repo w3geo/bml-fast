@@ -112,7 +112,7 @@
                       @click:append="showHelp('form_teilnahme_grundwasserschutz_acker')"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
-                      label="Teilnahme am vorbeugenden Grundwasserschutz"
+                      label="Teiln. vorbeugender Grundwasserschutz"
                       variant="outlined"
                       density="compact"
                       hide-details
