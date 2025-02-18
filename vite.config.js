@@ -14,4 +14,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  define: {
+    'import.meta.env.VITE_TRACKER_SCRIPT': JSON.stringify(process.env.VITE_TRACKER_SCRIPT || ''), // eslint-disable-line no-undef
+  },
 });
