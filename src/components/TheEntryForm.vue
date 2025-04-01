@@ -5,17 +5,20 @@
     elevation="10"
   >
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
-      <v-col class="text-button text-white">
+      <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-list-box </v-icon>
-        Datenfenster
+        Schlag- und Nährstoff-Daten
       </v-col>
+      <v-col cols="2" class="text-right pr-1"
+        ><v-icon size="small" @click="showHelp('datawindow')">mdi-help-circle</v-icon></v-col
+      >
     </v-row>
     <v-row class="theForm" no-gutters>
       <v-col>
         <div class="selectSchlag" v-if="dataWindow === 1 && currentSaved === null">
           Bitte einen Schlag als Ausgangspunkt wählen!
         </div>
-        <v-form ref="entryform" v-if="dataWindow === 2">
+        <v-form class="inbForm" ref="entryform" v-if="dataWindow === 2">
           <v-expansion-panels variant="accordion" multiple v-model="panelInit">
             <v-expansion-panel value="basisdaten" rounded="0" elevation="0">
               <v-expansion-panel-title static class="bg-grey-darken-1">
@@ -25,6 +28,8 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_feldstuecksname')"
                       v-model="entry.feldstuecksname"
                       label="Feldstück/Name"
                       variant="outlined"
@@ -34,6 +39,8 @@
                   </v-col>
                   <v-col cols="3" class="px-4 mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_feldstuecksnummer')"
                       v-model.number="entry.feldstuecksnummer"
                       label="Feldstück/Nr"
                       variant="outlined"
@@ -44,6 +51,8 @@
                   </v-col>
                   <v-col cols="3" class="px-4 mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_schlagnummer')"
                       v-model="entry.schlagnummer"
                       label="Schlagnummer"
                       variant="outlined"
@@ -56,16 +65,20 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_flaechennutzungsart')"
                       v-model="lookup.feldstücknutzungsarten[entry.flaechennutzungsart]"
                       label="Flächennutzungsart"
                       variant="outlined"
                       density="compact"
                       hide-details
-                      disabled
+                      readonly
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_flaeche')"
                       v-model.number="entry.flaeche"
                       label="Fläche (ha)"
                       variant="outlined"
@@ -81,21 +94,25 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_imGrundwasserschutz')"
                       v-model="imGrundwasserschutz"
                       label="Fläche im Grundwasserschutz"
                       variant="outlined"
                       density="compact"
                       hide-details
-                      disabled
+                      readonly
                     />
                   </v-col>
 
                   <v-col cols="6" class="px-4 mb-3" v-if="entry.flaechennutzungsart === 'A'">
                     <v-select
                       v-if="entry.flaeche_grundwasserschutz > 0"
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_teilnahme_grundwasserschutz_acker')"
                       v-model="entry.teilnahme_grundwasserschutz_acker"
                       :items="itemsJaNein"
-                      label="Teilnahme am vorbeugenden Grundwasserschutz"
+                      label="Teiln. vorbeugender Grundwasserschutz"
                       variant="outlined"
                       density="compact"
                       hide-details
@@ -106,6 +123,8 @@
                 <v-row no-gutters v-if="entry.teilnahme_grundwasserschutz_acker">
                   <v-col cols="6" class="px-4 mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_nsaldo')"
                       v-model.number="entry.nsaldo"
                       label="N-Saldo (kg N/ha)"
                       variant="outlined"
@@ -116,6 +135,8 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_gw_acker_gebietszuteilung')"
                       v-model="entry.gw_acker_gebietszuteilung"
                       :items="itemsGWAcker"
                       label="GW-Acker Gebietszuteilung"
@@ -129,16 +150,20 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-text-field
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_imNitratrisikogebiet')"
                       v-model="imNitratrisikogebiet"
                       label="Fläche im Nitratrisikogebiet"
                       variant="outlined"
                       density="compact"
                       hide-details
-                      disabled
+                      readonly
                     />
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3" v-if="entry.wrrl">
                     <v-select
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_wrrl_duengeklasse')"
                       v-model="entry.wrrl_duengeklasse"
                       :items="lookup.wrrl"
                       label="Düngeklasse WRRL"
@@ -154,6 +179,8 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_phosphor_gehaltsklasse')"
                       v-model="entry.phosphor_gehaltsklasse"
                       :items="itemsABCDE"
                       label="Phosphor Gehaltsklasse"
@@ -164,6 +191,8 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_kalium_gehaltsklasse')"
                       v-model="entry.kalium_gehaltsklasse"
                       :items="itemsABCDE"
                       label="Kalium Gehaltsklasse"
@@ -178,6 +207,8 @@
                   <v-col cols="6" class="px-4 mb-3">
                     <v-select
                       v-if="entry.flaechennutzungsart === 'A'"
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_ackerzahl')"
                       v-model="entry.ackerzahl"
                       :items="lookup.ackerzahlItems"
                       label="Ackerzahl"
@@ -189,6 +220,8 @@
                   </v-col>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_bodenart')"
                       v-model="entry.bodenart"
                       :items="lookup.bodenartenbodenschwere"
                       label="Bodenart"
@@ -204,6 +237,8 @@
                 <v-row no-gutters>
                   <v-col cols="6" class="px-4 obligatory mb-3">
                     <v-select
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_jahr')"
                       v-model="entry.jahr"
                       :items="lookup.yearItems"
                       label="Wirtschaftsjahr"
@@ -214,6 +249,8 @@
                   </v-col>
                   <v-col cols="6" class="px-4 mb-3">
                     <v-autocomplete
+                      append-icon="mdi-help-circle"
+                      @click:append="showHelp('form_vorfrucht')"
                       v-model="entry.vorfrucht"
                       v-model:search="search.vorfrucht"
                       :items="lookup.kulturenItems.alle"
@@ -243,20 +280,21 @@
                 >
                   <v-row no-gutters class="bg-brown-lighten-2">
                     <v-col cols="10" class="pl-2">
-                      <span class="text-button">{{
-                        i === 1 ? 'Zwischenfrucht' : `${i - 1}. Hauptfrucht`
-                      }}</span>
-                    </v-col>
-                    <v-col cols="2" class="text-right">
+                      <div class="text-button d-inline-flex">
+                        {{ i === 1 ? 'Zwischenfrucht' : `${i - 1}. Hauptfrucht` }}
+                      </div>
                       <v-btn
                         v-if="i > 1"
                         icon
-                        size="20"
+                        size="18"
                         @click="deleteCulture(i - 1)"
-                        class="mt-2 mr-2"
+                        class="ml-4 mb-1"
                       >
-                        <v-icon size="20" color="red" icon="mdi-close"
+                        <v-icon size="16" color="red" icon="mdi-close"
                       /></v-btn>
+                    </v-col>
+                    <v-col cols="2" class="text-right pt-2 pr-2">
+                      <v-icon @click="showHelp('zwischenfrucht')">mdi-help-circle</v-icon>
                     </v-col>
                   </v-row>
 
@@ -266,6 +304,8 @@
                     >
                     <v-col cols="12" class="px-4 obligatory mb-3">
                       <v-autocomplete
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_zwischenfrucht_kultur')"
                         v-model="entry.cultures[i - 1].kultur"
                         v-model:search="search.kultur"
                         :items="
@@ -305,6 +345,8 @@
                       "
                     >
                       <v-select
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_ertragslage')"
                         v-model="entry.cultures[i - 1].ertragslage"
                         :items="ertragsLagen(entry.cultures[i - 1].kultur, false)"
                         label="Erwartete Ertragslage"
@@ -323,6 +365,8 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_nmin')"
                         v-model="entry.cultures[i - 1].nmin"
                         label="NMin / manuell"
                         variant="outlined"
@@ -341,12 +385,14 @@
                       class="px-4 mb-3"
                     >
                       <v-text-field
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_nminvorgabe')"
                         v-model="entry.cultures[i - 1].nminvorgabe"
                         label="Vorgabe"
                         variant="outlined"
                         density="compact"
                         type="number"
-                        disabled
+                        readonly
                         hide-details
                       />
                     </v-col>
@@ -365,7 +411,10 @@
                         ) !== 'Düngeverbot')
                     "
                   >
-                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
+                    <v-col cols="10" class="mb-2 pa-1 bg-brown-lighten-4">Düngungen</v-col>
+                    <v-col cols="2" class="text-right mb-2 pt-1 pr-2 bg-brown-lighten-4">
+                      <v-icon color="white" @click="showHelp('duengungen')">mdi-help-circle</v-icon>
+                    </v-col>
                     <v-card
                       v-for="f in entry.cultures[i - 1].duengung.length"
                       :key="`kultur${i}duengung${f}`"
@@ -375,17 +424,16 @@
                       <v-row no-gutters class="bg-light-green-lighten-3">
                         <v-col cols="10" class="pl-2">
                           <span class="text-subtitle-2">{{ f }}. Düngung</span>
-                        </v-col>
-                        <v-col cols="2" class="text-right">
                           <v-btn
                             icon
                             size="18"
                             @click.stop="deleteFertilization(i - 1, f - 1)"
-                            class="mt-0 mr-1"
+                            class="ml-4"
                           >
                             <v-icon size="18" color="red" icon="mdi-close"
                           /></v-btn>
                         </v-col>
+                        <v-col cols="2" class="text-right pr-1"> </v-col>
                       </v-row>
 
                       <v-row no-gutters>
@@ -400,6 +448,8 @@
                           class="pa-2"
                         >
                           <v-select
+                            append-icon="mdi-help-circle"
+                            @click:append="showHelp('form_duengung_typ')"
                             v-model="entry.cultures[i - 1].duengung[f - 1].typ"
                             :items="lookup.fertilizationTypes"
                             label="Typ"
@@ -419,6 +469,8 @@
                           "
                         >
                           <v-autocomplete
+                            append-icon="mdi-help-circle"
+                            @click:append="showHelp('form_duengung_id')"
                             v-model="entry.cultures[i - 1].duengung[f - 1].id"
                             v-model:search="search.duengung"
                             :items="lookup[entry.cultures[i - 1].duengung[f - 1].typ]"
@@ -443,6 +495,8 @@
                           "
                         >
                           <v-text-field
+                            append-icon="mdi-help-circle"
+                            @click:append="showHelp('form_duengung_menge')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].menge"
                             :label="
                               npkLabel(
@@ -471,7 +525,9 @@
                           "
                         >
                           <v-text-field
-                            :disabled="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            :readonly="entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger'"
+                            append-icon="mdi-help-circle"
+                            @click:append="showHelp('form_duengung_n')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].n"
                             :label="npkLabel('n', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
@@ -492,10 +548,12 @@
                           "
                         >
                           <v-text-field
-                            :disabled="
+                            :readonly="
                               entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
+                            append-icon="mdi-help-circle"
+                            @click:append="showHelp('form_duengung_p')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].p"
                             :label="npkLabel('p', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
@@ -516,10 +574,12 @@
                           "
                         >
                           <v-text-field
-                            :disabled="
+                            :readonly="
                               entry.cultures[i - 1].duengung[f - 1].typ == 'handelsdünger' ||
                               entry.cultures[i - 1].duengung[f - 1].typ == 'bewässerung'
                             "
+                            append-icon="mdi-help-circle"
+                            @click:append="showHelp('form_duengung_k')"
                             v-model.number="entry.cultures[i - 1].duengung[f - 1].k"
                             :label="npkLabel('k', entry.cultures[i - 1].duengung[f - 1].typ, 0)"
                             variant="outlined"
@@ -616,10 +676,18 @@
                       ) !== 'keine Ertragserfassung'
                     "
                   >
-                    <v-col cols="12" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
+                    <v-col cols="10" class="mb-2 pa-1 bg-brown-lighten-4">Ernte / Ertrag</v-col>
+                    <v-col cols="2" class="text-right mb-2 pt-1 pr-2 bg-brown-lighten-4">
+                      <v-icon color="white" @click="showHelp('ernteertrag')"
+                        >mdi-help-circle</v-icon
+                      >
+                    </v-col>
+
                     <v-col cols="6" class="pa-2">
                       <v-select
                         v-if="ertragsTyp(entry.cultures[i - 1].kultur, 'einheit') == 'EL Auswahl'"
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_ertragslageernte')"
                         v-model="entry.cultures[i - 1].ertragslageernte"
                         :items="ertragsLagen(entry.cultures[i - 1].kultur, true)"
                         label="Ertrag (Klasse)"
@@ -631,6 +699,8 @@
                         v-if="
                           ['t', 'm3'].includes(ertragsTyp(entry.cultures[i - 1].kultur, 'einheit'))
                         "
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_ernte')"
                         v-model.number="entry.cultures[i - 1].ernte"
                         :label="`Ernte (in ${ertragsTyp(entry.cultures[i - 1].kultur, 'einheit')})`"
                         variant="outlined"
@@ -646,6 +716,8 @@
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_feuchte')"
                         v-model="entry.cultures[i - 1].feuchte"
                         label="Kornfeuchte"
                         :items="lookup.kornfeuchteListe"
@@ -660,6 +732,8 @@
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 4 ||
                           ertragsTyp(entry.cultures[i - 1].kultur, '') == 5
                         "
+                        append-icon="mdi-help-circle"
+                        @click:append="showHelp('form_protein')"
                         v-model="entry.cultures[i - 1].protein"
                         label="Proteingehalt"
                         :items="lookup.proteinListe[ertragsTyp(entry.cultures[i - 1].kultur, '')]"
@@ -689,7 +763,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <div class="pa-2 bg-blue-lighten-5" style="overflow: hidden">
-                  SCHLAG-DATEN:<br />
+                  Schlag-Daten:<br />
                   <pre>{{ entry.schlaginfo.basic }}</pre>
                   <pre>{{ entry.schlaginfo.programs }}</pre>
                 </div>
@@ -736,10 +810,12 @@ import { SCHLAEGE_SOURCE } from '../constants.js';
 import { useTopicIntersections } from '../composables/useTopicIntersections.js';
 import { useLookup } from '../composables/useLookUps.js';
 import { useBalanceCalculator } from '../composables/useBalanceCalculator.js';
+import { useHelp } from '../composables/useHelp.js';
 
+const { showHelp } = useHelp();
 const { currentBilanz } = useBalanceCalculator();
 
-const debug = true; // TRUE FÜR DEBUG PANEL
+const debug = false; // TRUE FÜR DEBUG PANEL
 
 const { savedData, currentSaved, dataWindow, emptyCulture, emptyFertilization, entry } =
   useDataEntries();
@@ -1146,8 +1222,25 @@ div.obligatory div.v-field {
   opacity: 0.7 !important;
 }
 
-div.obligatory div.v-input--disabled {
+div.v-input--readonly {
   font-style: italic;
+}
+
+.inbForm .v-input__append {
+  margin-inline-start: 0px !important;
+  position: relative;
+  background-color: white;
+}
+
+.inbForm .v-input__append .v-icon {
+  position: absolute;
+  top: 1px;
+  left: -17px;
+  color: grey;
+}
+
+.inbForm .v-input__append .v-icon--size-default {
+  font-size: 1em;
 }
 </style>
 <style scoped>

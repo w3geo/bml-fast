@@ -1,10 +1,13 @@
 <template>
   <v-card class="panelSize" v-if="dataWindow === 0" elevation="10">
     <v-row no-gutters class="boxHeader bg-grey-darken-2">
-      <v-col class="text-button text-white">
+      <v-col cols="10" class="text-button text-white">
         <v-icon class="mx-1"> mdi-file-arrow-up-down </v-icon>
         Daten Export / Import
       </v-col>
+      <v-col cols="2" class="text-right pr-1"
+        ><v-icon size="small" @click="showHelp('importexport')">mdi-help-circle</v-icon></v-col
+      >
     </v-row>
     <v-row no-gutters class="mt-2">
       <v-col cols="4" class="pa-2 pt-4">
@@ -45,6 +48,9 @@
 <script setup>
 import { dataWindow, useDataEntries } from '../composables/useDataEntries.js';
 import { ref } from 'vue';
+import { useHelp } from '../composables/useHelp.js';
+
+const { showHelp } = useHelp();
 
 const { savedData } = useDataEntries();
 const inputFile = ref(null);
