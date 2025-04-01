@@ -37,11 +37,11 @@ const allHelp = {
   },
   form_flaeche: {
     title: 'Flächennutzungsart',
-    text: 'Die Flächennutzungsart für den Schlag gemäß Eintrag im Inspire Agrar-Atlas. NUR LESBAR.',
+    text: 'Die Flächennutzungsart für den Schlag gemäß INVEKOS (identer Eintrag wie im Inspire Agrar-Atlas). NUR LESBAR.',
   },
   form_imGrundwasserschutz: {
     title: 'Fläche im Grundwasserschutz',
-    text: 'Lage des Schlags im Grundwasserschutz gemäß Eintrag im Inspire Agrar-Atlas. NUR LESBAR.',
+    text: 'Lage des Schlags im ÖPUL Grundwasserschutz gemäß INVEKOS (identer Eintrag wie im Inspire Agrar-Atlas). NUR LESBAR.',
   },
   form_teilnahme_grundwasserschutz_acker: {
     title: 'Teilnahme am vorbgeugenden Grundwasserschutz',
@@ -53,23 +53,23 @@ const allHelp = {
   },
   form_gw_acker_gebietszuteilung: {
     title: 'Grundwasserschutz Gebietszuteilung',
-    text: 'Gebietszuteilung laut Grundwasserchutz-Acker. Vorgabe aus dem Inspire Agrar-Atlas, kann jedoch geändert werden.',
+    text: 'Gebietszuteilung laut ÖPUL Grundwasserchutz-Acker. Vorgabe aus INVEKOS, kann jedoch geändert werden.',
   },
   form_imNitratrisikogebiet: {
     title: 'Nitratrisikogebiet',
-    text: 'Angabe, ob Schlag im Nitratrisikogebiet liegt.',
+    text: 'Angabe, ob der Schlag im Nitratrisikogebiet liegt, laut NAPV.',
   },
   form_wrrl_duengeklasse: {
     title: 'Düngeklasse WRRL',
-    text: 'Düngeklasse A-F gemäß Wasserrahmenrichtlinie. Vorgabe aus dem Inspire Agrar-Atlas, kann jedoch geändert werden.',
+    text: 'Düngeklasse A-F gemäß Wasserrahmenrichtlinie. Vorgabe aus INVEKOS (identer Eintrag wie im Inspire Agrar-Atlas), kann jedoch geändert werden.',
   },
   form_phosphor_gehaltsklasse: {
     title: 'Phosphor-Gehaltsklasse',
-    text: 'Vorgabe aus dem Inspire Agrar-Atlas, kann jedoch geändert werden.',
+    text: 'Phosphor-Gehaltsklasse des Schlags, kann jedoch geändert werden.',
   },
   form_kalium_gehaltsklasse: {
     title: 'Kalium-Gehaltsklasse',
-    text: 'Vorgabe aus dem Inspire Agrar-Atlas, kann jedoch geändert werden.',
+    text: 'Kalium-Gehaltsklasse des Schlags, kann jedoch geändert werden.',
   },
   form_ackerzahl: {
     title: 'Ackerzahl',
@@ -77,7 +77,7 @@ const allHelp = {
   },
   form_bodenart: {
     title: 'Bodenart',
-    text: 'Die überwiegende Bodenart des Schlags. Vorgabe aus dem Inspire Agrar-Atlas, kann jedoch geändert werden.',
+    text: 'Bodenart des Schlags, kann jedoch geändert werden.',
   },
   form_jahr: {
     title: 'Wirtschaftsjahr',

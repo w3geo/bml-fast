@@ -88,7 +88,8 @@
       <v-row no-gutters class="pa-4 bg-grey-lighten-2" align="center">
         <v-col cols="12"
           >Feedback / Fehlermeldungen? Bitte kontaktieren Sie uns mit einer möglichst exakten
-          Beschreibung unter <a href="service.inb@bml.gv.at">service.inb@bml.gv.at</a>.</v-col
+          Beschreibung unter
+          <a href="mailto:service.inb@bml.gv.at">service.inb@bml.gv.at</a>.</v-col
         >
       </v-row>
     </v-card>
