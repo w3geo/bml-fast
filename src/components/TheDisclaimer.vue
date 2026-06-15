@@ -6,11 +6,11 @@
           <p class="pa-4">
             <strong>
               Sehr geehrte Benutzerin, sehr geehrter Benutzer, herzlichen Dank, dass Sie den INB des
-              BML verwenden.
+              BMLUK verwenden.
             </strong>
           </p>
           <p class="px-4 py-2">
-            Das BML ist aufgrund EU-rechtlicher Vorgaben gemäß Art 15, Abs 4, Buchstabe (g), der
+            Das BMLUK ist aufgrund EU-rechtlicher Vorgaben gemäß Art 15, Abs 4, Buchstabe (g), der
             GAP-Strategieplan-VO, Nr. 2115/2021 zur Bereitstellung eines
             Betriebsnachhaltigkeitsinstruments für Nährstoffe (Integrierte Nährstoff Bilanz- INB) in
             Österreich verpflichtet.
@@ -18,11 +18,11 @@
           <p class="px-4 py-2">
             Aus den Karteninhalten (Darstellungen) und den dazugehörenden Texten können
             Rechtsansprüche weder begründet noch abgeleitet werden. Das Bundesministerium für Land-
-            und Forstwirtschaft, Regionen und Wasserwirtschaft (BML) übernimmt keine Haftung für
-            Richtigkeit, Vollständigkeit, Aktualität oder dauernde Verfügbarkeit dieses
-            Webkartendienstes. Die Karten und Texte sind keine amtliche Auskunft oder
-            rechtsverbindliche Aussage. Amtliche Auskünfte zu einem bestimmten Gebiet oder einer
-            bestimmten Frage erteilt auf Anfrage die zuständige Behörde.
+            und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft (BMLUK)
+            übernimmt keine Haftung für Richtigkeit, Vollständigkeit, Aktualität oder dauernde
+            Verfügbarkeit dieses Webkartendienstes. Die Karten und Texte sind keine amtliche
+            Auskunft oder rechtsverbindliche Aussage. Amtliche Auskünfte zu einem bestimmten Gebiet
+            oder einer bestimmten Frage erteilt auf Anfrage die zuständige Behörde.
           </p>
           <p class="px-4 py-2">
             Der INB stellt Nährstoffverhältnisse auf Schlagebene dar und soll Empfehlungen für den
@@ -34,9 +34,9 @@
           </p>
           <p class="px-4 py-2">
             Alle Angaben (Berechnungsergebnisse) sind trotz sorgfältigster Bearbeitung/Verarbeitung
-            ohne Gewähr und nicht rechtsverbindlich. Eine Haftung des BML für Nachteile, die
+            ohne Gewähr und nicht rechtsverbindlich. Eine Haftung des BMLUK für Nachteile, die
             aufgrund der auf INB.Agrarforschung.at angezeigten und abgefragten Inhalte entstanden
-            sind, wird ausgeschlossen. Das BML behält sich ausdrücklich vor, Inhalte des INB
+            sind, wird ausgeschlossen. Das BMLUK behält sich ausdrücklich vor, Inhalte des INB
             jederzeit ohne Ankündigung ganz oder teilweise zu ändern, zu ergänzen, zu löschen oder
             zeitweise nicht zu veröffentlichen.
           </p>
@@ -89,7 +89,7 @@
         <v-col cols="12"
           >Feedback / Fehlermeldungen? Bitte kontaktieren Sie uns mit einer möglichst exakten
           Beschreibung unter
-          <a href="mailto:service.inb@bml.gv.at">service.inb@bml.gv.at</a>.</v-col
+          <a href="mailto:service.inb@bmluk.gv.at">service.inb@bmluk.gv.at</a>.</v-col
         >
       </v-row>
     </v-card>

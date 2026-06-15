@@ -1,6 +1,6 @@
 # bml-fast
 
-FaST Tool für den Agraratlas des BML
+FaST Tool für den Agraratlas des BMLUK
 
 ## Environment variables
 
