@@ -10,7 +10,7 @@
     <v-navigation-drawer v-model="drawer" disable-resize-watcher temporary @click="drawer = false">
       <v-row no-gutters class="mt-4">
         <v-col cols="12" class="pa-3 pt-1">
-          <a class="drawerLink" href="https://info.bml.gv.at/impressum.html" target="_blank"
+          <a class="drawerLink" href="https://www.bmluk.gv.at/impressum.html" target="_blank"
             >Impressum</a
           >
         </v-col>
